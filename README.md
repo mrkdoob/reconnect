@@ -33,3 +33,4 @@ Comes with user authentication included
 3. `createdb fullstack-boilerplate` (must have postgres setup locally)
 4. `cd packages/api && yarn watch`
 5. `cd packages/web && yarn start`
+# reconnect

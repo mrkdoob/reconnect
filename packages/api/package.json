@@ -1,7 +1,10 @@
 {
   "private": true,
-  "name": "@fullstack-boilerplate/api",
+  "name": "@reconnect/api",
   "version": "1.0.0",
+  "engines": {
+    "node": "11.13.0"
+  },
   "main": "src/index.ts",
   "license": "MIT",
   "scripts": {
