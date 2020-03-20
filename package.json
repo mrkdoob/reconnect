@@ -1,0 +1,41 @@
+{
+  "name": "root",
+  "private": true,
+  "version": "1.0.0",
+  "license": "MIT",
+  "workspaces": {
+    "packages": [
+      "packages/*"
+    ]
+  },
+  "scripts": {
+    "build:api": "cd packages/api && yarn build",
+    "build:web": "cd packages/web && yarn build",
+    "test": "lerna run test",
+    "typecheck": "lerna run typecheck",
+    "lint": "lerna run lint",
+    "pre-commit": "lerna run pre-commit",
+    "ci": "yarn typecheck && yarn lint && yarn test",
+    "heroku-postbuild": "yarn build:api"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lerna run --concurrency 1 --stream pre-commit"
+    }
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "2.12.0",
+    "@typescript-eslint/parser": "2.12.0",
+    "babel-eslint": "10.0.3",
+    "eslint": "6.7.2",
+    "eslint-config-prettier": "6.7.0",
+    "eslint-plugin-flowtype": "4.5.2",
+    "eslint-plugin-import": "2.19.1",
+    "eslint-plugin-jsx-a11y": "6.2.3",
+    "husky": "3.1.0",
+    "lerna": "3.19.0",
+    "lint-staged": "9.5.0",
+    "prettier": "1.19.1",
+    "typescript": "3.7.3"
+  }
+}
