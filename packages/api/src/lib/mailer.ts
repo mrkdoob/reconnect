@@ -19,7 +19,7 @@ interface MailArgs {
 }
 
 export class Mailer {
-  private readonly from: string = "Common Grounds <noreply@commongrounds.co>"
+  private readonly from: string = "Recconnect <noreply@reconnect.io>"
   private devMail: Transporter
 
   constructor() {
@@ -31,7 +31,7 @@ export class Mailer {
       from: this.from,
       to: args.to,
       templateId: args.templateId,
-      dynamic_template_data: args.variables,
+      dynamicTemplateData: args.variables,
     }
     try {
       if (IS_PRODUCTION || IS_STAGING) {

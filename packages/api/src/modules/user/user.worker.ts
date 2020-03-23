@@ -1,8 +1,6 @@
 import { Service, Inject } from "typedi"
-import { QueueScheduler } from "bullmq"
 import { UserService } from "./user.service"
 import { Worker } from "../../lib/worker"
-import { redis } from "../../lib/redis"
 import { UserTaskService } from "../userTask/userTask.service"
 import { GroupService } from "../group/group.service"
 import { UserGroupMessageService } from "../userGroupMessage/userGroupMessage.service"
@@ -41,7 +39,7 @@ export type JobType =
   | updateDailyMessage
 
 const QUEUE = "USER"
-new QueueScheduler(QUEUE, { connection: redis })
+// new QueueScheduler(QUEUE, { connection: redis })
 @Service()
 export class UserWorker extends Worker<JobType> {
   constructor() {
