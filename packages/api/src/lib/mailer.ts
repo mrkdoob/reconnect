@@ -19,7 +19,7 @@ interface MailArgs {
 }
 
 export class Mailer {
-  private readonly from: string = "Recconnect <noreply@reconnect.io>"
+  private readonly from: string = "Reconnect <noreply@reconnect.io>"
   private devMail: Transporter
 
   constructor() {

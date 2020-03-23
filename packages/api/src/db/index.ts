@@ -1,10 +1,5 @@
 import { getConnectionOptions, createConnection } from "typeorm"
-import {
-  NODE_ENV,
-  DATABASE_URL,
-  IS_PRODUCTION,
-  IS_STAGING,
-} from "../lib/config"
+import { NODE_ENV, DATABASE_URL } from "../lib/config"
 import { PostgresConnectionOptions } from "typeorm/driver/postgres/PostgresConnectionOptions"
 
 export const createDbConnection = async () => {
@@ -21,7 +16,7 @@ export const createDbConnection = async () => {
     })
 
     // Run migrations in production
-    if (IS_PRODUCTION || IS_STAGING) await connection.runMigrations()
+    // if (IS_PRODUCTION || IS_STAGING) await connection.runMigrations()
   } catch (err) {
     // Sentry
     console.log(err)
