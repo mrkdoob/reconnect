@@ -1,7 +1,7 @@
 let env: string
 
 const hostname = window?.location?.hostname
-if (hostname === "admin.commongrounds.co") {
+if (hostname === "reconnect.netlify.com") {
   env = "production"
 } else {
   env = "development"
@@ -16,5 +16,5 @@ export const apiUrl = production
   : "http://localhost:5555/graphql"
 
 export const webUrl = production
-  ? "https://admin.commongrounds.co"
+  ? "https://reconnect.netlify.com"
   : "http://localhost:3000"

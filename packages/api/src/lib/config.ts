@@ -1,4 +1,5 @@
 // ENV VARIABLES
+
 export const {
   NODE_ENV = "development",
   APP_ENV = "development",
@@ -60,13 +61,6 @@ export const DEV_EMAIL_OPTIONS: any = {
   debug: true,
   ignoreTLS: true,
 }
-
-// STRIPE
-// export const STRIPE_PRODUCT_ID = "prod_G1ILMnfCGjgyPH"
-// export const STRIPE_PLAN_ID = "plan_G57Kw3lqY5dyDY"
-
-// CREDIT DETAILS
-export const TAX_PERCENT = 1.21
 
 //  JWT AUTH
 export const jwtAuth = {
