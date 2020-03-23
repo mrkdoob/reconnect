@@ -12,7 +12,7 @@ export const environment = env
 export const production = env === "production"
 
 export const apiUrl = production
-  ? "https://api.commongrounds.co/graphql"
+  ? "https://reconnect-app-15.herokuapp.com/graphql"
   : "http://localhost:5555/graphql"
 
 export const webUrl = production
