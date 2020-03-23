@@ -1,5 +1,4 @@
 import BQueue, { Queue, JobOptions } from "bull"
-import { sentry } from "./sentry"
 import { REDIS_URL } from "./config"
 
 export class Worker<T extends { name: string; data: any }> {
@@ -15,7 +14,7 @@ export class Worker<T extends { name: string; data: any }> {
         console.info("Processing job:", job.data)
         processor(job.data)
       } catch (error) {
-        sentry.captureException(error)
+        // sentry.captureException(error)
         console.log(error)
         console.info("JOB NAME:", job.data.name)
         console.info("JOB DATA:", job.data.data)
