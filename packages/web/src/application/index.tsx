@@ -13,6 +13,7 @@ import { Settings } from "../pages/Settings"
 import { Progress } from "../pages/Progress"
 import { Register } from "../pages/Register"
 import { Login } from "../pages/Login"
+import { CurrentLevelReward } from "../pages/CurrentLevelReward"
 
 export function Application() {
   return (
@@ -27,6 +28,7 @@ export function Application() {
             <Course path="/courses/:slug" />
             <Groups path="/:slug/groups" />
             <LevelReward path="/levelreward/:levelId" />
+            <CurrentLevelReward path="/mylevelreward" />
             <Settings path="/settings" />
             <Progress path="/progress" />
             <Register path="/register" />

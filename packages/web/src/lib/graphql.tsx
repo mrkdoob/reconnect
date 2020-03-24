@@ -767,7 +767,7 @@ export type MyDailyRewardFragment = { __typename?: "UserDayReward" } & Pick<
   UserDayReward,
   "id"
 > & {
-    courseDayReward: Maybe<
+    courseDayReward?: Maybe<
       { __typename?: "CourseDayReward" } & Pick<
         CourseDayReward,
         "id" | "description" | "pictureUrl" | "videoUrl"
@@ -778,14 +778,16 @@ export type MyDailyRewardFragment = { __typename?: "UserDayReward" } & Pick<
 export type MyDayRewardQueryVariables = {}
 
 export type MyDayRewardQuery = { __typename?: "Query" } & {
-  myDayReward: Maybe<{ __typename?: "UserDayReward" } & MyDailyRewardFragment>
+  myDayReward?: Maybe<{ __typename?: "UserDayReward" } & MyDailyRewardFragment>
 }
 
 export type GroupItemFragment = { __typename?: "Group" } & Pick<
   Group,
   "id" | "name" | "startDate" | "endDate" | "groupSize"
 > & {
-    users: Maybe<Array<{ __typename?: "User" } & Pick<User, "id" | "fullName">>>
+    users?: Maybe<
+      Array<{ __typename?: "User" } & Pick<User, "id" | "fullName">>
+    >
   }
 
 export type LevelItemFragment = { __typename?: "Level" } & Pick<
@@ -801,7 +803,7 @@ export type LevelItemFragment = { __typename?: "Level" } & Pick<
 export type EndMyCourseMutationVariables = {}
 
 export type EndMyCourseMutation = { __typename?: "Mutation" } & {
-  endMyCourse: Maybe<{ __typename?: "User" } & Pick<User, "id" | "groupId">>
+  endMyCourse?: Maybe<{ __typename?: "User" } & Pick<User, "id" | "groupId">>
 }
 
 export type GetBulkSignedUrlMutationVariables = {
@@ -809,7 +811,7 @@ export type GetBulkSignedUrlMutationVariables = {
 }
 
 export type GetBulkSignedUrlMutation = { __typename?: "Mutation" } & {
-  getBulkSignedS3Url: Maybe<
+  getBulkSignedS3Url?: Maybe<
     Array<
       { __typename?: "BulkSignedResponse" } & Pick<
         BulkSignedResponse,
@@ -829,7 +831,9 @@ export type UserGroupItemFragment = { __typename?: "Group" } & Pick<
   | "groupSize"
   | "qiForReward"
   | "groupQiCoins"
-> & { users: Maybe<Array<{ __typename?: "User" } & GroupUserTaskItemFragment>> }
+> & {
+    users?: Maybe<Array<{ __typename?: "User" } & GroupUserTaskItemFragment>>
+  }
 
 export type GroupUserTaskItemFragment = { __typename?: "User" } & Pick<
   User,
@@ -849,12 +853,12 @@ export type UserItemFragment = { __typename?: "User" } & Pick<
 export type UserGroupMessageFragment = {
   __typename?: "UserGroupMessage"
 } & Pick<UserGroupMessage, "id" | "isRead" | "showOption"> & {
-    groupMessage: Maybe<
+    groupMessage?: Maybe<
       { __typename?: "GroupMessage" } & Pick<
         GroupMessage,
         "id" | "rewardCount" | "leftCoinsCount"
       > & {
-          message: Maybe<
+          message?: Maybe<
             { __typename?: "Message" } & Pick<
               Message,
               "id" | "message" | "videoUrl" | "pictureUrl"
@@ -870,7 +874,7 @@ export type UpdateUserGroupMessageMutationVariables = {
 }
 
 export type UpdateUserGroupMessageMutation = { __typename?: "Mutation" } & {
-  updateUserGroupMessage: Maybe<
+  updateUserGroupMessage?: Maybe<
     { __typename?: "UserGroupMessage" } & Pick<
       UserGroupMessage,
       "isRead" | "showOption"
@@ -882,7 +886,7 @@ export type UserTaskItemFragment = { __typename?: "UserTask" } & Pick<
   UserTask,
   "id" | "completed" | "levelTaskId"
 > & {
-    levelTask: Maybe<
+    levelTask?: Maybe<
       { __typename?: "LevelTask" } & Pick<
         LevelTask,
         "id" | "order" | "description" | "fullDescription" | "videoUrl"
@@ -896,28 +900,28 @@ export type UpdateUserTaskMutationVariables = {
 }
 
 export type UpdateUserTaskMutation = { __typename?: "Mutation" } & {
-  updateUserTask: Maybe<{ __typename?: "UserTask" } & UserTaskItemFragment>
+  updateUserTask?: Maybe<{ __typename?: "UserTask" } & UserTaskItemFragment>
 }
 
 export type MeFragment = { __typename?: "User" } & Pick<
   User,
   "id" | "fullName" | "email" | "groupOrder" | "avatar"
 > & {
-    group: Maybe<{ __typename?: "Group" } & UserGroupItemFragment>
-    userLevel: Maybe<{ __typename?: "UserLevel" } & Pick<UserLevel, "levelId">>
+    group?: Maybe<{ __typename?: "Group" } & UserGroupItemFragment>
+    userLevel?: Maybe<{ __typename?: "UserLevel" } & Pick<UserLevel, "levelId">>
   }
 
 export type MeQueryVariables = {}
 
 export type MeQuery = { __typename?: "Query" } & {
-  me: Maybe<{ __typename?: "User" } & MeFragment>
+  me?: Maybe<{ __typename?: "User" } & MeFragment>
 }
 
 export type CourseFragment = { __typename?: "Course" } & Pick<
   Course,
   "fullDescription" | "duration" | "benefits"
 > & {
-    levels: Maybe<Array<{ __typename?: "Level" } & CourseLevelFragment>>
+    levels?: Maybe<Array<{ __typename?: "Level" } & CourseLevelFragment>>
   } & CourseItemFragment
 
 export type GetCourseQueryVariables = {
@@ -934,19 +938,33 @@ export type GetAllCoursesQuery = { __typename?: "Query" } & {
   getAllCourses: Array<{ __typename?: "Course" } & CourseItemFragment>
 }
 
+export type GetCurrentLevelRewardQueryVariables = {}
+
+export type GetCurrentLevelRewardQuery = { __typename?: "Query" } & {
+  me?: Maybe<
+    { __typename?: "User" } & Pick<User, "id"> & {
+        userLevel?: Maybe<
+          { __typename?: "UserLevel" } & Pick<UserLevel, "id"> & {
+              level?: Maybe<{ __typename?: "Level" } & LevelRewardFragment>
+            }
+        >
+      }
+  >
+}
+
 export type UserLevelItemFragment = { __typename?: "UserLevel" } & Pick<
   UserLevel,
   "id" | "completed" | "progressDay"
-> & { level: Maybe<{ __typename?: "Level" } & LevelItemFragment> }
+> & { level?: Maybe<{ __typename?: "Level" } & LevelItemFragment> }
 
 export type MyDashboardFragment = { __typename?: "User" } & Pick<
   User,
   "id" | "groupOrder"
 > & {
-    tasks: Maybe<Array<{ __typename?: "UserTask" } & UserTaskItemFragment>>
-    group: Maybe<{ __typename?: "Group" } & UserGroupItemFragment>
-    userLevel: Maybe<{ __typename?: "UserLevel" } & UserLevelItemFragment>
-    userGroupMessage: Maybe<
+    tasks?: Maybe<Array<{ __typename?: "UserTask" } & UserTaskItemFragment>>
+    group?: Maybe<{ __typename?: "Group" } & UserGroupItemFragment>
+    userLevel?: Maybe<{ __typename?: "UserLevel" } & UserLevelItemFragment>
+    userGroupMessage?: Maybe<
       { __typename?: "UserGroupMessage" } & UserGroupMessageFragment
     >
   }
@@ -954,13 +972,13 @@ export type MyDashboardFragment = { __typename?: "User" } & Pick<
 export type MyDashboardQueryVariables = {}
 
 export type MyDashboardQuery = { __typename?: "Query" } & {
-  me: Maybe<{ __typename?: "User" } & MyDashboardFragment>
+  me?: Maybe<{ __typename?: "User" } & MyDashboardFragment>
 }
 
 export type CompleteMeMutationVariables = {}
 
 export type CompleteMeMutation = { __typename?: "Mutation" } & {
-  completeMe: Maybe<{ __typename?: "User" } & MyDashboardFragment>
+  completeMe?: Maybe<{ __typename?: "User" } & MyDashboardFragment>
 }
 
 export type GetCourseGroupsQueryVariables = {
@@ -969,7 +987,7 @@ export type GetCourseGroupsQueryVariables = {
 
 export type GetCourseGroupsQuery = { __typename?: "Query" } & {
   courseBySlug: { __typename?: "Course" } & Pick<Course, "id"> & {
-      groups: Maybe<Array<{ __typename?: "Group" } & GroupItemFragment>>
+      groups?: Maybe<Array<{ __typename?: "Group" } & GroupItemFragment>>
     }
 }
 
@@ -979,14 +997,14 @@ export type StartMyCourseMutationVariables = {
 }
 
 export type StartMyCourseMutation = { __typename?: "Mutation" } & {
-  startMyCourse: Maybe<{ __typename?: "User" } & MyDashboardFragment>
+  startMyCourse?: Maybe<{ __typename?: "User" } & MyDashboardFragment>
 }
 
 export type LevelRewardFragment = { __typename?: "Level" } & Pick<
   Level,
   "id" | "title" | "cover" | "levelNumber" | "rewardText" | "rewardDescription"
 > & {
-    levelTasks: Maybe<
+    levelTasks?: Maybe<
       Array<
         { __typename?: "LevelTask" } & Pick<
           LevelTask,
@@ -1015,11 +1033,11 @@ export type LoginMutation = { __typename?: "Mutation" } & {
 }
 
 export type MyProgressFragment = { __typename?: "User" } & Pick<User, "id"> & {
-    userLevel: Maybe<{ __typename?: "UserLevel" } & MyLevelProgressFragment>
-    userCourse: Maybe<
+    userLevel?: Maybe<{ __typename?: "UserLevel" } & MyLevelProgressFragment>
+    userCourse?: Maybe<
       Array<
         { __typename?: "UserCourse" } & Pick<UserCourse, "id" | "isActive"> & {
-            course: Maybe<{ __typename?: "Course" } & MyCourseProgressFragment>
+            course?: Maybe<{ __typename?: "Course" } & MyCourseProgressFragment>
           }
       >
     >
@@ -1028,19 +1046,19 @@ export type MyProgressFragment = { __typename?: "User" } & Pick<User, "id"> & {
 export type MyCourseProgressFragment = { __typename?: "Course" } & Pick<
   Course,
   "id"
-> & { levels: Maybe<Array<{ __typename?: "Level" } & CourseLevelFragment>> }
+> & { levels?: Maybe<Array<{ __typename?: "Level" } & CourseLevelFragment>> }
 
 export type MyLevelProgressFragment = { __typename?: "UserLevel" } & Pick<
   UserLevel,
   "id" | "progressDay" | "completed"
 > & {
-    level: Maybe<{ __typename?: "Level" } & Pick<Level, "id" | "levelNumber">>
+    level?: Maybe<{ __typename?: "Level" } & Pick<Level, "id" | "levelNumber">>
   }
 
 export type MyProgressQueryVariables = {}
 
 export type MyProgressQuery = { __typename?: "Query" } & {
-  me: Maybe<{ __typename?: "User" } & MyProgressFragment>
+  me?: Maybe<{ __typename?: "User" } & MyProgressFragment>
 }
 
 export type RegisterMutationVariables = {
@@ -1057,7 +1075,7 @@ export type MySettingsFragment = { __typename?: "User" } & Pick<
   User,
   "id" | "firstName" | "lastName" | "email" | "avatar" | "groupId"
 > & {
-    userGroupMessage: Maybe<
+    userGroupMessage?: Maybe<
       { __typename?: "UserGroupMessage" } & Pick<
         UserGroupMessage,
         "id" | "showOption"
@@ -1068,7 +1086,7 @@ export type MySettingsFragment = { __typename?: "User" } & Pick<
 export type MySettingsQueryVariables = {}
 
 export type MySettingsQuery = { __typename?: "Query" } & {
-  me: Maybe<{ __typename?: "User" } & MySettingsFragment>
+  me?: Maybe<{ __typename?: "User" } & MySettingsFragment>
 }
 
 export type UpdateSettingsMutationVariables = {
@@ -1076,7 +1094,7 @@ export type UpdateSettingsMutationVariables = {
 }
 
 export type UpdateSettingsMutation = { __typename?: "Mutation" } & {
-  updateMe: Maybe<{ __typename?: "User" } & MySettingsFragment>
+  updateMe?: Maybe<{ __typename?: "User" } & MySettingsFragment>
 }
 
 export const MyDailyRewardFragmentDoc = gql`
@@ -1742,6 +1760,68 @@ export type GetAllCoursesLazyQueryHookResult = ReturnType<
 export type GetAllCoursesQueryResult = ApolloReactCommon.QueryResult<
   GetAllCoursesQuery,
   GetAllCoursesQueryVariables
+>
+export const GetCurrentLevelRewardDocument = gql`
+  query GetCurrentLevelReward {
+    me {
+      id
+      userLevel {
+        id
+        level {
+          ...LevelReward
+        }
+      }
+    }
+  }
+  ${LevelRewardFragmentDoc}
+`
+
+/**
+ * __useGetCurrentLevelRewardQuery__
+ *
+ * To run a query within a React component, call `useGetCurrentLevelRewardQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetCurrentLevelRewardQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetCurrentLevelRewardQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetCurrentLevelRewardQuery(
+  baseOptions?: ApolloReactHooks.QueryHookOptions<
+    GetCurrentLevelRewardQuery,
+    GetCurrentLevelRewardQueryVariables
+  >,
+) {
+  return ApolloReactHooks.useQuery<
+    GetCurrentLevelRewardQuery,
+    GetCurrentLevelRewardQueryVariables
+  >(GetCurrentLevelRewardDocument, baseOptions)
+}
+export function useGetCurrentLevelRewardLazyQuery(
+  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+    GetCurrentLevelRewardQuery,
+    GetCurrentLevelRewardQueryVariables
+  >,
+) {
+  return ApolloReactHooks.useLazyQuery<
+    GetCurrentLevelRewardQuery,
+    GetCurrentLevelRewardQueryVariables
+  >(GetCurrentLevelRewardDocument, baseOptions)
+}
+export type GetCurrentLevelRewardQueryHookResult = ReturnType<
+  typeof useGetCurrentLevelRewardQuery
+>
+export type GetCurrentLevelRewardLazyQueryHookResult = ReturnType<
+  typeof useGetCurrentLevelRewardLazyQuery
+>
+export type GetCurrentLevelRewardQueryResult = ApolloReactCommon.QueryResult<
+  GetCurrentLevelRewardQuery,
+  GetCurrentLevelRewardQueryVariables
 >
 export const MyDashboardDocument = gql`
   query MyDashboard {

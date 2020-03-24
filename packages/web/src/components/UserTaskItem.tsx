@@ -37,7 +37,9 @@ export const UPDATE_USERTASK = gql`
 interface Props {
   task: UserTaskItemFragment
   isLast: boolean
-  handleTaskCompletion: (completedTask: UserTaskItemFragment | null) => void
+  handleTaskCompletion: (
+    completedTask: UserTaskItemFragment | null | undefined,
+  ) => void
 }
 
 export function UserTaskItem({ task, isLast, handleTaskCompletion }: Props) {
@@ -62,6 +64,7 @@ export function UserTaskItem({ task, isLast, handleTaskCompletion }: Props) {
     mutationHandler(res, {
       onSuccess: data => {
         // TODO: update cache
+        if (!data) return
         handleTaskCompletion(data.updateUserTask)
       },
     })

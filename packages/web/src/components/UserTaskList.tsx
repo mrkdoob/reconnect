@@ -9,7 +9,9 @@ interface Props {
 }
 
 export function UserTaskList({ tasks, handleDayCompletion }: Props) {
-  const handleTaskCompletion = (completedTask: UserTaskItemFragment | null) => {
+  const handleTaskCompletion = (
+    completedTask: UserTaskItemFragment | null | undefined,
+  ) => {
     if (!completedTask) return
 
     let allCompleted = true

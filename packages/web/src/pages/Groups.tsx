@@ -1,5 +1,5 @@
-import React, { useState } from "react"
-import { RouteComponentProps, Redirect } from "@reach/router"
+import React from "react"
+import { RouteComponentProps, Redirect, navigate } from "@reach/router"
 
 import { Page } from "../components/Page"
 import gql from "graphql-tag.macro"
@@ -47,9 +47,9 @@ export const Groups: React.FC<Props> = props => {
   const courseId = data?.courseBySlug.id
   const me = useMe()
 
-  const [groupSelected, setGroupSelected] = useState<boolean>(
-    me?.group ? true : false,
-  )
+  // const [groupSelected, setGroupSelected] = useState<boolean>(
+  //   me?.group ? true : false,
+  // )
   const [startCourse] = useStartMyCourseMutation()
 
   const toast = useToast()
@@ -61,7 +61,7 @@ export const Groups: React.FC<Props> = props => {
       variables: { courseId, groupId },
     })
       .then(res => {
-        setGroupSelected(true)
+        navigate("/mylevelreward")
       })
       .catch(() => {
         toast({
@@ -72,7 +72,7 @@ export const Groups: React.FC<Props> = props => {
       })
   }
 
-  if (groupSelected) {
+  if (me?.group) {
     return <Redirect noThrow={true} to="/" />
   }
   return (
