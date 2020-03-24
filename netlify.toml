@@ -1,5 +1,5 @@
 [build]
-  publish = "packages/admin/build"
+  publish = "packages/web/build"
   command = "yarn build:web"
   
 [build.environment]
