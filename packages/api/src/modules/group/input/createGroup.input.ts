@@ -13,8 +13,7 @@ export class CreateGroupInput implements Partial<Group> {
   @Field()
   rewardCount: number
 
-  @IsNotEmpty()
-  @Field()
+  @Field({ nullable: true })
   startDate: Date
 
   @IsNotEmpty()
@@ -32,4 +31,8 @@ export class CreateGroupInput implements Partial<Group> {
   @IsNotEmpty()
   @Field()
   courseId: string
+
+  @IsNotEmpty()
+  @Field()
+  rewardType: string
 }

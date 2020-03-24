@@ -47,9 +47,6 @@ export const Groups: React.FC<Props> = props => {
   const courseId = data?.courseBySlug.id
   const me = useMe()
 
-  // const [groupSelected, setGroupSelected] = useState<boolean>(
-  //   me?.group ? true : false,
-  // )
   const [startCourse] = useStartMyCourseMutation()
 
   const toast = useToast()

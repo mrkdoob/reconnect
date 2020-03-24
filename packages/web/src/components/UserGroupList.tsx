@@ -8,6 +8,7 @@ import {
 import { User } from "styled-icons/boxicons-regular/User"
 import { InfoCircle } from "styled-icons/boxicons-regular/InfoCircle"
 import Tree from "../lib/assets/tree.png"
+import Food from "../lib/assets/food.png"
 import Coin from "../lib/assets/coin.png"
 
 interface Props {
@@ -57,18 +58,26 @@ export function UserGroupList({ group }: Props) {
                 w="90%"
                 color="green"
               />
-              <Image src={Tree} h={12} w={16} />
+              {group.rewardType === "tree" ? (
+                <Image src={Tree} h={12} w={16} />
+              ) : (
+                <Image src={Food} h={12} w={12} mx={4} />
+              )}
               <Tooltip
                 // @ts-ignore
                 ariaLabel={
                   group.qiForReward -
                   (group.groupQiCoins % group.qiForReward) +
-                  " more Qi coins needed to plant a tree"
+                  (group.rewardType === "tree"
+                    ? " more Qi coins needed to plant a tree"
+                    : " more Qi coins needed to provide a meal")
                 }
                 label={
                   group.qiForReward -
                   (group.groupQiCoins % group.qiForReward) +
-                  " more Qi coins needed to plant a tree"
+                  (group.rewardType === "tree"
+                    ? " more Qi coins needed to plant a tree"
+                    : " more Qi coins needed to provide a meal")
                 }
               >
                 <Box
@@ -102,12 +111,16 @@ export function UserGroupList({ group }: Props) {
             </Flex>
             <Flex align="center" mt={8}>
               <Flex justify="center" align="center" w={16}>
-                <Image src={Tree} h={12} w={16} />
+                {group.rewardType === "tree" ? (
+                  <Image src={Tree} h={12} w={16} />
+                ) : (
+                  <Image src={Food} h={12} w={12} />
+                )}
               </Flex>
               <Text ml={4} fontSize="lg">
-                {group.rewardCount - group.oldRewardCount} tree
-                {group.rewardCount - group.oldRewardCount !== 1 && "s"} planted
-                today
+                {group.rewardCount - group.oldRewardCount} {group.rewardType}
+                {group.rewardCount - group.oldRewardCount !== 1 && "s"}{" "}
+                {group.rewardType === "tree" ? "planted" : "provided"} today
               </Text>
             </Flex>
             <Tooltip

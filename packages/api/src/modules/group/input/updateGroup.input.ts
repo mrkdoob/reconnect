@@ -30,4 +30,7 @@ export class UpdateGroupInput implements Partial<Group> {
 
   @Field({ nullable: true })
   groupQiCoins: number
+
+  @Field({ nullable: true })
+  rewardType: string
 }

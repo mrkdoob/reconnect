@@ -32,9 +32,6 @@ export class Course extends BaseEntity<Course> {
   @StringField({ nullable: true })
   benefits: string
 
-  @StringField({ nullable: true })
-  endText: string
-
   //TODO: Remove nullable?
   @StringField({ nullable: true })
   cover: string

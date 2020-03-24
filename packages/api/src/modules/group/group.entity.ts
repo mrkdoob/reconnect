@@ -29,6 +29,9 @@ export class Group extends BaseEntity<Group> {
   @IntField({ default: 0 })
   groupQiCoins: number // Resets daily
 
+  @StringField({ default: "tree" })
+  rewardType: string
+
   @DateField({ nullable: true })
   startDate: Date
 

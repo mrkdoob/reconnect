@@ -32,15 +32,20 @@ const colors = ["blue.550", "blue.50", "green.50", "green.350"] // Add more colo
 
 export function GroupItem(props: Props) {
   return (
-    <StyledGroupItem onClick={() => props.handleGroupSelect(props.group.id)}>
+    <StyledGroupItem
+      borderRadius="lg"
+      onClick={() => props.handleGroupSelect(props.group.id)}
+    >
       <Flex py={6} px={12} justify="space-between">
         <Flex align="flex-start" justify="center" direction="column">
           <Heading fontWeight="normal" fontSize={{ sm: "xl", md: "2xl" }}>
             {props.group.name}
           </Heading>
-          <Text fontSize="md" color="gray.400">
-            Starts {dayjs(props.group.startDate).format("DD MMM")}
-          </Text>
+          {props.group.startDate && (
+            <Text fontSize="md" color="gray.400">
+              Starts {dayjs(props.group.startDate).format("DD MMM")}
+            </Text>
+          )}
         </Flex>
         <Flex align="center" justify="flex-end">
           <Heading

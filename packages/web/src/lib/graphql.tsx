@@ -47,7 +47,6 @@ export type Course = {
   fullDescription?: Maybe<Scalars["String"]>
   duration?: Maybe<Scalars["String"]>
   benefits?: Maybe<Scalars["String"]>
-  endText?: Maybe<Scalars["String"]>
   cover?: Maybe<Scalars["String"]>
   levels?: Maybe<Array<Level>>
   groups?: Maybe<Array<Group>>
@@ -88,11 +87,12 @@ export type CreateCourseInput = {
 export type CreateGroupInput = {
   name: Scalars["String"]
   rewardCount: Scalars["Float"]
-  startDate: Scalars["DateTime"]
+  startDate?: Maybe<Scalars["DateTime"]>
   qiForReward: Scalars["Float"]
   qiRewardAmount: Scalars["Float"]
   endDate: Scalars["DateTime"]
   courseId: Scalars["String"]
+  rewardType: Scalars["String"]
 }
 
 export type CreateGroupMessageInput = {
@@ -167,6 +167,7 @@ export type Group = {
   qiRewardAmount: Scalars["Int"]
   qiForReward: Scalars["Int"]
   groupQiCoins: Scalars["Int"]
+  rewardType: Scalars["String"]
   startDate?: Maybe<Scalars["DateTime"]>
   endDate?: Maybe<Scalars["DateTime"]>
   groupSize?: Maybe<Scalars["Int"]>
@@ -605,6 +606,7 @@ export type UpdateGroupInput = {
   qiForReward?: Maybe<Scalars["Float"]>
   qiRewardAmount?: Maybe<Scalars["Float"]>
   groupQiCoins?: Maybe<Scalars["Float"]>
+  rewardType?: Maybe<Scalars["String"]>
 }
 
 export type UpdateGroupMessageInput = {
@@ -831,6 +833,7 @@ export type UserGroupItemFragment = { __typename?: "Group" } & Pick<
   | "groupSize"
   | "qiForReward"
   | "groupQiCoins"
+  | "rewardType"
 > & {
     users?: Maybe<Array<{ __typename?: "User" } & GroupUserTaskItemFragment>>
   }
@@ -1154,6 +1157,7 @@ export const UserGroupItemFragmentDoc = gql`
     groupSize
     qiForReward
     groupQiCoins
+    rewardType
     users {
       ...GroupUserTaskItem
     }

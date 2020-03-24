@@ -5,6 +5,7 @@ import { Page } from "../components/Page"
 import { Flex, Text, Box, Image, Progress, Spinner } from "@chakra-ui/core"
 import { styled } from "../components/providers/ThemeProvider"
 import Tree from "../lib/assets/tree.png"
+import Food from "../lib/assets/food.png"
 
 import gql from "graphql-tag.macro"
 import {
@@ -170,16 +171,27 @@ export const Dashboard: React.FC<RouteComponentProps> = () => {
               align="center"
               justify="center"
             >
-              <Image
-                src={Tree}
-                h={{ base: 12, lg: 24 }}
-                w={{ base: 16, lg: 32 }}
-              />
+              {me?.group?.rewardType === "tree" ? (
+                <Image
+                  src={Tree}
+                  h={{ base: 12, lg: 24 }}
+                  w={{ base: 16, lg: 32 }}
+                />
+              ) : (
+                <Image
+                  src={Food}
+                  h={{ base: 12, lg: 20 }}
+                  w={{ base: 12, lg: 20 }}
+                  mr={4}
+                />
+              )}
               <Text
                 mr={{ base: 4, lg: 12 }}
                 fontSize={{ base: "xl", md: "2xl" }}
               >
-                {me?.group?.rewardCount} total trees planted
+                {me?.group?.rewardCount} total {me?.group?.rewardType}
+                {me?.group?.rewardCount !== 1 && "s"}{" "}
+                {me?.group?.rewardType === "tree" ? "planted" : "provided"}
               </Text>
             </Flex>
           </Flex>

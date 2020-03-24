@@ -14,7 +14,11 @@ import {
 } from "@chakra-ui/core"
 import { Link } from "@reach/router"
 import gql from "graphql-tag.macro"
-import { LevelItemFragment, useEndMyCourseMutation } from "../lib/graphql"
+import {
+  LevelItemFragment,
+  useEndMyCourseMutation,
+  MeDocument,
+} from "../lib/graphql"
 
 export const LEVEL_ITEM = gql`
   fragment LevelItem on Level {
@@ -49,7 +53,9 @@ export const LevelRewardModal = ({
   level,
   rewardCount,
 }: Props) => {
-  const [endCourse] = useEndMyCourseMutation()
+  const [endCourse] = useEndMyCourseMutation({
+    refetchQueries: [{ query: MeDocument }],
+  })
 
   const handleEndOfCourse = async () => {
     endCourse()
