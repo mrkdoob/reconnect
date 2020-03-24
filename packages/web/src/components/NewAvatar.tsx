@@ -12,18 +12,15 @@ import gql from "graphql-tag.macro"
 import {
   useUpdateSettingsMutation,
   MySettingsDocument,
-  useGetBulkSignedUrlMutation,
+  useGetSignedUrlMutation,
 } from "../lib/graphql"
 import { formatFileName } from "../lib/helpers"
 import { useToast } from "../lib/hooks/useToast"
 import { useOpen } from "../lib/hooks/useOpen"
 
-export const GET_BULK_SIGNED_URL = gql`
-  mutation GetBulkSignedUrl($data: S3BulkSignedUrlInput!) {
-    getBulkSignedS3Url(data: $data) {
-      url
-      key
-    }
+export const GET_SIGNED_URL = gql`
+  mutation GetSignedUrl($data: S3SignedUrlInput!) {
+    getSignedS3Url(data: $data)
   }
 `
 
@@ -33,7 +30,7 @@ interface Props {
 export const NewAvatar: React.FC<Props> = props => {
   const [images, setImages] = React.useState<File[]>([])
   const [loading, setLoading, setStopLoading] = useOpen()
-  const [getBulkSigned] = useGetBulkSignedUrlMutation()
+  const [getSigned] = useGetSignedUrlMutation()
   const [updateSettings] = useUpdateSettingsMutation()
   const toast = useToast()
 
@@ -51,37 +48,54 @@ export const NewAvatar: React.FC<Props> = props => {
     try {
       setLoading()
       if (images.length === 0) return
-      const imageKey = `avatars/`
+      const imageKey = `/`
       const imageData = images.map(image => ({
         image,
         fileType: image.type,
         key: imageKey + formatFileName(image.name),
       }))
+      const key = imageKey + formatFileName(images[0].name)
       // GET SIGNED URLS
-      const bulkRes = await getBulkSigned({
+      const res = await getSigned({
         variables: {
           data: {
-            files: imageData.map(i => ({ fileType: i.fileType, key: i.key })),
+            key,
+            fileType: images[0].type,
           },
         },
       })
 
       // UPLOAD TO S3
-      if (!bulkRes.data?.getBulkSignedS3Url) return
-      await Promise.all(
-        bulkRes.data.getBulkSignedS3Url.map(async request => {
-          const file = imageData.find(d => d.key === request.key)
-          if (!file) return
+      if (!res.data?.getSignedS3Url) return
+      // await Promise.all(
+      //   bulkRes.data.getBulkSignedS3Url.map(async request => {
+      //     const file = imageData.find(d => d.key === request.key)
+      //     if (!file) return
 
-          await fetch(request.url, {
-            method: "PUT",
-            headers: {
-              "Content-Type": file.fileType,
-            },
-            body: file.image,
-          })
-        }),
-      )
+      //     await fetch(request.url, {
+      //       method: "PUT",
+      //       headers: {
+      //         "Content-Type": file.fileType,
+      //       },
+      //       body: file.image,
+      //     })
+      //   }),
+      // )
+      try {
+        const signedRequest = res.data.getSignedS3Url
+
+        await fetch(signedRequest, {
+          method: "PUT",
+          headers: {
+            "Content-Type": images[0].type,
+          },
+          body: images[0],
+        }).catch(() => {
+          // TODO: network error
+        })
+      } catch (error) {
+        console.log(error)
+      }
 
       await updateSettings({
         refetchQueries: [{ query: MySettingsDocument }],

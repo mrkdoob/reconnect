@@ -808,20 +808,14 @@ export type EndMyCourseMutation = { __typename?: "Mutation" } & {
   endMyCourse?: Maybe<{ __typename?: "User" } & Pick<User, "id" | "groupId">>
 }
 
-export type GetBulkSignedUrlMutationVariables = {
-  data: S3BulkSignedUrlInput
+export type GetSignedUrlMutationVariables = {
+  data: S3SignedUrlInput
 }
 
-export type GetBulkSignedUrlMutation = { __typename?: "Mutation" } & {
-  getBulkSignedS3Url?: Maybe<
-    Array<
-      { __typename?: "BulkSignedResponse" } & Pick<
-        BulkSignedResponse,
-        "url" | "key"
-      >
-    >
-  >
-}
+export type GetSignedUrlMutation = { __typename?: "Mutation" } & Pick<
+  Mutation,
+  "getSignedS3Url"
+>
 
 export type UserGroupItemFragment = { __typename?: "Group" } & Pick<
   Group,
@@ -1456,52 +1450,49 @@ export type EndMyCourseMutationOptions = ApolloReactCommon.BaseMutationOptions<
   EndMyCourseMutation,
   EndMyCourseMutationVariables
 >
-export const GetBulkSignedUrlDocument = gql`
-  mutation GetBulkSignedUrl($data: S3BulkSignedUrlInput!) {
-    getBulkSignedS3Url(data: $data) {
-      url
-      key
-    }
+export const GetSignedUrlDocument = gql`
+  mutation GetSignedUrl($data: S3SignedUrlInput!) {
+    getSignedS3Url(data: $data)
   }
 `
 
 /**
- * __useGetBulkSignedUrlMutation__
+ * __useGetSignedUrlMutation__
  *
- * To run a mutation, you first call `useGetBulkSignedUrlMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useGetBulkSignedUrlMutation` returns a tuple that includes:
+ * To run a mutation, you first call `useGetSignedUrlMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useGetSignedUrlMutation` returns a tuple that includes:
  * - A mutate function that you can call at any time to execute the mutation
  * - An object with fields that represent the current status of the mutation's execution
  *
  * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
  *
  * @example
- * const [getBulkSignedUrlMutation, { data, loading, error }] = useGetBulkSignedUrlMutation({
+ * const [getSignedUrlMutation, { data, loading, error }] = useGetSignedUrlMutation({
  *   variables: {
  *      data: // value for 'data'
  *   },
  * });
  */
-export function useGetBulkSignedUrlMutation(
+export function useGetSignedUrlMutation(
   baseOptions?: ApolloReactHooks.MutationHookOptions<
-    GetBulkSignedUrlMutation,
-    GetBulkSignedUrlMutationVariables
+    GetSignedUrlMutation,
+    GetSignedUrlMutationVariables
   >,
 ) {
   return ApolloReactHooks.useMutation<
-    GetBulkSignedUrlMutation,
-    GetBulkSignedUrlMutationVariables
-  >(GetBulkSignedUrlDocument, baseOptions)
+    GetSignedUrlMutation,
+    GetSignedUrlMutationVariables
+  >(GetSignedUrlDocument, baseOptions)
 }
-export type GetBulkSignedUrlMutationHookResult = ReturnType<
-  typeof useGetBulkSignedUrlMutation
+export type GetSignedUrlMutationHookResult = ReturnType<
+  typeof useGetSignedUrlMutation
 >
-export type GetBulkSignedUrlMutationResult = ApolloReactCommon.MutationResult<
-  GetBulkSignedUrlMutation
+export type GetSignedUrlMutationResult = ApolloReactCommon.MutationResult<
+  GetSignedUrlMutation
 >
-export type GetBulkSignedUrlMutationOptions = ApolloReactCommon.BaseMutationOptions<
-  GetBulkSignedUrlMutation,
-  GetBulkSignedUrlMutationVariables
+export type GetSignedUrlMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  GetSignedUrlMutation,
+  GetSignedUrlMutationVariables
 >
 export const UpdateUserGroupMessageDocument = gql`
   mutation UpdateUserGroupMessage(
