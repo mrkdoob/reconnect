@@ -21,13 +21,13 @@ export class Group extends BaseEntity<Group> {
   groupMembersFinished: number
 
   @IntField({ default: 10 })
-  qiRewardAmount: number
+  coinRewardAmount: number
 
   @IntField({ default: 50 })
-  qiForReward: number
+  coinsForReward: number
 
   @IntField({ default: 0 })
-  groupQiCoins: number // Resets daily
+  groupCoins: number // Resets daily
 
   @StringField({ default: "tree" })
   rewardType: string

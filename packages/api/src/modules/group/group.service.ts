@@ -37,12 +37,12 @@ export class GroupService {
     if (!groupId) return
     const group = await this.groupRepository.findById(groupId)
     const newFinishedCount = group.groupMembersFinished + 1
-    let newQiCoins = group.groupQiCoins + group.qiRewardAmount
+    let newCoins = group.groupCoins + group.coinRewardAmount
 
     let newRewardCount = 0
-    if (newQiCoins % group.qiForReward === 0) {
+    if (newCoins % group.coinsForReward === 0) {
       newRewardCount = group.rewardCount + 1
-      newQiCoins = 0
+      newCoins = 0
     } else {
       newRewardCount = group.rewardCount
     }
@@ -50,7 +50,7 @@ export class GroupService {
     const data: Partial<Group> = {
       groupMembersFinished: newFinishedCount,
       rewardCount: newRewardCount,
-      groupQiCoins: newQiCoins,
+      groupCoins: newCoins,
     }
     return group.update(data)
   }

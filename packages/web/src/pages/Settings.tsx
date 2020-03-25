@@ -13,6 +13,7 @@ import {
   Switch,
   FormLabel,
   useDisclosure,
+  IconButton,
 } from "@chakra-ui/core"
 
 import {
@@ -130,17 +131,31 @@ export const Settings: React.FC<Props> = props => {
           borderRadius="xl"
           backgroundColor="gray.50"
           p={{ base: 8, md: 12 }}
+          align="center"
+          direction="column"
         >
-          <StyledImage
-            borderRadius="xl"
-            size="150px"
-            src={settings?.avatar || ""}
-            alt={settings?.firstName}
-            objectFit="cover"
-            margin="0 auto"
-            mb={12}
-            onClick={onOpen}
-          />
+          <Box position="relative" mb={12}>
+            <StyledImage
+              borderRadius="xl"
+              size="150px"
+              src={settings?.avatar || ""}
+              alt={settings?.firstName}
+              objectFit="cover"
+              onClick={onOpen}
+            />
+            <IconButton
+              pos="absolute"
+              bottom={0}
+              size="sm"
+              isLoading={loading}
+              isDisabled={loading}
+              right={0}
+              icon="edit"
+              variantColor="blue"
+              aria-label="Edit profile picture"
+              onClick={onOpen}
+            />
+          </Box>
           <Modal
             size="md"
             isOpen={isOpen}
@@ -180,7 +195,13 @@ export const Settings: React.FC<Props> = props => {
                 }}
               />
             </Flex>
-            <Flex justify="space-between" align="center" mt={6}>
+            <Flex
+              justify="space-between"
+              direction="row-reverse"
+              align="center"
+              mt={6}
+            >
+              {form.appError && <Text color="red.500">{form.appError}</Text>}{" "}
               <Button
                 variantColor="blue"
                 type="submit"
@@ -189,7 +210,6 @@ export const Settings: React.FC<Props> = props => {
               >
                 Save
               </Button>
-              {form.appError && <Text color="red.500">{form.appError}</Text>}
             </Flex>
           </Form>
         </StyledTile>
@@ -198,7 +218,7 @@ export const Settings: React.FC<Props> = props => {
   )
 }
 
-const StyledTile = styled(Box)`
+const StyledTile = styled(Flex)`
   border-top: 3px solid ${p => p.theme.colors.blue[400]};
   border-left: 3px solid ${p => p.theme.colors.blue[200]};
   border-right: 3px solid ${p => p.theme.colors.green[100]};

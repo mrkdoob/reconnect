@@ -1,12 +1,5 @@
 import React from "react"
-import {
-  Button,
-  Box,
-  Image,
-  IconButton,
-  SimpleGrid,
-  Flex,
-} from "@chakra-ui/core"
+import { Button, Box, Image, IconButton, Flex } from "@chakra-ui/core"
 import { useDropzone } from "react-dropzone"
 import gql from "graphql-tag.macro"
 import {
@@ -122,7 +115,12 @@ export const NewAvatar: React.FC<Props> = props => {
         )}
       </Box>
       <Flex p={4} justify="flex-end">
-        <Button variant="ghost" onClick={props.onClose} isDisabled={loading}>
+        <Button
+          variant="ghost"
+          onClick={props.onClose}
+          isDisabled={loading}
+          mr={8}
+        >
           Cancel
         </Button>
         <Button

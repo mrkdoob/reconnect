@@ -49,8 +49,8 @@ export function UserGroupList({ group }: Props) {
             <Flex align="center" justify="space-between" position="relative">
               <Progress
                 value={
-                  ((group.groupQiCoins % group.qiForReward) /
-                    group.qiForReward) *
+                  ((group.groupCoins % group.coinsForReward) /
+                    group.coinsForReward) *
                   100
                 }
                 borderRadius="lg"
@@ -61,23 +61,23 @@ export function UserGroupList({ group }: Props) {
               {group.rewardType === "tree" ? (
                 <Image src={Tree} h={12} w={16} />
               ) : (
-                <Image src={Food} h={12} w={12} mx={4} />
+                <Image src={Food} h={10} w={10} mx={4} />
               )}
               <Tooltip
                 // @ts-ignore
                 ariaLabel={
-                  group.qiForReward -
-                  (group.groupQiCoins % group.qiForReward) +
+                  group.coinsForReward -
+                  (group.groupCoins % group.coinsForReward) +
                   (group.rewardType === "tree"
-                    ? " more Qi coins needed to plant a tree"
-                    : " more Qi coins needed to provide a meal")
+                    ? " more coins needed to plant a tree"
+                    : " more coins needed to provide a meal")
                 }
                 label={
-                  group.qiForReward -
-                  (group.groupQiCoins % group.qiForReward) +
+                  group.coinsForReward -
+                  (group.groupCoins % group.coinsForReward) +
                   (group.rewardType === "tree"
-                    ? " more Qi coins needed to plant a tree"
-                    : " more Qi coins needed to provide a meal")
+                    ? " more coins needed to plant a tree"
+                    : " more coins needed to provide a meal")
                 }
               >
                 <Box
@@ -106,7 +106,7 @@ export function UserGroupList({ group }: Props) {
                 <Image src={Coin} h={8} w={8} />
               </Flex>
               <Text ml={4} fontSize="lg">
-                {group.groupQiCoins} Qi coins earned
+                {group.groupCoins} coins earned
               </Text>
             </Flex>
             <Flex align="center" mt={8}>
@@ -114,7 +114,7 @@ export function UserGroupList({ group }: Props) {
                 {group.rewardType === "tree" ? (
                   <Image src={Tree} h={12} w={16} />
                 ) : (
-                  <Image src={Food} h={12} w={12} />
+                  <Image src={Food} h={10} w={10} />
                 )}
               </Flex>
               <Text ml={4} fontSize="lg">

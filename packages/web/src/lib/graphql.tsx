@@ -164,9 +164,9 @@ export type Group = {
   rewardCount: Scalars["Int"]
   oldRewardCount: Scalars["Int"]
   groupMembersFinished: Scalars["Int"]
-  qiRewardAmount: Scalars["Int"]
-  qiForReward: Scalars["Int"]
-  groupQiCoins: Scalars["Int"]
+  coinRewardAmount: Scalars["Int"]
+  coinsForReward: Scalars["Int"]
+  groupCoins: Scalars["Int"]
   rewardType: Scalars["String"]
   startDate?: Maybe<Scalars["DateTime"]>
   endDate?: Maybe<Scalars["DateTime"]>
@@ -605,7 +605,7 @@ export type UpdateGroupInput = {
   groupMembersFinished?: Maybe<Scalars["Float"]>
   qiForReward?: Maybe<Scalars["Float"]>
   qiRewardAmount?: Maybe<Scalars["Float"]>
-  groupQiCoins?: Maybe<Scalars["Float"]>
+  groupCoins?: Maybe<Scalars["Float"]>
   rewardType?: Maybe<Scalars["String"]>
 }
 
@@ -825,8 +825,8 @@ export type UserGroupItemFragment = { __typename?: "Group" } & Pick<
   | "oldRewardCount"
   | "groupMembersFinished"
   | "groupSize"
-  | "qiForReward"
-  | "groupQiCoins"
+  | "coinsForReward"
+  | "groupCoins"
   | "rewardType"
 > & {
     users?: Maybe<Array<{ __typename?: "User" } & GroupUserTaskItemFragment>>
@@ -1149,8 +1149,8 @@ export const UserGroupItemFragmentDoc = gql`
     oldRewardCount
     groupMembersFinished
     groupSize
-    qiForReward
-    groupQiCoins
+    coinsForReward
+    groupCoins
     rewardType
     users {
       ...GroupUserTaskItem

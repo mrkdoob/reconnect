@@ -57,7 +57,7 @@ export class GroupMessageService {
           groupMessage.update({
             messageId: newMessage.id,
             rewardCount: dayRewardCount,
-            leftCoinsCount: res.groupQiCoins,
+            leftCoinsCount: res.groupCoins,
           })
         })
       })

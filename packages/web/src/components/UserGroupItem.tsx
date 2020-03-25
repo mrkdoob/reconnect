@@ -17,8 +17,8 @@ export const USER_GROUP = gql`
     oldRewardCount
     groupMembersFinished
     groupSize
-    qiForReward
-    groupQiCoins
+    coinsForReward
+    groupCoins
     rewardType
     users {
       ...GroupUserTaskItem
