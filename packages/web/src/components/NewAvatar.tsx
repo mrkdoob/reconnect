@@ -48,7 +48,7 @@ export const NewAvatar: React.FC<Props> = props => {
     try {
       setLoading()
       if (images.length === 0) return
-      const imageKey = `/`
+      const imageKey = ``
       const imageData = images.map(image => ({
         image,
         fileType: image.type,
@@ -130,20 +130,17 @@ export const NewAvatar: React.FC<Props> = props => {
         </Box>
         {images?.length > 0 && (
           <SimpleGrid spacing={6} columns={3}>
-            {images.map((file, i) => (
-              <PreviewImage
-                key={i}
-                src={URL.createObjectURL(file)}
-                loading={loading}
-                onRemove={() =>
-                  setImages(
-                    images
-                      .slice(0, i)
-                      .concat(images.slice(i + 1, images.length)),
-                  )
-                }
-              />
-            ))}
+            {/* {images.map((file, i) => ( */}
+            <PreviewImage
+              src={URL.createObjectURL(images[0])}
+              loading={loading}
+              onRemove={() =>
+                setImages(
+                  images.slice(0, 1).concat(images.slice(1 + 1, images.length)),
+                )
+              }
+            />
+            {/* ))} */}
           </SimpleGrid>
         )}
       </Box>
