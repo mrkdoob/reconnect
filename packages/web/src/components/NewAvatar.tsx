@@ -83,12 +83,12 @@ export const NewAvatar: React.FC<Props> = props => {
       const amzUrl = "https://reconnectapp-dev.s3.eu-central-1.amazonaws.com/"
 
       await updateSettings({
-        refetchQueries: [{ query: MySettingsDocument }],
         variables: {
           data: {
             avatar: amzUrl + imageData.key,
           },
         },
+        refetchQueries: [{ query: MySettingsDocument }],
       }).then(() => {
         props.onClose && props.onClose()
       })
@@ -114,13 +114,11 @@ export const NewAvatar: React.FC<Props> = props => {
           Drag or click here to upload image
         </Box>
         {images?.length > 0 && (
-          <SimpleGrid spacing={6} columns={3}>
-            <PreviewImage
-              src={URL.createObjectURL(images[0])}
-              loading={loading}
-              onRemove={() => setImages([])}
-            />
-          </SimpleGrid>
+          <PreviewImage
+            src={URL.createObjectURL(images[0])}
+            loading={loading}
+            onRemove={() => setImages([])}
+          />
         )}
       </Box>
       <Flex p={4} justify="flex-end">
@@ -147,7 +145,7 @@ interface PreviewImageProps {
 }
 function PreviewImage(props: PreviewImageProps) {
   return (
-    <Box pos="relative" w="100%" h="150px">
+    <Box pos="relative" w="150px" h="150px" m="0 auto">
       <IconButton
         pos="absolute"
         top={0}

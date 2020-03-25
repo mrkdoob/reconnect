@@ -141,7 +141,12 @@ export const Settings: React.FC<Props> = props => {
             mb={12}
             onClick={onOpen}
           />
-          <Modal size="xl" isOpen={isOpen} title="New images" onClose={onClose}>
+          <Modal
+            size="md"
+            isOpen={isOpen}
+            title="New profile picture"
+            onClose={onClose}
+          >
             <NewAvatar onClose={onClose} />
           </Modal>
 
