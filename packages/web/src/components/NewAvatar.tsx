@@ -34,14 +34,12 @@ export const NewAvatar: React.FC<Props> = props => {
   const [updateSettings] = useUpdateSettingsMutation()
   const toast = useToast()
 
-  const onDrop = React.useCallback(
-    (newImages: File[]) => setImages([...images, ...newImages]),
-    [images],
-  )
+  const onDrop = React.useCallback((newImages: File[]) => {
+    setImages([...newImages])
+  }, [])
 
   const { getRootProps, getInputProps } = useDropzone({
     onDrop,
-    multiple: false,
   })
 
   const handleSubmit = async () => {
@@ -49,11 +47,11 @@ export const NewAvatar: React.FC<Props> = props => {
       setLoading()
       if (images.length === 0) return
       const imageKey = ``
-      const imageData = images.map(image => ({
-        image,
-        fileType: image.type,
-        key: imageKey + formatFileName(image.name),
-      }))
+      const imageData = {
+        image: images[0],
+        fileType: images[0].type,
+        key: imageKey + formatFileName(images[0].name),
+      }
       const key = imageKey + formatFileName(images[0].name)
       // GET SIGNED URLS
       const res = await getSigned({
@@ -67,23 +65,8 @@ export const NewAvatar: React.FC<Props> = props => {
 
       // UPLOAD TO S3
       if (!res.data?.getSignedS3Url) return
-      // await Promise.all(
-      //   bulkRes.data.getBulkSignedS3Url.map(async request => {
-      //     const file = imageData.find(d => d.key === request.key)
-      //     if (!file) return
-
-      //     await fetch(request.url, {
-      //       method: "PUT",
-      //       headers: {
-      //         "Content-Type": file.fileType,
-      //       },
-      //       body: file.image,
-      //     })
-      //   }),
-      // )
       try {
         const signedRequest = res.data.getSignedS3Url
-
         await fetch(signedRequest, {
           method: "PUT",
           headers: {
@@ -97,11 +80,13 @@ export const NewAvatar: React.FC<Props> = props => {
         console.log(error)
       }
 
+      const amzUrl = "https://reconnectapp-dev.s3.eu-central-1.amazonaws.com/"
+
       await updateSettings({
         refetchQueries: [{ query: MySettingsDocument }],
         variables: {
           data: {
-            avatar: imageData[0].key,
+            avatar: amzUrl + imageData.key,
           },
         },
       }).then(() => {
@@ -126,21 +111,15 @@ export const NewAvatar: React.FC<Props> = props => {
           borderColor="gray.200"
         >
           <input {...getInputProps()} />
-          Drag or click here to upload images
+          Drag or click here to upload image
         </Box>
         {images?.length > 0 && (
           <SimpleGrid spacing={6} columns={3}>
-            {/* {images.map((file, i) => ( */}
             <PreviewImage
               src={URL.createObjectURL(images[0])}
               loading={loading}
-              onRemove={() =>
-                setImages(
-                  images.slice(0, 1).concat(images.slice(1 + 1, images.length)),
-                )
-              }
+              onRemove={() => setImages([])}
             />
-            {/* ))} */}
           </SimpleGrid>
         )}
       </Box>
