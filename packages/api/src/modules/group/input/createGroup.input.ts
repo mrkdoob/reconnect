@@ -18,11 +18,11 @@ export class CreateGroupInput implements Partial<Group> {
 
   @IsNotEmpty()
   @Field()
-  qiForReward: number
+  coinsForReward: number
 
   @IsNotEmpty()
   @Field()
-  qiRewardAmount: number
+  coinRewardAmount: number
 
   @IsNotEmpty()
   @Field()

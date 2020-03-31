@@ -88,8 +88,8 @@ export type CreateGroupInput = {
   name: Scalars["String"]
   rewardCount: Scalars["Float"]
   startDate?: Maybe<Scalars["DateTime"]>
-  qiForReward: Scalars["Float"]
-  qiRewardAmount: Scalars["Float"]
+  coinsForReward: Scalars["Float"]
+  coinRewardAmount: Scalars["Float"]
   endDate: Scalars["DateTime"]
   courseId: Scalars["String"]
   rewardType: Scalars["String"]
@@ -115,6 +115,15 @@ export type CreateLevelInput = {
 
 export type CreateLevelTaskInput = {
   order: Scalars["Float"]
+  description: Scalars["String"]
+  fullDescription: Scalars["String"]
+  videoUrl: Scalars["String"]
+  levelId: Scalars["String"]
+}
+
+export type CreateLevelTaskOptionInput = {
+  order: Scalars["Float"]
+  label: Scalars["String"]
   description: Scalars["String"]
   fullDescription: Scalars["String"]
   videoUrl: Scalars["String"]
@@ -215,6 +224,20 @@ export type LevelTask = {
   fullDescription?: Maybe<Scalars["String"]>
   videoUrl?: Maybe<Scalars["String"]>
   levelId?: Maybe<Scalars["String"]>
+  options?: Maybe<Array<LevelTaskOption>>
+}
+
+export type LevelTaskOption = {
+  __typename?: "LevelTaskOption"
+  id: Scalars["ID"]
+  createdAt: Scalars["DateTime"]
+  updatedAt: Scalars["DateTime"]
+  order: Scalars["Int"]
+  label: Scalars["String"]
+  description: Scalars["String"]
+  fullDescription?: Maybe<Scalars["String"]>
+  videoUrl?: Maybe<Scalars["String"]>
+  levelTaskId?: Maybe<Scalars["String"]>
 }
 
 export type LoginInput = {
@@ -263,6 +286,9 @@ export type Mutation = {
   createLevelTask: LevelTask
   updateLevelTask?: Maybe<LevelTask>
   destroyLevelTask: Scalars["Boolean"]
+  createLevelTaskOption: LevelTaskOption
+  updateLevelTaskOption?: Maybe<LevelTaskOption>
+  destroyLevelTaskOption: Scalars["Boolean"]
   createMessage: Message
   updateMessage?: Maybe<Message>
   destroyMessage?: Maybe<Scalars["Boolean"]>
@@ -387,6 +413,19 @@ export type MutationDestroyLevelTaskArgs = {
   levelTaskId: Scalars["String"]
 }
 
+export type MutationCreateLevelTaskOptionArgs = {
+  data: CreateLevelTaskOptionInput
+}
+
+export type MutationUpdateLevelTaskOptionArgs = {
+  data: UpdateLevelTaskOptionInput
+  levelTaskId: Scalars["String"]
+}
+
+export type MutationDestroyLevelTaskOptionArgs = {
+  levelTaskId: Scalars["String"]
+}
+
 export type MutationCreateMessageArgs = {
   data: CreateMessageInput
 }
@@ -484,6 +523,9 @@ export type Query = {
   getLevelTask: LevelTask
   getAllLevelTasks: Array<LevelTask>
   getAllLevelTasksByLevelId: Array<LevelTask>
+  getLevelTaskOption: LevelTaskOption
+  getAllLevelTaskOptions: Array<LevelTaskOption>
+  getAllLevelTaskOptionsByLevelId: Array<LevelTaskOption>
   getMessage: Message
   allMessages: Array<Message>
   getUserCourse: UserCourse
@@ -530,6 +572,14 @@ export type QueryGetLevelTaskArgs = {
 }
 
 export type QueryGetAllLevelTasksByLevelIdArgs = {
+  levelId: Scalars["String"]
+}
+
+export type QueryGetLevelTaskOptionArgs = {
+  levelTaskId: Scalars["String"]
+}
+
+export type QueryGetAllLevelTaskOptionsByLevelIdArgs = {
   levelId: Scalars["String"]
 }
 
@@ -644,6 +694,14 @@ export type UpdateLevelTaskInput = {
   videoUrl?: Maybe<Scalars["String"]>
 }
 
+export type UpdateLevelTaskOptionInput = {
+  order?: Maybe<Scalars["Float"]>
+  label?: Maybe<Scalars["String"]>
+  description?: Maybe<Scalars["String"]>
+  fullDescription?: Maybe<Scalars["String"]>
+  videoUrl?: Maybe<Scalars["String"]>
+}
+
 export type UpdateMessageInput = {
   message?: Maybe<Scalars["String"]>
   pictureUrl?: Maybe<Scalars["String"]>
@@ -672,6 +730,7 @@ export type UpdateUserLevelInput = {
 export type UpdateUserTaskInput = {
   completed?: Maybe<Scalars["Boolean"]>
   levelTaskId?: Maybe<Scalars["String"]>
+  levelTaskOptionId?: Maybe<Scalars["String"]>
   order?: Maybe<Scalars["Float"]>
 }
 
@@ -750,6 +809,7 @@ export type UserTask = {
   updatedAt: Scalars["DateTime"]
   completed: Scalars["Boolean"]
   levelTaskId?: Maybe<Scalars["String"]>
+  levelTaskOptionId?: Maybe<Scalars["String"]>
   order?: Maybe<Scalars["Int"]>
   userId: Scalars["String"]
   levelTask?: Maybe<LevelTask>
@@ -792,6 +852,15 @@ export type GroupItemFragment = { __typename?: "Group" } & Pick<
     >
   }
 
+export type LevelRewardFragment = { __typename?: "Level" } & Pick<
+  Level,
+  "id" | "title" | "cover" | "levelNumber" | "rewardText" | "rewardDescription"
+> & {
+    levelTasks?: Maybe<
+      Array<{ __typename?: "LevelTask" } & LevelTaskItemFragment>
+    >
+  }
+
 export type LevelItemFragment = { __typename?: "Level" } & Pick<
   Level,
   | "id"
@@ -807,6 +876,32 @@ export type EndMyCourseMutationVariables = {}
 export type EndMyCourseMutation = { __typename?: "Mutation" } & {
   endMyCourse?: Maybe<{ __typename?: "User" } & Pick<User, "id" | "groupId">>
 }
+
+export type LevelTaskOptionItemFragment = {
+  __typename?: "LevelTaskOption"
+} & Pick<
+  LevelTaskOption,
+  "id" | "order" | "label" | "description" | "fullDescription" | "videoUrl"
+>
+
+export type LevelTaskItemFragment = { __typename?: "LevelTask" } & Pick<
+  LevelTask,
+  "id" | "order" | "description" | "fullDescription" | "videoUrl"
+> & {
+    options?: Maybe<
+      Array<
+        { __typename?: "LevelTaskOption" } & Pick<
+          LevelTaskOption,
+          | "id"
+          | "order"
+          | "label"
+          | "description"
+          | "fullDescription"
+          | "videoUrl"
+        >
+      >
+    >
+  }
 
 export type GetSignedUrlMutationVariables = {
   data: S3SignedUrlInput
@@ -997,20 +1092,6 @@ export type StartMyCourseMutation = { __typename?: "Mutation" } & {
   startMyCourse?: Maybe<{ __typename?: "User" } & MyDashboardFragment>
 }
 
-export type LevelRewardFragment = { __typename?: "Level" } & Pick<
-  Level,
-  "id" | "title" | "cover" | "levelNumber" | "rewardText" | "rewardDescription"
-> & {
-    levelTasks?: Maybe<
-      Array<
-        { __typename?: "LevelTask" } & Pick<
-          LevelTask,
-          "id" | "order" | "description" | "fullDescription" | "videoUrl"
-        >
-      >
-    >
-  }
-
 export type GetLevelRewardQueryVariables = {
   levelId: Scalars["String"]
 }
@@ -1116,6 +1197,47 @@ export const GroupItemFragmentDoc = gql`
       id
       fullName
     }
+  }
+`
+export const LevelTaskItemFragmentDoc = gql`
+  fragment LevelTaskItem on LevelTask {
+    id
+    order
+    description
+    fullDescription
+    videoUrl
+    options {
+      id
+      order
+      label
+      description
+      fullDescription
+      videoUrl
+    }
+  }
+`
+export const LevelRewardFragmentDoc = gql`
+  fragment LevelReward on Level {
+    id
+    title
+    cover
+    levelNumber
+    rewardText
+    rewardDescription
+    levelTasks {
+      ...LevelTaskItem
+    }
+  }
+  ${LevelTaskItemFragmentDoc}
+`
+export const LevelTaskOptionItemFragmentDoc = gql`
+  fragment LevelTaskOptionItem on LevelTaskOption {
+    id
+    order
+    label
+    description
+    fullDescription
+    videoUrl
   }
 `
 export const UserInfoFragmentDoc = gql`
@@ -1281,23 +1403,6 @@ export const MyDashboardFragmentDoc = gql`
   ${UserGroupItemFragmentDoc}
   ${UserLevelItemFragmentDoc}
   ${UserGroupMessageFragmentDoc}
-`
-export const LevelRewardFragmentDoc = gql`
-  fragment LevelReward on Level {
-    id
-    title
-    cover
-    levelNumber
-    rewardText
-    rewardDescription
-    levelTasks {
-      id
-      order
-      description
-      fullDescription
-      videoUrl
-    }
-  }
 `
 export const MyLevelProgressFragmentDoc = gql`
   fragment MyLevelProgress on UserLevel {

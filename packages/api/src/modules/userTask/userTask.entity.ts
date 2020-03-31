@@ -14,6 +14,9 @@ export class UserTask extends BaseEntity<UserTask> {
   @UuidField({ nullable: true })
   levelTaskId: string
 
+  @UuidField({ nullable: true })
+  levelTaskOptionId: string
+
   @IntField({ nullable: true })
   order: number
 

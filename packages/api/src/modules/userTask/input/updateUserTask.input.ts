@@ -11,5 +11,8 @@ export class UpdateUserTaskInput implements Partial<UserTask> {
   levelTaskId: string
 
   @Field({ nullable: true })
+  levelTaskOptionId: string
+
+  @Field({ nullable: true })
   order: number
 }
