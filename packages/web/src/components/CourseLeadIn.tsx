@@ -4,6 +4,8 @@ import { styled } from "./providers/ThemeProvider"
 import { CourseFragment } from "../lib/graphql"
 import { Hourglass } from "../lib/imageLinks"
 import { Tree } from "../lib/imageLinks"
+import { Food } from "../lib/imageLinks"
+import { Mask } from "../lib/imageLinks"
 import { YinYang } from "../lib/imageLinks"
 
 interface Props {
@@ -35,18 +37,34 @@ export function CourseLeadIn(props: Props) {
           {/* TODO: Fix this alignment */}
           <Flex minWidth="20%" justify="center" align="center">
             {" "}
-            <Image
-              src={Tree}
-              h={{ base: "3rem", lg: 20 }}
-              w={{ base: "4rem", lg: 32 }}
-            />
+            {props.course.rewardType === "tree" ? (
+              <Image
+                src={Tree}
+                h={{ base: "3rem", lg: 20 }}
+                w={{ base: "4rem", lg: 32 }}
+              />
+            ) : props.course.rewardType === "meal" ? (
+              <Image
+                src={Food}
+                h={{ base: "2.5rem", lg: 16 }}
+                w={{ base: "2.5rem", lg: 16 }}
+                mr={{ base: 0, lg: 4 }}
+              />
+            ) : (
+              <Image
+                src={Mask}
+                h={{ base: "3rem", lg: 20 }}
+                w={{ base: "3rem", lg: 20 }}
+              />
+            )}
           </Flex>
           <Box w="80%">
             <BoxHeader>Plant</BoxHeader>
-            <BoxSubHeader>Trees</BoxSubHeader>
+            <BoxSubHeader>{props.course.rewardType}s</BoxSubHeader>
             <Text fontSize="sm">
-              You will have a chance to plant trees everyday together with your
-              team
+              You will have a chance to{" "}
+              {props.course.rewardType === "tree" ? "plant" : "provide"}{" "}
+              {props.course.rewardType}s everyday together with your team
             </Text>
           </Box>
         </Flex>
@@ -87,4 +105,5 @@ const BoxSubHeader = styled(Text)`
   font-size: ${p => p.theme.fontSizes.lg};
   font-weight: ${p => p.theme.fontWeights.semibold};
   margin-bottom: ${p => p.theme.space[2]};
+  text-transform: capitalize;
 `

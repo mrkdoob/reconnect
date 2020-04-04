@@ -13,6 +13,10 @@ export const COURSE_ITEM = gql`
     category
     description
     slug
+    fullDescription
+    duration
+    benefits
+    rewardType
   }
 `
 

@@ -21,9 +21,6 @@ export const COURSE = gql`
     levels {
       ...CourseLevel
     }
-    fullDescription
-    duration
-    benefits
     ...CourseItem
   }
   ${CourseItemFragmentDoc}

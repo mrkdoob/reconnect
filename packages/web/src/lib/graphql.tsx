@@ -48,6 +48,7 @@ export type Course = {
   duration?: Maybe<Scalars["String"]>
   benefits?: Maybe<Scalars["String"]>
   cover?: Maybe<Scalars["String"]>
+  rewardType?: Maybe<Scalars["String"]>
   levels?: Maybe<Array<Level>>
   groups?: Maybe<Array<Group>>
   courseDayRewards?: Maybe<Array<CourseDayReward>>
@@ -82,6 +83,7 @@ export type CreateCourseInput = {
   benefits?: Maybe<Scalars["String"]>
   cover: Scalars["String"]
   endText?: Maybe<Scalars["String"]>
+  rewardType?: Maybe<Scalars["String"]>
 }
 
 export type CreateGroupInput = {
@@ -649,6 +651,7 @@ export type UpdateCourseInput = {
   benefits?: Maybe<Scalars["String"]>
   cover?: Maybe<Scalars["String"]>
   endText?: Maybe<Scalars["String"]>
+  rewardType?: Maybe<Scalars["String"]>
 }
 
 export type UpdateGroupInput = {
@@ -821,7 +824,16 @@ export type UserTask = {
 
 export type CourseItemFragment = { __typename?: "Course" } & Pick<
   Course,
-  "id" | "name" | "cover" | "category" | "description" | "slug"
+  | "id"
+  | "name"
+  | "cover"
+  | "category"
+  | "description"
+  | "slug"
+  | "fullDescription"
+  | "duration"
+  | "benefits"
+  | "rewardType"
 >
 
 export type CourseLevelFragment = { __typename?: "Level" } & Pick<
@@ -1003,12 +1015,9 @@ export type MeQuery = { __typename?: "Query" } & {
   me?: Maybe<{ __typename?: "User" } & MeFragment>
 }
 
-export type CourseFragment = { __typename?: "Course" } & Pick<
-  Course,
-  "fullDescription" | "duration" | "benefits"
-> & {
-    levels?: Maybe<Array<{ __typename?: "Level" } & CourseLevelFragment>>
-  } & CourseItemFragment
+export type CourseFragment = { __typename?: "Course" } & {
+  levels?: Maybe<Array<{ __typename?: "Level" } & CourseLevelFragment>>
+} & CourseItemFragment
 
 export type GetCourseQueryVariables = {
   slug: Scalars["String"]
@@ -1304,6 +1313,10 @@ export const CourseItemFragmentDoc = gql`
     category
     description
     slug
+    fullDescription
+    duration
+    benefits
+    rewardType
   }
 `
 export const CourseFragmentDoc = gql`
@@ -1311,9 +1324,6 @@ export const CourseFragmentDoc = gql`
     levels {
       ...CourseLevel
     }
-    fullDescription
-    duration
-    benefits
     ...CourseItem
   }
   ${CourseLevelFragmentDoc}

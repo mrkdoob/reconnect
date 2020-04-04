@@ -36,4 +36,8 @@ export class CreateCourseInput implements Partial<Course> {
   @IsNotEmpty()
   @Field({ nullable: true })
   endText: string
+
+  @IsNotEmpty()
+  @Field({ nullable: true })
+  rewardType: string
 }

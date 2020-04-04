@@ -36,6 +36,9 @@ export class Course extends BaseEntity<Course> {
   @StringField({ nullable: true })
   cover: string
 
+  @StringField({ nullable: true })
+  rewardType: string
+
   // RELATIONS
   @OneToMany(
     () => Level,

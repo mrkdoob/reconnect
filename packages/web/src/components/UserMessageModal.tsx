@@ -12,13 +12,10 @@ import {
   Flex,
   Image,
   Button,
-  Spinner,
 } from "@chakra-ui/core"
 
 import {
   useUpdateUserGroupMessageMutation,
-  MyGroupMessageFragmentDoc,
-  useMyGroupMessageQuery,
   UserGroupMessageFragment,
 } from "../lib/graphql"
 import { useToggle } from "../lib/hooks/useToggle"
