@@ -5,6 +5,8 @@ import { UserTaskService } from "../userTask/userTask.service"
 import { GroupService } from "../group/group.service"
 import { UserGroupMessageService } from "../userGroupMessage/userGroupMessage.service"
 import { GroupMessageService } from "../groupMessage/groupMessage.service"
+import { UserResolver } from "./user.resolver"
+import { ONE_DAY } from "../../lib/times"
 
 export type resetGroupUserTasks = {
   name: "resetGroupUserTasks"
@@ -55,6 +57,8 @@ export class UserWorker extends Worker<JobType> {
   userGroupMessageService: UserGroupMessageService
   @Inject(() => GroupMessageService)
   groupMessageService: GroupMessageService
+  @Inject(() => UserResolver)
+  userResolver: UserResolver
 
   async work() {
     this.runJob(async (job: JobType) => {
@@ -73,6 +77,7 @@ export class UserWorker extends Worker<JobType> {
           return
         case "updateDailyMessage":
           this.groupMessageService.updateDailyMessage()
+          this.userResolver.dailyReset(ONE_DAY)
           return
         default:
           return

@@ -49,17 +49,19 @@ export function CourseLevelList(props: Props) {
 
         {props.course?.levels &&
           props.course.levels.length > 0 &&
-          props.course.levels.map(level =>
-            level.levelNumber <= completedLevels ? (
-              <ProgressLevelItem
-                key={level.id}
-                level={level}
-                userLevel={props.userLevel}
-                isCurrentLevel={level.levelNumber === completedLevels}
-              />
-            ) : (
-              <CourseLevelItem key={level.id} level={level} />
-            ),
+          props.course.levels.map(
+            level =>
+              !level.isLast &&
+              (level.levelNumber <= completedLevels ? (
+                <ProgressLevelItem
+                  key={level.id}
+                  level={level}
+                  userLevel={props.userLevel}
+                  isCurrentLevel={level.levelNumber === completedLevels}
+                />
+              ) : (
+                <CourseLevelItem key={level.id} level={level} />
+              )),
           )}
       </Flex>
     </Flex>

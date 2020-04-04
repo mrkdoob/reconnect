@@ -66,7 +66,6 @@ interface Props extends RouteComponentProps<{ levelId: string }> {}
 export const Progress: React.FC<Props> = props => {
   const { data, loading } = useMyProgressQuery()
   const myProgress = data?.me
-  console.log(myProgress)
 
   const activeCourse = myProgress?.userCourse?.find(uc => uc.isActive)?.course
 

@@ -512,7 +512,7 @@ export type Query = {
   getAllCourseDayRewards: Array<CourseDayReward>
   group: Group
   groups: Array<Group>
-  testAllTasksReset: Scalars["Boolean"]
+  dailyReset: Scalars["Boolean"]
   getUser?: Maybe<User>
   me?: Maybe<User>
   testUpdateDailyMessage: Scalars["Boolean"]
@@ -553,6 +553,10 @@ export type QueryGetCourseDayRewardArgs = {
 
 export type QueryGroupArgs = {
   groupId: Scalars["String"]
+}
+
+export type QueryDailyResetArgs = {
+  delay: Scalars["Float"]
 }
 
 export type QueryGetUserArgs = {
@@ -822,7 +826,7 @@ export type CourseItemFragment = { __typename?: "Course" } & Pick<
 
 export type CourseLevelFragment = { __typename?: "Level" } & Pick<
   Level,
-  "id" | "title" | "cover" | "levelNumber" | "maxProgressDays"
+  "id" | "title" | "cover" | "levelNumber" | "maxProgressDays" | "isLast"
 >
 
 export type MyDailyRewardFragment = { __typename?: "UserDayReward" } & Pick<
@@ -889,17 +893,7 @@ export type LevelTaskItemFragment = { __typename?: "LevelTask" } & Pick<
   "id" | "order" | "description" | "fullDescription" | "videoUrl"
 > & {
     options?: Maybe<
-      Array<
-        { __typename?: "LevelTaskOption" } & Pick<
-          LevelTaskOption,
-          | "id"
-          | "order"
-          | "label"
-          | "description"
-          | "fullDescription"
-          | "videoUrl"
-        >
-      >
+      Array<{ __typename?: "LevelTaskOption" } & LevelTaskOptionItemFragment>
     >
   }
 
@@ -1199,6 +1193,16 @@ export const GroupItemFragmentDoc = gql`
     }
   }
 `
+export const LevelTaskOptionItemFragmentDoc = gql`
+  fragment LevelTaskOptionItem on LevelTaskOption {
+    id
+    order
+    label
+    description
+    fullDescription
+    videoUrl
+  }
+`
 export const LevelTaskItemFragmentDoc = gql`
   fragment LevelTaskItem on LevelTask {
     id
@@ -1207,14 +1211,10 @@ export const LevelTaskItemFragmentDoc = gql`
     fullDescription
     videoUrl
     options {
-      id
-      order
-      label
-      description
-      fullDescription
-      videoUrl
+      ...LevelTaskOptionItem
     }
   }
+  ${LevelTaskOptionItemFragmentDoc}
 `
 export const LevelRewardFragmentDoc = gql`
   fragment LevelReward on Level {
@@ -1229,16 +1229,6 @@ export const LevelRewardFragmentDoc = gql`
     }
   }
   ${LevelTaskItemFragmentDoc}
-`
-export const LevelTaskOptionItemFragmentDoc = gql`
-  fragment LevelTaskOptionItem on LevelTaskOption {
-    id
-    order
-    label
-    description
-    fullDescription
-    videoUrl
-  }
 `
 export const UserInfoFragmentDoc = gql`
   fragment UserInfo on User {
@@ -1303,6 +1293,7 @@ export const CourseLevelFragmentDoc = gql`
     cover
     levelNumber
     maxProgressDays
+    isLast
   }
 `
 export const CourseItemFragmentDoc = gql`

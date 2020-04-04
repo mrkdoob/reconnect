@@ -12,7 +12,7 @@ import {
   Button,
   Image,
 } from "@chakra-ui/core"
-import { Link } from "@reach/router"
+import { Link, navigate } from "@reach/router"
 import gql from "graphql-tag.macro"
 import {
   LevelItemFragment,
@@ -57,9 +57,14 @@ export const LevelRewardModal = ({
     refetchQueries: [{ query: MeDocument }],
   })
 
-  const handleEndOfCourse = async () => {
+  const handleEndOfCourse = () => {
     endCourse()
     onClose()
+  }
+
+  const handleLevelUpClose = () => {
+    onClose()
+    if (level?.id && !level?.isLast) navigate(`/levelreward/${level.id}`)
   }
 
   return (
@@ -69,7 +74,15 @@ export const LevelRewardModal = ({
       <SlideIn in={levelCompleted}>
         {/* // eslint-disable-next-line react/jsx-no-undef */}
         {(styles: any) => (
-          <Modal onClose={onClose} isOpen={levelCompleted} size="xl">
+          <Modal
+            onClose={
+              level?.id && !level?.isLast
+                ? handleLevelUpClose
+                : handleEndOfCourse
+            }
+            isOpen={levelCompleted}
+            size="xl"
+          >
             <ModalOverlay opacity={styles.opacity} />
             <ModalContent
               pb={5}
@@ -84,7 +97,7 @@ export const LevelRewardModal = ({
               <ModalBody>
                 <Flex direction="column">
                   <Text mb={4}>{level?.rewardDescription}</Text>
-                  {rewardCount && rewardCount !== 0 && (
+                  {rewardCount !== 0 && (
                     <Text mb={4}>
                       Together your group has planted {rewardCount} tree(s)
                     </Text>
@@ -92,7 +105,7 @@ export const LevelRewardModal = ({
                   <Text mb={4}>
                     {level?.isLast
                       ? "This is the end of the course. Continue learning by trying out some of our other courses."
-                      : "There are new lessons and practices waiting for you."}
+                      : "There is a new teaching waiting for you."}
                   </Text>
                   {level?.rewardUrl && (
                     <Image
@@ -106,16 +119,14 @@ export const LevelRewardModal = ({
                     />
                   )}
                   {level?.id && !level?.isLast ? (
-                    <Link to={`/levelreward/${level.id}`}>
-                      <Button
-                        my={6}
-                        onClick={onClose}
-                        variantColor="blue"
-                        w="100%"
-                      >
-                        Continue
-                      </Button>
-                    </Link>
+                    <Button
+                      my={6}
+                      onClick={handleLevelUpClose}
+                      variantColor="blue"
+                      w="100%"
+                    >
+                      Continue
+                    </Button>
                   ) : (
                     <Link to={`/courses`}>
                       <Button

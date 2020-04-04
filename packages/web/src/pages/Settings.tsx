@@ -73,7 +73,6 @@ const SettingsSchema = Yup.object().shape<UpdateInput>({
   // password: Yup.string().min(6, "Must be at least 6 characters"),
   firstName: Yup.string().required("Required"),
   lastName: Yup.string().required("Required"),
-  avatar: Yup.string(),
 })
 
 interface Props extends RouteComponentProps {}
@@ -177,11 +176,6 @@ export const Settings: React.FC<Props> = props => {
               defaultValue={settings?.lastName}
             />
             <Input name="email" label="Email" defaultValue={settings?.email} />
-            <Input
-              name="avatar"
-              label="Avatar link"
-              defaultValue={settings?.avatar || ""}
-            />
             <Flex align="center" justify="space-between" mt={6}>
               <FormLabel htmlFor="email-alerts">
                 Show daily group summary?

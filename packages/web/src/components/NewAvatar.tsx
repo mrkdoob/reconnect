@@ -6,6 +6,7 @@ import {
   useUpdateSettingsMutation,
   MySettingsDocument,
   useGetSignedUrlMutation,
+  MeDocument,
 } from "../lib/graphql"
 import { formatFileName } from "../lib/helpers"
 import { useToast } from "../lib/hooks/useToast"
@@ -24,7 +25,9 @@ export const NewAvatar: React.FC<Props> = props => {
   const [images, setImages] = React.useState<File[]>([])
   const [loading, setLoading, setStopLoading] = useOpen()
   const [getSigned] = useGetSignedUrlMutation()
-  const [updateSettings] = useUpdateSettingsMutation()
+  const [updateSettings] = useUpdateSettingsMutation({
+    refetchQueries: [{ query: MeDocument }],
+  })
   const toast = useToast()
 
   const onDrop = React.useCallback((newImages: File[]) => {

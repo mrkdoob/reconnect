@@ -12,6 +12,7 @@ export const COURSE_LEVEL = gql`
     cover
     levelNumber
     maxProgressDays
+    isLast
   }
 `
 
@@ -36,16 +37,8 @@ export function CourseLevelItem(props: Props) {
         align="center"
         justify="center"
       >
-        {props.level.levelNumber !== 1 && <Box as={Lock} height={10} mr={4} />}
+        {props.level.levelNumber !== 1 && <Box as={Lock} height={10} />}
       </StyledImageBox>
-      {/* <Box
-        w="4px"
-        position="absolute"
-        h="4rem"
-        right="Calc(225px - 4rem)"
-        top="9rem"
-        bg={colors[props.level.levelNumber - 1]}
-      /> */}
 
       <StyledContentFlex
         w={{ base: "Calc(100% - 7rem)", md: "Calc(450px - 8rem)" }}

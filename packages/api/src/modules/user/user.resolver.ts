@@ -62,27 +62,19 @@ export class UserResolver {
   userWorker: UserWorker
 
   @Query(() => Boolean)
-  async testAllTasksReset() {
-    this.userWorker.addJob(
-      { name: "resetGroupUserTasks", data: {} },
-      { delay: 1 }, // TODO: delay to midnight. Calculate based on current time
-    )
+  async dailyReset(@Arg("delay") delay: number) {
+    console.log("Daily reset delay: " + delay)
+    this.userWorker.addJob({ name: "resetGroupUserTasks", data: {} }, { delay })
     this.userWorker.addJob(
       { name: "resetMembersFinished", data: {} },
-      { delay: 1 },
+      { delay },
     )
-    this.userWorker.addJob(
-      { name: "resetAllGroupOrders", data: {} },
-      { delay: 1 },
-    )
+    this.userWorker.addJob({ name: "resetAllGroupOrders", data: {} }, { delay })
     this.userWorker.addJob(
       { name: "resetAllUserGroupMessages", data: {} },
-      { delay: 1 },
+      { delay },
     )
-    this.userWorker.addJob(
-      { name: "updateDailyMessage", data: {} },
-      { delay: 1 },
-    )
+    this.userWorker.addJob({ name: "updateDailyMessage", data: {} }, { delay })
     return true
   }
 

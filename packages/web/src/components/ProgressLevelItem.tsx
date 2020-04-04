@@ -3,7 +3,7 @@ import { Flex, Box, Text, Image } from "@chakra-ui/core"
 import { CourseLevelFragment, MyLevelProgressFragment } from "../lib/graphql"
 import { styled } from "./providers/ThemeProvider"
 import { Book } from "styled-icons/boxicons-regular/Book"
-import Tree from "../lib/assets/tree.png"
+import { Tree } from "../lib/imageLinks"
 import { Link } from "@reach/router"
 
 interface Props {

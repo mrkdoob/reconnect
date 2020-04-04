@@ -2,10 +2,9 @@ import React from "react"
 import { Flex, Box, Text, Image } from "@chakra-ui/core"
 import { styled } from "./providers/ThemeProvider"
 import { CourseFragment } from "../lib/graphql"
-
-import Tree from "../lib/assets/tree.png"
-import YinYang from "../lib/assets/yin-yang.png"
-import Hourglass from "../lib/assets/Hourglass.svg"
+import { Hourglass } from "../lib/imageLinks"
+import { Tree } from "../lib/imageLinks"
+import { YinYang } from "../lib/imageLinks"
 
 interface Props {
   course: CourseFragment

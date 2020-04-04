@@ -12,11 +12,14 @@ import {
   Flex,
   Image,
   Button,
+  Spinner,
 } from "@chakra-ui/core"
 
 import {
-  UserGroupMessageFragment,
   useUpdateUserGroupMessageMutation,
+  MyGroupMessageFragmentDoc,
+  useMyGroupMessageQuery,
+  UserGroupMessageFragment,
 } from "../lib/graphql"
 import { useToggle } from "../lib/hooks/useToggle"
 import { Markup } from "interweave"
@@ -54,36 +57,40 @@ export const UPDATE_USER_GROUP_MESSAGE = gql`
     }
   }
 `
-
 interface Props {
   userGroupMessage: UserGroupMessageFragment
+  rewardType?: string
 }
 
-export const UserMessageModal = ({ userGroupMessage }: Props) => {
+export const UserMessageModal: React.FC<Props> = props => {
   const [modalOpen, toggleModal] = useToggle({
-    default: !userGroupMessage.isRead && userGroupMessage.showOption,
+    default:
+      !props.userGroupMessage?.isRead && props.userGroupMessage?.showOption,
   }) // TODO: Change useToggle
+
   const [updateUserGroupMessage] = useUpdateUserGroupMessageMutation()
 
   const handleDontShowMe = async () => {
     toggleModal()
+    if (!props.userGroupMessage) return
 
     updateUserGroupMessage({
       variables: {
-        userGroupMessageId: userGroupMessage.id,
+        userGroupMessageId: props.userGroupMessage.id,
         data: {
           showOption: false,
         },
       },
-    }).then(res => console.log(res))
+    })
   }
 
   const handleClose = async () => {
     toggleModal()
+    if (!props.userGroupMessage) return
 
     updateUserGroupMessage({
       variables: {
-        userGroupMessageId: userGroupMessage.id,
+        userGroupMessageId: props.userGroupMessage.id,
         data: {
           isRead: true,
         },
@@ -105,26 +112,35 @@ export const UserMessageModal = ({ userGroupMessage }: Props) => {
               <ModalCloseButton />
               <ModalBody>
                 <Flex direction="column">
-                  {userGroupMessage?.groupMessage?.rewardCount !== 0 && (
+                  {props.userGroupMessage?.groupMessage?.rewardCount !== 0 && (
                     <Text mb={4}>
-                      Together with your team you have planted{" "}
-                      {userGroupMessage?.groupMessage?.rewardCount} tree
-                      {userGroupMessage?.groupMessage?.rewardCount !== 1 &&
-                        "s"}{" "}
+                      Together with your team you have{" "}
+                      {props.rewardType === "tree" ? "planted" : "donated"}{" "}
+                      {props.userGroupMessage?.groupMessage?.rewardCount}{" "}
+                      {props.rewardType}
+                      {props.userGroupMessage?.groupMessage?.rewardCount !==
+                        1 && "s"}{" "}
                       yesterday. Thank you!
                     </Text>
                   )}
 
-                  {userGroupMessage?.groupMessage?.leftCoinsCount !== 0 && (
+                  {props.userGroupMessage?.groupMessage?.leftCoinsCount !==
+                    0 && (
                     <Text mb={4}>
-                      There are {userGroupMessage?.groupMessage?.leftCoinsCount}{" "}
+                      There are{" "}
+                      {props.userGroupMessage?.groupMessage?.leftCoinsCount}{" "}
                       coins left from yesterday. These will give you a head
-                      start today to plant the next tree.
+                      start today to{" "}
+                      {props.rewardType === "tree" ? "plant" : "donate"} the
+                      next {props.rewardType}.
                     </Text>
                   )}
-                  {userGroupMessage?.groupMessage?.message?.pictureUrl && (
+                  {props.userGroupMessage?.groupMessage?.message
+                    ?.pictureUrl && (
                     <Image
-                      src={userGroupMessage.groupMessage.message.pictureUrl}
+                      src={
+                        props.userGroupMessage.groupMessage.message.pictureUrl
+                      }
                       alt="Message picture"
                       w="625px"
                       h="300px"
@@ -134,7 +150,9 @@ export const UserMessageModal = ({ userGroupMessage }: Props) => {
                     />
                   )}
                   <Markup
-                    content={userGroupMessage?.groupMessage?.message?.message}
+                    content={
+                      props.userGroupMessage?.groupMessage?.message?.message
+                    }
                   />
 
                   <Button my={6} onClick={handleClose} variantColor="blue">

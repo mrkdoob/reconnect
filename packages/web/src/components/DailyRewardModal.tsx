@@ -71,7 +71,7 @@ export const DailyRewardModal = ({ dayCompleted, onClose }: Props) => {
       <SlideIn in={dayCompleted}>
         {/* // eslint-disable-next-line react/jsx-no-undef */}
         {(styles: any) => (
-          <Modal onClose={handleClose} isOpen={dayCompleted} size="2xl">
+          <Modal onClose={handleClose} isOpen={dayCompleted} size="xl">
             <ModalOverlay opacity={styles.opacity} />
             <ModalContent
               pb={5}
@@ -98,17 +98,21 @@ export const DailyRewardModal = ({ dayCompleted, onClose }: Props) => {
                   </Button>
                   <Collapse mt={4} isOpen={show}>
                     {reward?.courseDayReward?.pictureUrl && (
-                      <Image
-                        src={reward?.courseDayReward?.pictureUrl}
-                        alt="Message picture"
-                        w="625px"
-                        h="300px"
-                        objectFit="cover"
-                        borderRadius="lg"
-                        mb={4}
-                      />
+                      <Flex justify="center">
+                        <Image
+                          src={reward?.courseDayReward?.pictureUrl}
+                          alt="Message picture"
+                          w="425px"
+                          h="200px"
+                          objectFit="cover"
+                          borderRadius="lg"
+                          mb={6}
+                        />
+                      </Flex>
                     )}
-                    <Markup content={reward?.courseDayReward?.description} />
+                    <Text fontSize="xl">
+                      <Markup content={reward?.courseDayReward?.description} />
+                    </Text>
                   </Collapse>
                   <Border mt={4} />
                   <Button
