@@ -59,7 +59,9 @@ export function CourseLeadIn(props: Props) {
             )}
           </Flex>
           <Box w="80%">
-            <BoxHeader>Plant</BoxHeader>
+            <BoxHeader>
+              {props.course.rewardType === "tree" ? "Plant" : "earn"}
+            </BoxHeader>
             <BoxSubHeader>{props.course.rewardType}s</BoxSubHeader>
             <Text fontSize="sm">
               You will have a chance to{" "}

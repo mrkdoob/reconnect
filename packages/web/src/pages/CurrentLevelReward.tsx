@@ -4,6 +4,7 @@ import gql from "graphql-tag.macro"
 import {
   LevelRewardFragmentDoc,
   useGetCurrentLevelRewardQuery,
+  UserTaskItemFragmentDoc,
 } from "../lib/graphql"
 import { LevelRewardItem } from "../components/LevelRewardItem"
 
@@ -17,9 +18,13 @@ export const GET_CURRENT_LEVEL_REWARD = gql`
           ...LevelReward
         }
       }
+      tasks {
+        ...UserTaskItem
+      }
     }
   }
   ${LevelRewardFragmentDoc}
+  ${UserTaskItemFragmentDoc}
 `
 
 export const CurrentLevelReward: React.FC<RouteComponentProps> = () => {
@@ -28,7 +33,11 @@ export const CurrentLevelReward: React.FC<RouteComponentProps> = () => {
 
   return (
     <>
-      <LevelRewardItem levelReward={levelReward} loading={loading} />
+      <LevelRewardItem
+        levelReward={levelReward}
+        tasks={data?.me?.tasks}
+        loading={loading}
+      />
     </>
   )
 }

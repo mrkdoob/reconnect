@@ -158,9 +158,7 @@ export const Navbar: React.FC = () => {
               <NavLink to="/">Dashboard </NavLink>
             </Text>
             <Text onClick={toggleMenu}>
-              <NavLink to={`/levelreward/${me?.userLevel?.levelId}`}>
-                Current lesson
-              </NavLink>
+              <NavLink to={`/mylevelreward`}>Current lesson</NavLink>
             </Text>
             <Text onClick={toggleMenu}>
               <NavLink to="/courses">Courses</NavLink>

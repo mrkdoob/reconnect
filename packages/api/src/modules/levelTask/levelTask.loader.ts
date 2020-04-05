@@ -2,7 +2,6 @@ import DataLoader from "dataloader"
 import { In } from "typeorm"
 import { LevelTaskOption } from "../levelTaskOption/levelTaskOption.entity"
 
-//TODO:
 export const levelTaskOptionsLoader = () =>
   new DataLoader(async (keys: ReadonlyArray<string>) => {
     const levelTaskIds = [...keys]

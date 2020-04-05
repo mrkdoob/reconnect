@@ -1,4 +1,11 @@
-import { Resolver, Query, Mutation, Arg } from "type-graphql"
+import {
+  Resolver,
+  Query,
+  Mutation,
+  Arg,
+  FieldResolver,
+  Root,
+} from "type-graphql"
 
 import { Inject } from "typedi"
 import { LevelTaskOption } from "./levelTaskOption.entity"
@@ -6,6 +13,7 @@ import { LevelTaskOptionService } from "./levelTaskOption.service"
 import { LevelTaskOptionRepository } from "./levelTaskOption.repository"
 import { CreateLevelTaskOptionInput } from "./input/createLevelTaskOption.input"
 import { UpdateLevelTaskOptionInput } from "./input/updateLevelTaskOption.input"
+import { Loaders } from "../shared/context/loaders"
 
 @Resolver(() => LevelTaskOption)
 export class LevelTaskOptionResolver {
@@ -60,4 +68,15 @@ export class LevelTaskOptionResolver {
   }
 
   // FIELD RESOLVERS
+  @FieldResolver(() => [LevelTaskOption], { nullable: true })
+  options(
+    @Root() levelTaskOption: LevelTaskOption,
+    @Loaders() { levelTaskOptionsLoader }: Loaders,
+  ) {
+    const options = levelTaskOptionsLoader.load(levelTaskOption.levelTaskId)
+    // Return remaining options
+    return options.then(res =>
+      res.filter(task => task.id !== levelTaskOption.id),
+    )
+  }
 }

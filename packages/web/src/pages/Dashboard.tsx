@@ -184,7 +184,7 @@ export const Dashboard: React.FC<RouteComponentProps> = () => {
           <Text mr={{ base: 4, lg: 12 }} fontSize={{ base: "xl", md: "2xl" }}>
             {me?.group?.rewardCount} total {me?.group?.rewardType}
             {me?.group?.rewardCount !== 1 && "s"}{" "}
-            {me?.group?.rewardType === "tree" ? "planted" : "provided"}
+            {me?.group?.rewardType === "tree" ? "planted" : "donated"}
           </Text>
         </Flex>
       </Flex>
@@ -232,6 +232,7 @@ export const Dashboard: React.FC<RouteComponentProps> = () => {
         onClose={() => setDayCompleted(false)}
         level={me?.userLevel?.level}
         rewardCount={me?.group?.rewardCount}
+        rewardType={me?.group?.rewardType}
       />
     </Page>
   )

@@ -4,6 +4,7 @@ import { CourseLevelFragment } from "../lib/graphql"
 import { styled } from "./providers/ThemeProvider"
 import gql from "graphql-tag.macro"
 import { Lock } from "styled-icons/boxicons-solid/Lock"
+import { colors } from "../lib/colors"
 
 export const COURSE_LEVEL = gql`
   fragment CourseLevel on Level {
@@ -19,8 +20,6 @@ export const COURSE_LEVEL = gql`
 interface Props {
   level: CourseLevelFragment
 }
-
-const colors = ["blue.400", "blue.200", "green.100", "green.400"] // TODO: Add more colors when using more levels
 
 export function CourseLevelItem(props: Props) {
   return (

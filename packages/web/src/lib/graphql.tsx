@@ -240,6 +240,7 @@ export type LevelTaskOption = {
   fullDescription?: Maybe<Scalars["String"]>
   videoUrl?: Maybe<Scalars["String"]>
   levelTaskId?: Maybe<Scalars["String"]>
+  options?: Maybe<Array<LevelTaskOption>>
 }
 
 export type LoginInput = {
@@ -820,6 +821,7 @@ export type UserTask = {
   order?: Maybe<Scalars["Int"]>
   userId: Scalars["String"]
   levelTask?: Maybe<LevelTask>
+  levelTaskOption?: Maybe<LevelTaskOption>
 }
 
 export type CourseItemFragment = { __typename?: "Course" } & Pick<
@@ -980,15 +982,53 @@ export type UpdateUserGroupMessageMutation = { __typename?: "Mutation" } & {
   >
 }
 
+export type UserTaskOptionItemFragment = {
+  __typename?: "LevelTaskOption"
+} & Pick<
+  LevelTaskOption,
+  "id" | "order" | "label" | "description" | "fullDescription" | "videoUrl"
+> & {
+    options?: Maybe<
+      Array<
+        { __typename?: "LevelTaskOption" } & Pick<
+          LevelTaskOption,
+          | "id"
+          | "order"
+          | "label"
+          | "description"
+          | "fullDescription"
+          | "videoUrl"
+        >
+      >
+    >
+  }
+
+export type UserLevelTaskItemFragment = { __typename?: "LevelTask" } & Pick<
+  LevelTask,
+  "id" | "order" | "description" | "fullDescription" | "videoUrl"
+> & {
+    options?: Maybe<
+      Array<
+        { __typename?: "LevelTaskOption" } & Pick<
+          LevelTaskOption,
+          | "id"
+          | "order"
+          | "label"
+          | "description"
+          | "fullDescription"
+          | "videoUrl"
+        >
+      >
+    >
+  }
+
 export type UserTaskItemFragment = { __typename?: "UserTask" } & Pick<
   UserTask,
-  "id" | "completed" | "levelTaskId"
+  "id" | "completed" | "levelTaskId" | "levelTaskOptionId"
 > & {
-    levelTask?: Maybe<
-      { __typename?: "LevelTask" } & Pick<
-        LevelTask,
-        "id" | "order" | "description" | "fullDescription" | "videoUrl"
-      >
+    levelTask?: Maybe<{ __typename?: "LevelTask" } & UserLevelTaskItemFragment>
+    levelTaskOption?: Maybe<
+      { __typename?: "LevelTaskOption" } & UserTaskOptionItemFragment
     >
   }
 
@@ -1043,6 +1083,7 @@ export type GetCurrentLevelRewardQuery = { __typename?: "Query" } & {
               level?: Maybe<{ __typename?: "Level" } & LevelRewardFragment>
             }
         >
+        tasks?: Maybe<Array<{ __typename?: "UserTask" } & UserTaskItemFragment>>
       }
   >
 }
@@ -1329,20 +1370,56 @@ export const CourseFragmentDoc = gql`
   ${CourseLevelFragmentDoc}
   ${CourseItemFragmentDoc}
 `
+export const UserLevelTaskItemFragmentDoc = gql`
+  fragment UserLevelTaskItem on LevelTask {
+    id
+    order
+    description
+    fullDescription
+    videoUrl
+    options {
+      id
+      order
+      label
+      description
+      fullDescription
+      videoUrl
+    }
+  }
+`
+export const UserTaskOptionItemFragmentDoc = gql`
+  fragment UserTaskOptionItem on LevelTaskOption {
+    id
+    order
+    label
+    description
+    fullDescription
+    videoUrl
+    options {
+      id
+      order
+      label
+      description
+      fullDescription
+      videoUrl
+    }
+  }
+`
 export const UserTaskItemFragmentDoc = gql`
   fragment UserTaskItem on UserTask {
     id
     completed
     levelTaskId
+    levelTaskOptionId
     levelTask {
-      id
-      order
-      description
-      fullDescription
-      videoUrl
-      order
+      ...UserLevelTaskItem
+    }
+    levelTaskOption {
+      ...UserTaskOptionItem
     }
   }
+  ${UserLevelTaskItemFragmentDoc}
+  ${UserTaskOptionItemFragmentDoc}
 `
 export const LevelItemFragmentDoc = gql`
   fragment LevelItem on Level {
@@ -1872,9 +1949,13 @@ export const GetCurrentLevelRewardDocument = gql`
           ...LevelReward
         }
       }
+      tasks {
+        ...UserTaskItem
+      }
     }
   }
   ${LevelRewardFragmentDoc}
+  ${UserTaskItemFragmentDoc}
 `
 
 /**

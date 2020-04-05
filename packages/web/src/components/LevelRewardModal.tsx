@@ -45,6 +45,7 @@ interface Props {
   onClose: () => void
   level?: LevelItemFragment | null
   rewardCount?: number
+  rewardType?: string
 }
 
 export const LevelRewardModal = ({
@@ -52,6 +53,7 @@ export const LevelRewardModal = ({
   onClose,
   level,
   rewardCount,
+  rewardType,
 }: Props) => {
   const [endCourse] = useEndMyCourseMutation({
     refetchQueries: [{ query: MeDocument }],
@@ -99,7 +101,11 @@ export const LevelRewardModal = ({
                   <Text mb={4}>{level?.rewardDescription}</Text>
                   {rewardCount !== 0 && (
                     <Text mb={4}>
-                      Together your group has planted {rewardCount} tree(s)
+                      {" "}
+                      {/* TODO: Change trees*/}
+                      Together your group has{" "}
+                      {rewardType === "tree" ? "planted" : "donated"}{" "}
+                      {rewardCount} {rewardType}(s)"
                     </Text>
                   )}
                   <Text mb={4}>

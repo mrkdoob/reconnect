@@ -5,6 +5,7 @@ import { GroupItemFragment } from "../lib/graphql"
 import { styled } from "./providers/ThemeProvider"
 import dayjs from "dayjs"
 import { User } from "styled-icons/boxicons-regular/User"
+import { colorsWithTrans } from "../lib/colors"
 
 export const GROUP_ITEM = gql`
   fragment GroupItem on Group {
@@ -26,9 +27,6 @@ interface Props {
   isLast: boolean
   handleGroupSelect: (groupId: string) => void
 }
-
-// TODO: Make global
-const colors = ["blue.550", "blue.50", "green.50", "green.350"] // Add more colors when using more levels
 
 export function GroupItem(props: Props) {
   return (
@@ -55,14 +53,14 @@ export function GroupItem(props: Props) {
           >
             {props.group?.users?.length} / {props.group.groupSize}
           </Heading>
-          <Box as={User} h={8} ml={2} color={colors[props.index]} />
+          <Box as={User} h={8} ml={2} color={colorsWithTrans[props.index]} />
         </Flex>
       </Flex>
       {!props.isLast && (
         <Box
           height="2px"
           width="80%"
-          bg={colors[props.index]}
+          bg={colorsWithTrans[props.index]}
           margin="0 auto"
           borderRadius="lg"
         />

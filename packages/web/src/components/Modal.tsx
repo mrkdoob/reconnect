@@ -12,7 +12,7 @@ import {
 } from "@chakra-ui/core"
 
 interface Props extends IModal {
-  title: string
+  title?: string
 }
 export const Modal: React.FC<Props> = props => {
   const { colorMode } = useColorMode()

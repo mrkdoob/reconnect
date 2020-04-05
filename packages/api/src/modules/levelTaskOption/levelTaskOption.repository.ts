@@ -18,8 +18,6 @@ export class LevelTaskOptionRepository {
 
   findAll(where?: FindConditions<LevelTaskOption>): Promise<LevelTaskOption[]> {
     const tasks = LevelTaskOption.find({ where })
-    console.log("tasks" + tasks)
-
     return tasks
   }
 

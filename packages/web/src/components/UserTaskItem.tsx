@@ -5,24 +5,63 @@ import {
   UserTaskItemFragment,
   UserTaskItemFragmentDoc,
   useUpdateUserTaskMutation,
+  UserTaskOptionItemFragmentDoc,
+  UserLevelTaskItemFragmentDoc,
 } from "../lib/graphql"
 import { mutationHandler } from "../lib/mutationHandler"
 import { useToggle } from "../lib/hooks/useToggle"
+
+export const USER_TASK_OPTION_ITEM = gql`
+  fragment UserTaskOptionItem on LevelTaskOption {
+    id
+    order
+    label
+    description
+    fullDescription
+    videoUrl
+    options {
+      id
+      order
+      label
+      description
+      fullDescription
+      videoUrl
+    }
+  }
+`
+export const USER_LEVEL_TASK_ITEM = gql`
+  fragment UserLevelTaskItem on LevelTask {
+    id
+    order
+    description
+    fullDescription
+    videoUrl
+    options {
+      id
+      order
+      label
+      description
+      fullDescription
+      videoUrl
+    }
+  }
+`
 
 export const USER_TASK = gql`
   fragment UserTaskItem on UserTask {
     id
     completed
     levelTaskId
+    levelTaskOptionId
     levelTask {
-      id
-      order
-      description
-      fullDescription
-      videoUrl
-      order
+      ...UserLevelTaskItem
+    }
+    levelTaskOption {
+      ...UserTaskOptionItem
     }
   }
+  ${UserTaskOptionItemFragmentDoc}
+  ${UserLevelTaskItemFragmentDoc}
 `
 
 export const UPDATE_USERTASK = gql`

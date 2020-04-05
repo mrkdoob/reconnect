@@ -17,6 +17,8 @@ import { UpdateUserTaskInput } from "./input/updateUserTask.input"
 import { UserTaskService } from "./userTask.service"
 import { LevelTask } from "../levelTask/levelTask.entity"
 import { Loaders } from "../shared/context/loaders"
+import { LevelTaskOptionRepository } from "../levelTaskOption/levelTaskOption.repository"
+import { LevelTaskOption } from "../levelTaskOption/levelTaskOption.entity"
 
 @Resolver(() => UserTask)
 export class UserTaskResolver {
@@ -24,6 +26,8 @@ export class UserTaskResolver {
   taskService: UserTaskService
   @Inject(() => UserTaskRepository)
   taskRepository: UserTaskRepository
+  @Inject(() => LevelTaskOptionRepository)
+  levelTaskOptionRepository: LevelTaskOptionRepository
 
   @Inject(() => UserResolver)
   UserResolver: UserResolver
@@ -66,5 +70,10 @@ export class UserTaskResolver {
     @Loaders() { levelTaskLoader }: Loaders,
   ): Promise<LevelTask> {
     return levelTaskLoader.load(userTask.levelTaskId)
+  }
+
+  @FieldResolver(() => LevelTaskOption, { nullable: true })
+  levelTaskOption(@Root() userTask: UserTask): Promise<LevelTaskOption> {
+    return this.levelTaskOptionRepository.findById(userTask.levelTaskOptionId)
   }
 }
