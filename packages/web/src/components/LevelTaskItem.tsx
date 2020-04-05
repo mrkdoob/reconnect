@@ -18,7 +18,6 @@ import {
   LevelTaskOptionItemFragment,
   useUpdateUserTaskMutation,
   UserTaskItemFragment,
-  GetCurrentLevelRewardDocument,
 } from "../lib/graphql"
 import gql from "graphql-tag.macro"
 import { Modal } from "./Modal"
@@ -52,9 +51,10 @@ export const LEVEL_TASK_ITEM = gql`
 interface Props {
   levelTask?: LevelTaskItemFragment
   userTask?: UserTaskItemFragment
+  hideDescription?: boolean
 }
 
-export function LevelTaskItem({ levelTask, userTask }: Props) {
+export function LevelTaskItem({ levelTask, userTask, hideDescription }: Props) {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const task = userTask
     ? userTask.levelTaskOptionId
@@ -65,7 +65,7 @@ export function LevelTaskItem({ levelTask, userTask }: Props) {
   return (
     <>
       <Text as="i" mt={6}>
-        {task?.description}
+        {!hideDescription && task?.description}
       </Text>
       <Text>{task?.fullDescription}</Text>
       {task?.videoUrl && (
@@ -85,7 +85,7 @@ export function LevelTaskItem({ levelTask, userTask }: Props) {
         </>
       )}
       {task?.options && task?.options?.length > 0 && (
-        <Flex justify="flex-end" mt={4}>
+        <Flex justify="flex-end" mt={8}>
           <Button size="sm" w="fit-content" onClick={onOpen}>
             More options
           </Button>
@@ -108,7 +108,7 @@ export function LevelTaskItem({ levelTask, userTask }: Props) {
                 modalClose={onClose}
               />
               {task?.options && index !== task?.options?.length - 1 && (
-                <Box height="1px" backgroundColor="gray.200" w="100%" />
+                <Box height="2px" bg="gray.100" borderRadius="lg" />
               )}
             </React.Fragment>
           ))}
@@ -125,7 +125,9 @@ interface OptionProps {
 }
 
 function LevelTaskOptionItem({ option, taskId, modalClose }: OptionProps) {
-  const [updateTask] = useUpdateUserTaskMutation({
+  const [
+    updateTask,
+  ] = useUpdateUserTaskMutation(/*{
     update: (cache, res) => {
       if (res.data) {
         cache.writeQuery({
@@ -136,7 +138,7 @@ function LevelTaskOptionItem({ option, taskId, modalClose }: OptionProps) {
         })
       }
     },
-  })
+  }*/)
   const { isOpen, onClose, onOpen } = useDisclosure()
   const toast = useToast()
   const labels = option.label.split(",")

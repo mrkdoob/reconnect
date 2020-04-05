@@ -1,5 +1,5 @@
 import React, { useState } from "react"
-import { Flex, Box, Icon, Collapse, AspectRatioBox } from "@chakra-ui/core"
+import { Flex, Box, Icon, Collapse } from "@chakra-ui/core"
 import gql from "graphql-tag.macro"
 import {
   UserTaskItemFragment,
@@ -10,6 +10,7 @@ import {
 } from "../lib/graphql"
 import { mutationHandler } from "../lib/mutationHandler"
 import { useToggle } from "../lib/hooks/useToggle"
+import { LevelTaskItem } from "./LevelTaskItem"
 
 export const USER_TASK_OPTION_ITEM = gql`
   fragment UserTaskOptionItem on LevelTaskOption {
@@ -109,25 +110,36 @@ export function UserTaskItem({ task, isLast, handleTaskCompletion }: Props) {
     })
   }
 
+  const displayedTask = task?.levelTaskOptionId
+    ? task?.levelTaskOption
+    : task?.levelTask
+
   return (
     <Box>
-      <Flex justify="space-between" align="center">
-        <Flex py={4} align="center">
-          <Flex
-            border={complete ? "2px solid" : "2px solid"}
-            h={6}
-            w={6}
-            rounded="md"
-            bg={complete ? "green.400" : "white"}
-            borderColor={complete ? "green.400" : "gray.200"}
-            color="white"
-            justify="center"
-            align="center"
-            onClick={handleComplete}
-            cursor="pointer"
-          >
-            <Icon name="check" size="16px" />
-          </Flex>
+      <Flex align="center">
+        <Flex
+          border={complete ? "2px solid" : "2px solid"}
+          h={6}
+          w={6}
+          rounded="md"
+          bg={complete ? "green.400" : "white"}
+          borderColor={complete ? "green.400" : "gray.200"}
+          color="white"
+          justify="center"
+          align="center"
+          onClick={handleComplete}
+          cursor="pointer"
+        >
+          <Icon name="check" size="16px" />
+        </Flex>
+        <Flex
+          cursor="pointer"
+          onClick={toggleDescription}
+          justify="space-between"
+          w="100%"
+          py={4}
+          align="center"
+        >
           <Box
             as="span"
             verticalAlign="top"
@@ -136,33 +148,18 @@ export function UserTaskItem({ task, isLast, handleTaskCompletion }: Props) {
             color={complete ? "gray.400" : "text"}
             textDecoration={complete ? "line-through" : ""}
           >
-            {task?.levelTask?.description}
+            {displayedTask?.description}
           </Box>
+          <Icon
+            size="1.25rem"
+            color="gray.300"
+            name={descriptionOpen ? "chevron-up" : "chevron-down"}
+            transform="0.3s ease-in-out"
+          />
         </Flex>
-        <Icon
-          size="1.25rem"
-          color="gray.300"
-          name={descriptionOpen ? "chevron-up" : "chevron-down"}
-          onClick={toggleDescription}
-          cursor="pointer"
-          transform="0.3s ease-in-out"
-        />
       </Flex>
       <Collapse mt={2} isOpen={descriptionOpen}>
-        {task?.levelTask?.fullDescription}
-        {task.levelTask?.videoUrl && (
-          <AspectRatioBox ratio={4 / 3}>
-            <Box
-              mt={6}
-              as="iframe"
-              title="task video"
-              // @ts-ignore
-              src={task.levelTask.videoUrl}
-              allowFullScreen
-              borderRadius="lg"
-            />
-          </AspectRatioBox>
-        )}
+        <LevelTaskItem userTask={task} hideDescription={true} />
       </Collapse>
 
       {/* TODO: move divider */}
