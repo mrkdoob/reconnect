@@ -137,19 +137,16 @@ export function UserGroupList({ group }: Props) {
               label={completedMembers.map((user, index) => {
                 if (completedMembers && index + 1 < completedMembers.length) {
                   return user.firstName + ", "
-                } else if (completedMembers && completedMembers.length === 1) {
-                  return user.firstName + " has completed her/his tasks today"
                 } else {
                   return user.firstName + " have completed their tasks today"
                 }
               })}
-              isOpen={
-                completedMembers && completedMembers.length > 0
-                  ? undefined
-                  : false
-              }
             >
-              <Flex align="center" mt={8}>
+              <Flex
+                align="center"
+                mt={8}
+                display={group.users.length < 5 ? "none" : "flex"}
+              >
                 <Flex justify="center" align="center" w={16}>
                   <Box as={User} mx={4} h={8} color="blue.500" />
                 </Flex>

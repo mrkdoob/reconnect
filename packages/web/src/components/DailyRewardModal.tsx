@@ -83,9 +83,7 @@ export const DailyRewardModal = ({ dayCompleted, onClose }: Props) => {
               <ModalCloseButton />
               <ModalBody>
                 <Flex direction="column">
-                  <Text mb={4}>
-                    You have unlocked an ancient scroll of wisdom.
-                  </Text>
+                  <Text mb={4}>You have unlocked a wisdom scroll.</Text>
                   <Border mb={4} />
                   <Button
                     my={6}
@@ -96,7 +94,7 @@ export const DailyRewardModal = ({ dayCompleted, onClose }: Props) => {
                   >
                     Open
                   </Button>
-                  <Collapse mt={4} isOpen={show}>
+                  <Collapse mt={4} isOpen={show} fontSize="xl">
                     {reward?.courseDayReward?.pictureUrl && (
                       <Flex justify="center">
                         <Image
@@ -110,9 +108,7 @@ export const DailyRewardModal = ({ dayCompleted, onClose }: Props) => {
                         />
                       </Flex>
                     )}
-                    <Text fontSize="xl">
-                      <Markup content={reward?.courseDayReward?.description} />
-                    </Text>
+                    <Markup content={reward?.courseDayReward?.description} />
                   </Collapse>
                   <Border mt={4} />
                   <Button

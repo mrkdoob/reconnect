@@ -60,13 +60,16 @@ export function CourseLeadIn(props: Props) {
           </Flex>
           <Box w="80%">
             <BoxHeader>
-              {props.course.rewardType === "tree" ? "Plant" : "earn"}
+              {props.course.rewardType === "tree" ? "Plant" : "support"}
             </BoxHeader>
-            <BoxSubHeader>{props.course.rewardType}s</BoxSubHeader>
+            {/* <BoxSubHeader>{props.course.rewardType}s</BoxSubHeader> */}
+            <BoxSubHeader>Help those in need</BoxSubHeader>
             <Text fontSize="sm">
-              You will have a chance to{" "}
+              {/* You will have a chance to{" "}
               {props.course.rewardType === "tree" ? "plant" : "provide"}{" "}
-              {props.course.rewardType}s everyday together with your team
+              {props.course.rewardType}s everyday together with your team* */}
+              Each time you practice, we will donate to a charity to help those
+              in need.
             </Text>
           </Box>
         </Flex>
@@ -107,5 +110,4 @@ const BoxSubHeader = styled(Text)`
   font-size: ${p => p.theme.fontSizes.lg};
   font-weight: ${p => p.theme.fontWeights.semibold};
   margin-bottom: ${p => p.theme.space[2]};
-  text-transform: capitalize;
 `
