@@ -23,9 +23,12 @@ export class LevelTaskRepository {
     return tasks
   }
 
-  findAllByLevelId(levelId: string): Promise<LevelTask[]> {
+  findAllByLevelId(
+    levelId: string,
+    options?: FindOneOptions<LevelTask>,
+  ): Promise<LevelTask[]> {
     try {
-      return LevelTask.find({ where: { levelId } })
+      return LevelTask.find({ where: { levelId }, ...options })
     } catch {
       throw new UserInputError("No level tasks found")
     }

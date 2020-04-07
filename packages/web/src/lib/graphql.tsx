@@ -130,6 +130,7 @@ export type CreateLevelTaskOptionInput = {
   fullDescription: Scalars["String"]
   videoUrl: Scalars["String"]
   levelId: Scalars["String"]
+  optionId: Scalars["String"]
 }
 
 export type CreateMessageInput = {
@@ -137,6 +138,13 @@ export type CreateMessageInput = {
   order: Scalars["Float"]
   pictureUrl?: Maybe<Scalars["String"]>
   videoUrl?: Maybe<Scalars["String"]>
+}
+
+export type CreateOptionInput = {
+  label: Scalars["String"]
+  description: Scalars["String"]
+  fullDescription: Scalars["String"]
+  videoUrl: Scalars["String"]
 }
 
 export type CreateUserCourseInput = {
@@ -222,7 +230,7 @@ export type LevelTask = {
   createdAt: Scalars["DateTime"]
   updatedAt: Scalars["DateTime"]
   order: Scalars["Int"]
-  description: Scalars["String"]
+  description?: Maybe<Scalars["String"]>
   fullDescription?: Maybe<Scalars["String"]>
   videoUrl?: Maybe<Scalars["String"]>
   levelId?: Maybe<Scalars["String"]>
@@ -235,12 +243,14 @@ export type LevelTaskOption = {
   createdAt: Scalars["DateTime"]
   updatedAt: Scalars["DateTime"]
   order: Scalars["Int"]
-  label: Scalars["String"]
-  description: Scalars["String"]
+  label?: Maybe<Scalars["String"]>
+  description?: Maybe<Scalars["String"]>
   fullDescription?: Maybe<Scalars["String"]>
   videoUrl?: Maybe<Scalars["String"]>
   levelTaskId?: Maybe<Scalars["String"]>
+  optionId?: Maybe<Scalars["String"]>
   options?: Maybe<Array<LevelTaskOption>>
+  option?: Maybe<Option>
 }
 
 export type LoginInput = {
@@ -295,6 +305,9 @@ export type Mutation = {
   createMessage: Message
   updateMessage?: Maybe<Message>
   destroyMessage?: Maybe<Scalars["Boolean"]>
+  createOption: Option
+  updateOption?: Maybe<Option>
+  destroyOption: Scalars["Boolean"]
   getSignedS3Url?: Maybe<Scalars["String"]>
   getBulkSignedS3Url?: Maybe<Array<BulkSignedResponse>>
   createUserCourse: UserCourse
@@ -442,6 +455,19 @@ export type MutationDestroyMessageArgs = {
   messageId: Scalars["String"]
 }
 
+export type MutationCreateOptionArgs = {
+  data: CreateOptionInput
+}
+
+export type MutationUpdateOptionArgs = {
+  data: UpdateOptionInput
+  optionId: Scalars["String"]
+}
+
+export type MutationDestroyOptionArgs = {
+  optionId: Scalars["String"]
+}
+
 export type MutationGetSignedS3UrlArgs = {
   data: S3SignedUrlInput
 }
@@ -506,6 +532,17 @@ export type MutationDestroyUserTaskArgs = {
   taskId: Scalars["String"]
 }
 
+export type Option = {
+  __typename?: "Option"
+  id: Scalars["ID"]
+  createdAt: Scalars["DateTime"]
+  updatedAt: Scalars["DateTime"]
+  label: Scalars["String"]
+  description: Scalars["String"]
+  fullDescription?: Maybe<Scalars["String"]>
+  videoUrl?: Maybe<Scalars["String"]>
+}
+
 export type Query = {
   __typename?: "Query"
   getCourse: Course
@@ -531,6 +568,8 @@ export type Query = {
   getAllLevelTaskOptionsByLevelId: Array<LevelTaskOption>
   getMessage: Message
   allMessages: Array<Message>
+  getOption: Option
+  getAllOptions: Array<Option>
   getUserCourse: UserCourse
   myDayReward?: Maybe<UserDayReward>
   testAllMessageReset: Scalars["Boolean"]
@@ -592,6 +631,10 @@ export type QueryGetAllLevelTaskOptionsByLevelIdArgs = {
 
 export type QueryGetMessageArgs = {
   messageId: Scalars["String"]
+}
+
+export type QueryGetOptionArgs = {
+  optionId: Scalars["String"]
 }
 
 export type QueryGetUserCourseArgs = {
@@ -708,6 +751,7 @@ export type UpdateLevelTaskOptionInput = {
   description?: Maybe<Scalars["String"]>
   fullDescription?: Maybe<Scalars["String"]>
   videoUrl?: Maybe<Scalars["String"]>
+  optionId?: Maybe<Scalars["String"]>
 }
 
 export type UpdateMessageInput = {
@@ -715,6 +759,13 @@ export type UpdateMessageInput = {
   pictureUrl?: Maybe<Scalars["String"]>
   videoUrl?: Maybe<Scalars["String"]>
   order?: Maybe<Scalars["Float"]>
+}
+
+export type UpdateOptionInput = {
+  label?: Maybe<Scalars["String"]>
+  description?: Maybe<Scalars["String"]>
+  fullDescription?: Maybe<Scalars["String"]>
+  videoUrl?: Maybe<Scalars["String"]>
 }
 
 export type UpdateUserCourseInput = {
@@ -992,13 +1043,14 @@ export type UserTaskOptionItemFragment = {
       Array<
         { __typename?: "LevelTaskOption" } & Pick<
           LevelTaskOption,
-          | "id"
-          | "order"
-          | "label"
-          | "description"
-          | "fullDescription"
-          | "videoUrl"
+          "id" | "order"
         >
+      >
+    >
+    option?: Maybe<
+      { __typename?: "Option" } & Pick<
+        Option,
+        "id" | "label" | "description" | "fullDescription" | "videoUrl"
       >
     >
   }
@@ -1398,6 +1450,9 @@ export const UserTaskOptionItemFragmentDoc = gql`
     options {
       id
       order
+    }
+    option {
+      id
       label
       description
       fullDescription

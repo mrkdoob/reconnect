@@ -141,7 +141,7 @@ function LevelTaskOptionItem({ option, taskId, modalClose }: OptionProps) {
   }*/)
   const { isOpen, onClose, onOpen } = useDisclosure()
   const toast = useToast()
-  const labels = option.label.split(",")
+  const labels = option.label ? option.label.split(",") : []
 
   const handleSelect = async (levelTaskOptionId: string) => {
     if (!taskId) return

@@ -23,6 +23,9 @@ export const USER_TASK_OPTION_ITEM = gql`
     options {
       id
       order
+    }
+    option {
+      id
       label
       description
       fullDescription

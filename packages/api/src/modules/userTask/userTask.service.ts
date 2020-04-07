@@ -32,9 +32,20 @@ export class UserTaskService {
   }
 
   async createFirstTasks(levelId: string, userId: string) {
-    const levelTasks = await this.levelTaskRepository.findAllByLevelId(levelId)
+    const levelTasks = await this.levelTaskRepository.findAllByLevelId(
+      levelId,
+      {
+        relations: ["levelTaskOptions"],
+      },
+    )
     levelTasks.map(task => {
-      this.create({ levelTaskId: task.id, userId, order: task.order })
+      task.levelTaskOptions
+      this.create({
+        levelTaskId: task.id,
+        userId,
+        order: task.order,
+        levelTaskOptionId: task.levelTaskOptions[0].id, // TODO: Select 1st or prev
+      })
     })
     return levelTasks
   }
@@ -51,8 +62,13 @@ export class UserTaskService {
     const userTasks = await this.userTaskRepository.findUserTasks(userId)
 
     nextLevelTasks.map((task, index) => {
-      const data = { levelTaskId: task.id, order: task.order }
-      userTasks[index].update(data)
+      const data = { levelTaskId: task.id, order: task.order, completed: true }
+
+      if (userTasks.length < index) {
+        userTasks[index].update(data)
+      } else {
+        this.create(data)
+      }
       // TODO: Create new userTask if nextLevelTasks > userTasks
     })
   }

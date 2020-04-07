@@ -1,13 +1,9 @@
 import { InputType, Field } from "type-graphql"
 import { IsNotEmpty } from "class-validator"
-import { LevelTaskOption } from "../levelTaskOption.entity"
+import { Option } from "../option.entity"
 
 @InputType()
-export class UpdateLevelTaskOptionInput implements Partial<LevelTaskOption> {
-  @IsNotEmpty()
-  @Field({ nullable: true })
-  order: number
-
+export class UpdateOptionInput implements Partial<Option> {
   @IsNotEmpty()
   @Field({ nullable: true })
   label: string
@@ -21,7 +17,4 @@ export class UpdateLevelTaskOptionInput implements Partial<LevelTaskOption> {
 
   @Field({ nullable: true })
   videoUrl: string
-
-  @Field({ nullable: true })
-  optionId: string
 }

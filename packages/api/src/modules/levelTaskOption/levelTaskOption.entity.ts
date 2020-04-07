@@ -3,6 +3,7 @@ import { ObjectType } from "type-graphql"
 import { BaseEntity } from "../shared/base.entity"
 import { StringField, IntField, UuidField } from "../shared/fields"
 import { LevelTask } from "../levelTask/levelTask.entity"
+import { Option } from "../option/option.entity"
 
 @ObjectType()
 @Entity()
@@ -10,10 +11,10 @@ export class LevelTaskOption extends BaseEntity<LevelTaskOption> {
   @IntField()
   order: number
 
-  @StringField()
+  @StringField({ nullable: true })
   label: string
 
-  @StringField()
+  @StringField({ nullable: true })
   description: string
 
   @StringField({ nullable: true })
@@ -26,10 +27,19 @@ export class LevelTaskOption extends BaseEntity<LevelTaskOption> {
   @UuidField({ nullable: true })
   levelTaskId: string
 
+  @UuidField({ nullable: true })
+  optionId: string
+
   // RELATIONS
   @ManyToOne(
     () => LevelTask,
-    // TODO: levelTask => levelTask.options,
+    levelTask => levelTask.levelTaskOptions,
   )
   levelTask: LevelTask
+
+  @ManyToOne(
+    () => Option,
+    option => option.levelTaskOption,
+  )
+  option: Option
 }

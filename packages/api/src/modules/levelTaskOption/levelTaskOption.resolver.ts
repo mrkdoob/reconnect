@@ -9,6 +9,7 @@ import {
 
 import { Inject } from "typedi"
 import { LevelTaskOption } from "./levelTaskOption.entity"
+import { Option } from "../option/option.entity"
 import { LevelTaskOptionService } from "./levelTaskOption.service"
 import { LevelTaskOptionRepository } from "./levelTaskOption.repository"
 import { CreateLevelTaskOptionInput } from "./input/createLevelTaskOption.input"
@@ -69,7 +70,7 @@ export class LevelTaskOptionResolver {
 
   // FIELD RESOLVERS
   @FieldResolver(() => [LevelTaskOption], { nullable: true })
-  options(
+  async options(
     @Root() levelTaskOption: LevelTaskOption,
     @Loaders() { levelTaskOptionsLoader }: Loaders,
   ) {
@@ -78,5 +79,13 @@ export class LevelTaskOptionResolver {
     return options.then(res =>
       res.filter(task => task.id !== levelTaskOption.id),
     )
+  }
+
+  @FieldResolver(() => Option, { nullable: true })
+  option(
+    @Root() levelTaskOption: LevelTaskOption,
+    @Loaders() { optionLoader }: Loaders,
+  ) {
+    return optionLoader.load(levelTaskOption.optionId)
   }
 }

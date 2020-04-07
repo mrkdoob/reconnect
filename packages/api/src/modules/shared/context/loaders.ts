@@ -22,6 +22,7 @@ import { groupMessageLoader } from "../../userGroupMessage/userGroupMessage.load
 import { messageLoader } from "../../groupMessage/groupMessage.loader"
 import { courseDayRewardLoader } from "../../userDayReward/userDayReward.loader"
 import { levelTaskOptionsLoader } from "../../levelTask/levelTask.loader"
+import { optionLoader } from "../../levelTaskOption/levelTaskOption.loader"
 
 export interface Loaders {
   groupMembersLoader: ReturnType<typeof groupMembersLoader>
@@ -39,6 +40,8 @@ export interface Loaders {
   levelTasksLoader: ReturnType<typeof levelTasksLoader>
   levelTaskLoader: ReturnType<typeof levelTaskLoader>
   levelTaskOptionsLoader: ReturnType<typeof levelTaskOptionsLoader>
+  optionLoader: ReturnType<typeof optionLoader>
+
   courseDayRewardLoader: ReturnType<typeof courseDayRewardLoader>
   courseDayRewardsLoader: ReturnType<typeof courseDayRewardsLoader>
 
