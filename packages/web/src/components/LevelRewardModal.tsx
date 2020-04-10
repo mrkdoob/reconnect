@@ -55,7 +55,7 @@ export const LevelRewardModal = ({
 
   const handleLevelUpClose = () => {
     onClose()
-    if (level?.id && !level?.isLast) navigate(`/levelreward/${level.id}`)
+    if (level?.id && !level?.isLast) navigate(`/mylevelreward`)
   }
 
   return (

@@ -27,16 +27,18 @@ export class LevelRepository {
     }
   }
 
-  async findNext(id: string): Promise<Level> {
+  async findNext(id: string, options?: FindOneOptions<Level>): Promise<Level> {
     try {
       const level = await Level.findOneOrFail(id)
 
       return await Level.findOneOrFail({
         where: { courseId: level.courseId, levelNumber: level.levelNumber + 1 },
+        ...options,
       }) //TODO: REMOVE?
         .catch(() => {
           return Level.findOneOrFail({
-            where: { courseId: level.courseId, levelNumber: 1 }, // Reset to first
+            where: { courseId: level.courseId, levelNumber: 1 },
+            ...options, // Reset to first
           })
         })
     } catch {

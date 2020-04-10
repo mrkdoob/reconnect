@@ -43,37 +43,43 @@ export class UserLevelService {
   }
 
   // TODO:
-  async updateDayProgress(userId: string): Promise<boolean> {
+  async updateDayProgress(userId: string): Promise<UserLevel> {
     // Return boolean true if next is last level
-    const userLevel = await this.userLevelRepository.findByUserId(userId)
+    const userLevel = await this.userLevelRepository.findByUserId(userId, {
+      relations: ["level"],
+    })
+
+    // TODO: use relations: {"level"}
     const level = await this.levelRepository.findById(userLevel.levelId)
     if (userLevel.progressDay + 1 === level.maxProgressDays) {
-      return await this.updateToNextLevel(userLevel.id)
+      const nextUserLevel = await this.updateToNextLevel(userLevel)
+      console.log("nextUserLevel.level.title:" + nextUserLevel.level.title)
+      return nextUserLevel
     } else {
       userLevel.update({
         completed: false,
         progressDay: userLevel.progressDay + 1,
       })
-      return false
+      return userLevel
     }
   }
 
-  async updateToNextLevel(userLevelId: string): Promise<boolean> {
-    // Return boolean true if last level
-    const userLevel = await this.userLevelRepository.findById(userLevelId)
+  async updateToNextLevel(userLevel: UserLevel): Promise<UserLevel> {
     const nextLevel = await this.levelRepository.findNext(userLevel.levelId)
-    let isLastLevel = false
     if (nextLevel.isLast) {
       await this.userTaskService.destroyAllTasks(userLevel.userId)
-      isLastLevel = true
     } else {
       await this.userTaskService.updateAllToNextTasks(
         nextLevel.id,
         userLevel.userId,
       )
     }
-    const data = { levelId: nextLevel.id, completed: false, progressDay: 0 }
-    userLevel.update(data)
-    return isLastLevel
+    const data = {
+      levelId: nextLevel.id,
+      completed: false,
+      progressDay: 0,
+      level: nextLevel,
+    }
+    return await userLevel.update(data)
   }
 }

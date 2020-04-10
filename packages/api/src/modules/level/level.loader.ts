@@ -10,9 +10,9 @@ export const levelTasksLoader = () =>
       where: {
         levelId: In(levelIds),
       },
-      // order: {
-      //   order: "ASC",
-      // },
+      order: {
+        order: "ASC",
+      },
     })
 
     const map: { [key: string]: LevelTask[] } = {}

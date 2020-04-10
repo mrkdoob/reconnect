@@ -1,4 +1,4 @@
-import { Entity, OneToOne } from "typeorm"
+import { Entity, ManyToOne } from "typeorm"
 import { ObjectType } from "type-graphql"
 import { BaseEntity } from "../shared/base.entity"
 import { UuidField, BooleanField, IntField } from "../shared/fields"
@@ -22,15 +22,15 @@ export class UserLevel extends BaseEntity<UserLevel> {
   userId: string
 
   // RELATIONS
-  @OneToOne(
+  @ManyToOne(
     () => User,
     User => User,
   )
   user: User
 
-  @OneToOne(
+  @ManyToOne(
     () => Level,
-    Level => Level,
+    Level => Level.userLevels,
   )
   level: Level
 }

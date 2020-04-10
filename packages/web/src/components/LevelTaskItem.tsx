@@ -27,10 +27,13 @@ export const LEVEL_TASK_OPTION_ITEM = gql`
   fragment LevelTaskOptionItem on LevelTaskOption {
     id
     order
-    label
-    description
-    fullDescription
-    videoUrl
+    option {
+      id
+      label
+      description
+      fullDescription
+      videoUrl
+    }
   }
 `
 
@@ -39,8 +42,6 @@ export const LEVEL_TASK_ITEM = gql`
     id
     order
     description
-    fullDescription
-    videoUrl
     options {
       ...LevelTaskOptionItem
     }
@@ -54,13 +55,19 @@ interface Props {
   hideDescription?: boolean
 }
 
+// TODO: Seperate components for levelTask and userTask?
+
 export function LevelTaskItem({ levelTask, userTask, hideDescription }: Props) {
   const { isOpen, onOpen, onClose } = useDisclosure()
-  const task = userTask
-    ? userTask.levelTaskOptionId
-      ? userTask.levelTaskOption
-      : userTask.levelTask
-    : levelTask
+  const task =
+    levelTask && levelTask.options
+      ? levelTask.options[0].option
+      : userTask?.levelTaskOption?.option
+
+  const otherOptions =
+    levelTask && levelTask.options
+      ? levelTask.options
+      : userTask?.levelTaskOption?.options
 
   return (
     <>
@@ -84,7 +91,7 @@ export function LevelTaskItem({ levelTask, userTask, hideDescription }: Props) {
           <Box mb={6} />
         </>
       )}
-      {task?.options && task?.options?.length > 0 && (
+      {otherOptions && otherOptions.length > 1 && (
         <Flex justify="flex-end" mt={8}>
           <Button size="sm" w="fit-content" onClick={onOpen}>
             More options
@@ -100,18 +107,19 @@ export function LevelTaskItem({ levelTask, userTask, hideDescription }: Props) {
       >
         <Box w="100%">
           <Text>{task?.description} is currently selected.</Text>
-          {task?.options?.map((option, index) => (
-            <React.Fragment key={option.id}>
-              <LevelTaskOptionItem
-                option={option}
-                taskId={userTask?.id}
-                modalClose={onClose}
-              />
-              {task?.options && index !== task?.options?.length - 1 && (
-                <Box height="2px" bg="gray.100" borderRadius="lg" />
-              )}
-            </React.Fragment>
-          ))}
+          {otherOptions &&
+            otherOptions.map((option, index) => (
+              <React.Fragment key={option.id}>
+                <LevelTaskOptionItem
+                  taskOption={option}
+                  taskId={userTask?.id}
+                  modalClose={onClose}
+                />
+                {otherOptions && index !== otherOptions.length - 1 && (
+                  <Box height="2px" bg="gray.100" borderRadius="lg" />
+                )}
+              </React.Fragment>
+            ))}
         </Box>
       </Modal>
     </>
@@ -119,12 +127,12 @@ export function LevelTaskItem({ levelTask, userTask, hideDescription }: Props) {
 }
 
 interface OptionProps {
-  option: LevelTaskOptionItemFragment
+  taskOption: LevelTaskOptionItemFragment
   taskId?: string
   modalClose: () => void
 }
 
-function LevelTaskOptionItem({ option, taskId, modalClose }: OptionProps) {
+function LevelTaskOptionItem({ taskOption, taskId, modalClose }: OptionProps) {
   const [
     updateTask,
   ] = useUpdateUserTaskMutation(/*{
@@ -141,10 +149,12 @@ function LevelTaskOptionItem({ option, taskId, modalClose }: OptionProps) {
   }*/)
   const { isOpen, onClose, onOpen } = useDisclosure()
   const toast = useToast()
-  const labels = option.label ? option.label.split(",") : []
+  const labels = taskOption?.option?.label
+    ? taskOption?.option?.label.split(",")
+    : []
 
-  const handleSelect = async (levelTaskOptionId: string) => {
-    if (!taskId) return
+  const handleSelect = async (levelTaskOptionId: string | undefined) => {
+    if (!taskId || !levelTaskOptionId) return
 
     modalClose()
     const res = await updateTask({
@@ -174,7 +184,7 @@ function LevelTaskOptionItem({ option, taskId, modalClose }: OptionProps) {
       >
         <Flex align="center" justify={{ base: "space-between", md: "center" }}>
           <Text fontWeight="semibold" mr={4}>
-            {option.description}
+            {taskOption?.option?.description}
           </Text>
           <Icon
             size="1.5rem"
@@ -200,8 +210,8 @@ function LevelTaskOptionItem({ option, taskId, modalClose }: OptionProps) {
         </Stack>
       </Flex>
       <Collapse isOpen={isOpen} mt={4}>
-        <Text>{option.fullDescription}</Text>
-        {option.videoUrl && (
+        <Text>{taskOption?.option?.fullDescription}</Text>
+        {taskOption?.option?.videoUrl && (
           <>
             <AspectRatioBox ratio={4 / 3}>
               <Box
@@ -209,26 +219,26 @@ function LevelTaskOptionItem({ option, taskId, modalClose }: OptionProps) {
                 as="iframe"
                 title="task video"
                 // @ts-ignore
-                src={option.videoUrl || ""}
+                src={taskOption?.option?.videoUrl || ""}
                 allowFullScreen
                 borderRadius="lg"
               />
             </AspectRatioBox>
             <Box mb={12} />
-            <Flex justify="flex-end">
-              <Button onClick={onClose} px={8} mr={4} variant="ghost">
-                Hide
-              </Button>
-              <Button
-                px={8}
-                variantColor="blue"
-                onClick={() => handleSelect(option.id)}
-              >
-                Select
-              </Button>
-            </Flex>
           </>
         )}
+        <Flex justify="flex-end" mt={4}>
+          <Button onClick={onClose} px={8} mr={4} variant="ghost">
+            Hide
+          </Button>
+          <Button
+            px={8}
+            variantColor="blue"
+            onClick={() => handleSelect(taskOption?.id)}
+          >
+            Select
+          </Button>
+        </Flex>
       </Collapse>
     </Box>
   )

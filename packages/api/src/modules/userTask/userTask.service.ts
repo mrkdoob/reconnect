@@ -39,12 +39,17 @@ export class UserTaskService {
       },
     )
     levelTasks.map(task => {
-      task.levelTaskOptions
+      const levelTaskOptionId = task.levelTaskOptions.find(
+        option => option.order === 1,
+      )
+        ? task.levelTaskOptions.find(option => option.order === 1)
+        : task.levelTaskOptions[0]
+
       this.create({
         levelTaskId: task.id,
         userId,
         order: task.order,
-        levelTaskOptionId: task.levelTaskOptions[0].id, // TODO: Select 1st or prev
+        levelTaskOptionId: levelTaskOptionId?.id, // TODO: Select 1st or prev
       })
     })
     return levelTasks
@@ -58,18 +63,23 @@ export class UserTaskService {
   async updateAllToNextTasks(levelId: string, userId: string) {
     const nextLevelTasks = await this.levelTaskRepository.findAllByLevelId(
       levelId,
+      {
+        relations: ["levelTaskOptions"],
+      },
     )
-    const userTasks = await this.userTaskRepository.findUserTasks(userId)
 
-    nextLevelTasks.map((task, index) => {
-      const data = { levelTaskId: task.id, order: task.order, completed: true }
+    // const userTasks = await this.userTaskRepository.findUserTasks(userId)
+    await this.destroyAllTasks(userId)
 
-      if (userTasks.length < index) {
-        userTasks[index].update(data)
-      } else {
-        this.create(data)
+    nextLevelTasks.map(task => {
+      const data = {
+        levelTaskId: task.id,
+        order: task.order,
+        completed: true,
+        userId,
+        levelTaskOptionId: task.levelTaskOptions[0].id, // TODO: Select prev selected?
       }
-      // TODO: Create new userTask if nextLevelTasks > userTasks
+      this.create(data)
     })
   }
 

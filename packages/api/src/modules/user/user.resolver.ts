@@ -62,7 +62,10 @@ export class UserResolver {
   userWorker: UserWorker
 
   @Query(() => Boolean)
-  async dailyReset(@Arg("delay") delay: number) {
+  async dailyReset(
+    @Arg("delay") delay: number,
+    @Arg("repeatDaily") repeatDaily?: boolean,
+  ) {
     console.log("Daily reset delay: " + delay)
     this.userWorker.addJob({ name: "resetGroupUserTasks", data: {} }, { delay })
     this.userWorker.addJob(
@@ -75,6 +78,10 @@ export class UserResolver {
       { delay },
     )
     this.userWorker.addJob({ name: "updateDailyMessage", data: {} }, { delay })
+
+    repeatDaily &&
+      this.userWorker.addJob({ name: "repeatDaily", data: {} }, { delay })
+
     return true
   }
 
@@ -153,7 +160,11 @@ export class UserResolver {
   async completeMe(@CurrentUser() currentUser: User): Promise<User> {
     let group
     // userLevelService returns boolean true if last level
-    if (!(await this.userLevelService.updateDayProgress(currentUser.id))) {
+    const userLevel = await this.userLevelService.updateDayProgress(
+      currentUser.id,
+    )
+    if (userLevel.level.isLast) {
+      console.log("Is last is working")
       group = await this.groupService.completeMember(currentUser.groupId) // Don't update group score if last level
     }
     const data: CompleteMeInput = {

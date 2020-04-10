@@ -9,6 +9,7 @@ import {
 } from "../shared/fields"
 import { LevelTask } from "../levelTask/levelTask.entity"
 import { Course } from "../course/course.entity"
+import { UserLevel } from "../userLevel/userLevel.entity"
 
 @ObjectType()
 @Entity()
@@ -56,4 +57,10 @@ export class Level extends BaseEntity<Level> {
     course => course.levels,
   )
   course: Course
+
+  @OneToMany(
+    () => UserLevel,
+    userLevel => userLevel.level,
+  )
+  userLevels: UserLevel[]
 }

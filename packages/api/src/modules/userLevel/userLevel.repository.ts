@@ -20,10 +20,14 @@ export class UserLevelRepository {
     return UserLevel.find({ where })
   }
 
-  findByUserId(userId: string): Promise<UserLevel> {
+  findByUserId(
+    userId: string,
+    options?: FindOneOptions<UserLevel>,
+  ): Promise<UserLevel> {
     try {
       return UserLevel.findOneOrFail({
         where: { userId },
+        ...options,
       })
     } catch {
       throw new UserInputError("No UserLevel found")

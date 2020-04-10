@@ -22,6 +22,7 @@ import { useMe } from "./providers/MeProvider"
 import { User } from "styled-icons/boxicons-regular/User"
 import { Home } from "styled-icons/boxicons-regular/Home"
 import { Book } from "styled-icons/boxicons-regular/Book"
+import { colors } from "../lib/colors"
 
 export const Navbar: React.FC = () => {
   const me = useMe()
@@ -36,11 +37,25 @@ export const Navbar: React.FC = () => {
         p={{ base: 2, lg: 3 }}
         display={{ base: "none", md: "flex" }}
       >
-        <Image
+        {/* <Image
           src="https://cdn.dribbble.com/users/60166/screenshots/6352895/new_wave.jpg"
           h={12}
           w={16}
-        />
+        /> */}
+        <Flex fontSize="xl">
+          <Text color={colors[0]}>B</Text>
+          <Text color={colors[1]}>e</Text>
+          <Text color={colors[2]}>co</Text>
+          <Text color={colors[3]}>me</Text>
+          {/* </Flex>
+        <Flex fontSize="xl" mt={-2}> */}
+          {/* <Text color={colors[0]} ml={2}>
+            a b
+          </Text>
+          <Text color={colors[1]}>et</Text>
+          <Text color={colors[2]}>ter</Text>
+          <Text color={colors[3]}>.me</Text> */}
+        </Flex>
 
         {/* Md+ */}
         <Flex align="center" justify="space-between" w={me ? "10rem" : "15rem"}>
@@ -110,9 +125,9 @@ export const Navbar: React.FC = () => {
           align="flex-start"
           borderRadius="lg"
         >
-          <Text onClick={toggleUserMenu}>
+          {/* TODO: <Text onClick={toggleUserMenu}>
             <NavLink to="/progress">My progress</NavLink>
-          </Text>
+          </Text> */}
           <Text onClick={toggleUserMenu}>
             <NavLink to="/courses">Courses</NavLink>
           </Text>
@@ -136,7 +151,12 @@ export const Navbar: React.FC = () => {
 
       {/* Mobile screen */}
       <StyledSidebar display={{ base: "flex", lg: "none" }} p={4}>
-        <Text>Reconnect</Text>
+        <Flex fontSize="xl">
+          <Text color={colors[0]}>B</Text>
+          <Text color={colors[1]}>e</Text>
+          <Text color={colors[2]}>co</Text>
+          <Text color={colors[3]}>me</Text>
+        </Flex>
         <Box as={menuOpen ? Close : Menu} h={8} onClick={toggleMenu} />
       </StyledSidebar>
       <Collapse
@@ -163,9 +183,9 @@ export const Navbar: React.FC = () => {
             <Text onClick={toggleMenu}>
               <NavLink to="/courses">Courses</NavLink>
             </Text>
-            <Text onClick={toggleMenu}>
+            {/* TODO: <Text onClick={toggleMenu}>
               <NavLink to="/progress">My progress</NavLink>
-            </Text>
+            </Text> */}
             <Text onClick={toggleMenu}>
               <NavLink to="/settings">Settings</NavLink>
             </Text>

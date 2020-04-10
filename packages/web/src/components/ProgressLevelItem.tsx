@@ -1,10 +1,10 @@
 import React from "react"
-import { Flex, Box, Text, Image } from "@chakra-ui/core"
+import { Flex, Box, Text, Icon } from "@chakra-ui/core"
 import { CourseLevelFragment, MyLevelProgressFragment } from "../lib/graphql"
 import { styled } from "./providers/ThemeProvider"
 import { Book } from "styled-icons/boxicons-regular/Book"
-import { Tree } from "../lib/imageLinks"
 import { Link } from "@reach/router"
+import { colors } from "../lib/colors"
 
 interface Props {
   level: CourseLevelFragment
@@ -12,7 +12,7 @@ interface Props {
   isCurrentLevel?: boolean
 }
 
-const colors = ["blue.400", "blue.200", "green.100", "green.400"] // Add more colors when using more levels
+// const colors = ["blue.400", "blue.200", "green.100", "green.400"] // Add more colors when using more levels
 
 export function ProgressLevelItem(props: Props) {
   return (
@@ -35,13 +35,13 @@ export function ProgressLevelItem(props: Props) {
           zIndex={"tooltip"}
         />
         {!props.isCurrentLevel && (
-          <Image
-            src={Tree}
-            h={12}
-            w={16}
-            position="absolute"
-            right={0}
+          <Icon
+            right={4}
             bottom={4}
+            position="absolute"
+            name="check"
+            size="32px"
+            color="white"
           />
         )}
 

@@ -948,14 +948,18 @@ export type EndMyCourseMutation = { __typename?: "Mutation" } & {
 
 export type LevelTaskOptionItemFragment = {
   __typename?: "LevelTaskOption"
-} & Pick<
-  LevelTaskOption,
-  "id" | "order" | "label" | "description" | "fullDescription" | "videoUrl"
->
+} & Pick<LevelTaskOption, "id" | "order"> & {
+    option?: Maybe<
+      { __typename?: "Option" } & Pick<
+        Option,
+        "id" | "label" | "description" | "fullDescription" | "videoUrl"
+      >
+    >
+  }
 
 export type LevelTaskItemFragment = { __typename?: "LevelTask" } & Pick<
   LevelTask,
-  "id" | "order" | "description" | "fullDescription" | "videoUrl"
+  "id" | "order" | "description"
 > & {
     options?: Maybe<
       Array<{ __typename?: "LevelTaskOption" } & LevelTaskOptionItemFragment>
@@ -1035,16 +1039,20 @@ export type UpdateUserGroupMessageMutation = { __typename?: "Mutation" } & {
 
 export type UserTaskOptionItemFragment = {
   __typename?: "LevelTaskOption"
-} & Pick<
-  LevelTaskOption,
-  "id" | "order" | "label" | "description" | "fullDescription" | "videoUrl"
-> & {
+} & Pick<LevelTaskOption, "id" | "order"> & {
     options?: Maybe<
       Array<
         { __typename?: "LevelTaskOption" } & Pick<
           LevelTaskOption,
           "id" | "order"
-        >
+        > & {
+            option?: Maybe<
+              { __typename?: "Option" } & Pick<
+                Option,
+                "id" | "label" | "description" | "fullDescription" | "videoUrl"
+              >
+            >
+          }
       >
     >
     option?: Maybe<
@@ -1055,30 +1063,10 @@ export type UserTaskOptionItemFragment = {
     >
   }
 
-export type UserLevelTaskItemFragment = { __typename?: "LevelTask" } & Pick<
-  LevelTask,
-  "id" | "order" | "description" | "fullDescription" | "videoUrl"
-> & {
-    options?: Maybe<
-      Array<
-        { __typename?: "LevelTaskOption" } & Pick<
-          LevelTaskOption,
-          | "id"
-          | "order"
-          | "label"
-          | "description"
-          | "fullDescription"
-          | "videoUrl"
-        >
-      >
-    >
-  }
-
 export type UserTaskItemFragment = { __typename?: "UserTask" } & Pick<
   UserTask,
   "id" | "completed" | "levelTaskId" | "levelTaskOptionId"
 > & {
-    levelTask?: Maybe<{ __typename?: "LevelTask" } & UserLevelTaskItemFragment>
     levelTaskOption?: Maybe<
       { __typename?: "LevelTaskOption" } & UserTaskOptionItemFragment
     >
@@ -1299,10 +1287,13 @@ export const LevelTaskOptionItemFragmentDoc = gql`
   fragment LevelTaskOptionItem on LevelTaskOption {
     id
     order
-    label
-    description
-    fullDescription
-    videoUrl
+    option {
+      id
+      label
+      description
+      fullDescription
+      videoUrl
+    }
   }
 `
 export const LevelTaskItemFragmentDoc = gql`
@@ -1310,8 +1301,6 @@ export const LevelTaskItemFragmentDoc = gql`
     id
     order
     description
-    fullDescription
-    videoUrl
     options {
       ...LevelTaskOptionItem
     }
@@ -1422,34 +1411,20 @@ export const CourseFragmentDoc = gql`
   ${CourseLevelFragmentDoc}
   ${CourseItemFragmentDoc}
 `
-export const UserLevelTaskItemFragmentDoc = gql`
-  fragment UserLevelTaskItem on LevelTask {
-    id
-    order
-    description
-    fullDescription
-    videoUrl
-    options {
-      id
-      order
-      label
-      description
-      fullDescription
-      videoUrl
-    }
-  }
-`
 export const UserTaskOptionItemFragmentDoc = gql`
   fragment UserTaskOptionItem on LevelTaskOption {
     id
     order
-    label
-    description
-    fullDescription
-    videoUrl
     options {
       id
       order
+      option {
+        id
+        label
+        description
+        fullDescription
+        videoUrl
+      }
     }
     option {
       id
@@ -1466,14 +1441,10 @@ export const UserTaskItemFragmentDoc = gql`
     completed
     levelTaskId
     levelTaskOptionId
-    levelTask {
-      ...UserLevelTaskItem
-    }
     levelTaskOption {
       ...UserTaskOptionItem
     }
   }
-  ${UserLevelTaskItemFragmentDoc}
   ${UserTaskOptionItemFragmentDoc}
 `
 export const LevelItemFragmentDoc = gql`

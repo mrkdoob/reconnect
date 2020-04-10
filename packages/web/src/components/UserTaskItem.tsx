@@ -6,7 +6,6 @@ import {
   UserTaskItemFragmentDoc,
   useUpdateUserTaskMutation,
   UserTaskOptionItemFragmentDoc,
-  UserLevelTaskItemFragmentDoc,
 } from "../lib/graphql"
 import { mutationHandler } from "../lib/mutationHandler"
 import { useToggle } from "../lib/hooks/useToggle"
@@ -16,33 +15,19 @@ export const USER_TASK_OPTION_ITEM = gql`
   fragment UserTaskOptionItem on LevelTaskOption {
     id
     order
-    label
-    description
-    fullDescription
-    videoUrl
     options {
       id
       order
+      option {
+        id
+        label
+        description
+        fullDescription
+        videoUrl
+      }
     }
     option {
       id
-      label
-      description
-      fullDescription
-      videoUrl
-    }
-  }
-`
-export const USER_LEVEL_TASK_ITEM = gql`
-  fragment UserLevelTaskItem on LevelTask {
-    id
-    order
-    description
-    fullDescription
-    videoUrl
-    options {
-      id
-      order
       label
       description
       fullDescription
@@ -57,15 +42,11 @@ export const USER_TASK = gql`
     completed
     levelTaskId
     levelTaskOptionId
-    levelTask {
-      ...UserLevelTaskItem
-    }
     levelTaskOption {
       ...UserTaskOptionItem
     }
   }
   ${UserTaskOptionItemFragmentDoc}
-  ${UserLevelTaskItemFragmentDoc}
 `
 
 export const UPDATE_USERTASK = gql`
@@ -113,10 +94,6 @@ export function UserTaskItem({ task, isLast, handleTaskCompletion }: Props) {
     })
   }
 
-  const displayedTask = task?.levelTaskOptionId
-    ? task?.levelTaskOption
-    : task?.levelTask
-
   return (
     <Box>
       <Flex align="center">
@@ -135,15 +112,10 @@ export function UserTaskItem({ task, isLast, handleTaskCompletion }: Props) {
         >
           <Icon name="check" size="16px" />
         </Flex>
-        <Flex
-          cursor="pointer"
-          onClick={toggleDescription}
-          justify="space-between"
-          w="100%"
-          py={4}
-          align="center"
-        >
+        <Flex justify="space-between" w="100%" py={4} align="center">
           <Box
+            onClick={handleComplete}
+            cursor="pointer"
             as="span"
             verticalAlign="top"
             ml={6}
@@ -151,11 +123,13 @@ export function UserTaskItem({ task, isLast, handleTaskCompletion }: Props) {
             color={complete ? "gray.400" : "text"}
             textDecoration={complete ? "line-through" : ""}
           >
-            {displayedTask?.description}
+            {task.levelTaskOption?.option?.description}
           </Box>
           <Icon
-            size="1.25rem"
+            size="1.5rem"
             color="gray.300"
+            onClick={toggleDescription}
+            cursor="pointer"
             name={descriptionOpen ? "chevron-up" : "chevron-down"}
             transform="0.3s ease-in-out"
           />
