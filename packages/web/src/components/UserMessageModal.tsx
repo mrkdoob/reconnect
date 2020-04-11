@@ -57,19 +57,20 @@ export const UserMessageModal: React.FC<Props> = props => {
 
   const [updateUserGroupMessage] = useUpdateUserGroupMessageMutation()
 
-  const handleDontShowMe = async () => {
-    toggleModal()
-    if (!props.userGroupMessage) return
+  // TODO: Add or remove?
+  // const handleDontShowMe = async () => {
+  //   toggleModal()
+  //   if (!props.userGroupMessage) return
 
-    updateUserGroupMessage({
-      variables: {
-        userGroupMessageId: props.userGroupMessage.id,
-        data: {
-          showOption: false,
-        },
-      },
-    })
-  }
+  //   updateUserGroupMessage({
+  //     variables: {
+  //       userGroupMessageId: props.userGroupMessage.id,
+  //       data: {
+  //         showOption: false,
+  //       },
+  //     },
+  //   })
+  // }
 
   const handleClose = async () => {
     toggleModal()
@@ -145,9 +146,9 @@ export const UserMessageModal: React.FC<Props> = props => {
         <Button my={6} onClick={handleClose} variantColor="blue">
           Continue
         </Button>
-        <Button fontSize="sm" onClick={handleDontShowMe} variant="ghost">
+        {/* TODO: Add or remove? <Button fontSize="sm" onClick={handleDontShowMe} variant="ghost">
           Don't show me again
-        </Button>
+        </Button> */}
       </Flex>
     </Modal>
   )

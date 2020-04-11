@@ -52,6 +52,8 @@ export class GroupService {
       rewardCount: newRewardCount,
       groupCoins: newCoins,
     }
+    console.log("data" + data)
+
     return group.update(data)
   }
 

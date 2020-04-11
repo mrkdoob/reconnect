@@ -159,7 +159,7 @@ export class UserResolver {
     const userLevel = await this.userLevelService.updateDayProgress(
       currentUser.id,
     )
-    if (userLevel.level.isLast) {
+    if (!userLevel.level.isLast) {
       group = await this.groupService.completeMember(currentUser.groupId) // Don't update group score if last level
     }
     const data: CompleteMeInput = {

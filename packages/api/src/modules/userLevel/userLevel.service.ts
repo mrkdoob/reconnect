@@ -53,7 +53,6 @@ export class UserLevelService {
     const level = await this.levelRepository.findById(userLevel.levelId)
     if (userLevel.progressDay + 1 === level.maxProgressDays) {
       const nextUserLevel = await this.updateToNextLevel(userLevel)
-      console.log("nextUserLevel.level.title:" + nextUserLevel.level.title)
       return nextUserLevel
     } else {
       userLevel.update({

@@ -83,11 +83,13 @@ export const Settings: React.FC<Props> = props => {
   })
   const settings = data?.me
 
-  const [showOptionState, setShowOptionState] = useState(false)
-  const showOption = settings?.userGroupMessage?.showOption || false
-  React.useEffect(() => {
-    setShowOptionState(showOption)
-  }, [showOption])
+  // TODO: Add or remove?
+  // const [showOptionState, setShowOptionState] = useState(false)
+  // const showOption = settings?.userGroupMessage?.showOption || false
+  // React.useEffect(() => {
+  //   setShowOptionState(showOption)
+  // }, [showOption])
+
   const { isOpen, onClose, onOpen } = useDisclosure()
 
   const form = useForm({ validationSchema: SettingsSchema })
@@ -111,16 +113,17 @@ export const Settings: React.FC<Props> = props => {
     })
   }
 
-  const handleUpdate = async () => {
-    if (!settings?.userGroupMessage) return
-    const res = await updateUserGroupMessage({
-      variables: {
-        userGroupMessageId: settings.userGroupMessage.id,
-        data: { showOption: !showOptionState },
-      },
-    }).catch(() => null)
-    return mutationHandler(res, undefined, undefined, toast)
-  }
+  // TODO: Add or remove?
+  // const handleUpdate = async () => {
+  //   if (!settings?.userGroupMessage) return
+  //   const res = await updateUserGroupMessage({
+  //     variables: {
+  //       userGroupMessageId: settings.userGroupMessage.id,
+  //       data: { showOption: !showOptionState },
+  //     },
+  //   }).catch(() => null)
+  //   return mutationHandler(res, undefined, undefined, toast)
+  // }
 
   return (
     <Page loading={loading} title="Settings">
@@ -180,14 +183,14 @@ export const Settings: React.FC<Props> = props => {
               <FormLabel htmlFor="email-alerts">
                 Show daily group summary?
               </FormLabel>
-              <Switch
+              {/* TODO: Add or remove? <Switch
                 id="email-alerts"
                 isChecked={showOptionState}
                 onChange={() => {
                   setShowOptionState(!showOptionState)
                   handleUpdate()
                 }}
-              />
+              /> */}
             </Flex>
             <Flex
               justify="space-between"

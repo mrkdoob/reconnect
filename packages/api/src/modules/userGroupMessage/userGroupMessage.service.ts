@@ -74,7 +74,6 @@ export class UserGroupMessageService {
 
     userMessages.map(userMessage => {
       userMessage.update({ isRead: false })
-      // this.updateToNextMessage(userMessage)
     })
   }
 }
