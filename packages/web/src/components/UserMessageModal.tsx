@@ -1,6 +1,6 @@
 import React from "react"
 import gql from "graphql-tag.macro"
-import { Text, Flex, Image, Button } from "@chakra-ui/core"
+import { Text, Flex, Image, Button, AspectRatioBox, Box } from "@chakra-ui/core"
 
 import {
   useUpdateUserGroupMessageMutation,
@@ -123,6 +123,22 @@ export const UserMessageModal: React.FC<Props> = props => {
             borderRadius="lg"
             mb={4}
           />
+        )}
+        {props.userGroupMessage?.message?.videoUrl && (
+          <>
+            <AspectRatioBox ratio={4 / 3}>
+              <Box
+                mt={6}
+                as="iframe"
+                title="task video"
+                // @ts-ignore
+                src={props.userGroupMessage?.message?.videoUrl || ""}
+                allowFullScreen
+                borderRadius="lg"
+              />
+            </AspectRatioBox>
+            <Box mb={6} />
+          </>
         )}
         <Markup content={props.userGroupMessage?.message?.message} />
 
