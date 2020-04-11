@@ -24,6 +24,7 @@ export const USER_GROUP_MESSAGE = gql`
         message
         videoUrl
         pictureUrl
+        fullHeightPic
       }
     }
   }
@@ -117,7 +118,11 @@ export const UserMessageModal: React.FC<Props> = props => {
             src={props.userGroupMessage.groupMessage.message.pictureUrl}
             alt="Message picture"
             w="625px"
-            h="300px"
+            h={
+              props.userGroupMessage.groupMessage.message.fullHeightPic
+                ? ""
+                : "300px"
+            }
             objectFit="cover"
             borderRadius="lg"
             mb={4}

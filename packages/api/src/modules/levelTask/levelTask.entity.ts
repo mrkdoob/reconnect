@@ -14,12 +14,6 @@ export class LevelTask extends BaseEntity<LevelTask> {
   @StringField({ nullable: true })
   description: string
 
-  @StringField({ nullable: true })
-  fullDescription: string
-
-  @StringField({ nullable: true })
-  videoUrl: string
-
   //TODO: true
   @UuidField({ nullable: true })
   levelId: string

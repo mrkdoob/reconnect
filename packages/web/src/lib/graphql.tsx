@@ -118,17 +118,11 @@ export type CreateLevelInput = {
 export type CreateLevelTaskInput = {
   order: Scalars["Float"]
   description: Scalars["String"]
-  fullDescription: Scalars["String"]
-  videoUrl: Scalars["String"]
   levelId: Scalars["String"]
 }
 
 export type CreateLevelTaskOptionInput = {
   order: Scalars["Float"]
-  label: Scalars["String"]
-  description: Scalars["String"]
-  fullDescription: Scalars["String"]
-  videoUrl: Scalars["String"]
   levelId: Scalars["String"]
   optionId: Scalars["String"]
 }
@@ -138,6 +132,7 @@ export type CreateMessageInput = {
   order: Scalars["Float"]
   pictureUrl?: Maybe<Scalars["String"]>
   videoUrl?: Maybe<Scalars["String"]>
+  fullHeightPic?: Maybe<Scalars["Boolean"]>
 }
 
 export type CreateOptionInput = {
@@ -231,8 +226,6 @@ export type LevelTask = {
   updatedAt: Scalars["DateTime"]
   order: Scalars["Int"]
   description?: Maybe<Scalars["String"]>
-  fullDescription?: Maybe<Scalars["String"]>
-  videoUrl?: Maybe<Scalars["String"]>
   levelId?: Maybe<Scalars["String"]>
   options?: Maybe<Array<LevelTaskOption>>
 }
@@ -243,10 +236,6 @@ export type LevelTaskOption = {
   createdAt: Scalars["DateTime"]
   updatedAt: Scalars["DateTime"]
   order: Scalars["Int"]
-  label?: Maybe<Scalars["String"]>
-  description?: Maybe<Scalars["String"]>
-  fullDescription?: Maybe<Scalars["String"]>
-  videoUrl?: Maybe<Scalars["String"]>
   levelTaskId?: Maybe<Scalars["String"]>
   optionId?: Maybe<Scalars["String"]>
   options?: Maybe<Array<LevelTaskOption>>
@@ -267,6 +256,7 @@ export type Message = {
   order: Scalars["Int"]
   pictureUrl?: Maybe<Scalars["String"]>
   videoUrl?: Maybe<Scalars["String"]>
+  fullHeightPic: Scalars["Boolean"]
 }
 
 export type Mutation = {
@@ -598,6 +588,7 @@ export type QueryGroupArgs = {
 }
 
 export type QueryDailyResetArgs = {
+  repeatDaily: Scalars["Boolean"]
   delay: Scalars["Float"]
 }
 
@@ -741,15 +732,10 @@ export type UpdateLevelInput = {
 export type UpdateLevelTaskInput = {
   order?: Maybe<Scalars["Float"]>
   description?: Maybe<Scalars["String"]>
-  fullDescription?: Maybe<Scalars["String"]>
-  videoUrl?: Maybe<Scalars["String"]>
 }
 
 export type UpdateLevelTaskOptionInput = {
   order?: Maybe<Scalars["Float"]>
-  label?: Maybe<Scalars["String"]>
-  description?: Maybe<Scalars["String"]>
-  fullDescription?: Maybe<Scalars["String"]>
   videoUrl?: Maybe<Scalars["String"]>
   optionId?: Maybe<Scalars["String"]>
 }
@@ -759,6 +745,7 @@ export type UpdateMessageInput = {
   pictureUrl?: Maybe<Scalars["String"]>
   videoUrl?: Maybe<Scalars["String"]>
   order?: Maybe<Scalars["Float"]>
+  fullHeightPic?: Maybe<Scalars["Boolean"]>
 }
 
 export type UpdateOptionInput = {
@@ -1016,7 +1003,7 @@ export type UserGroupMessageFragment = {
           message?: Maybe<
             { __typename?: "Message" } & Pick<
               Message,
-              "id" | "message" | "videoUrl" | "pictureUrl"
+              "id" | "message" | "videoUrl" | "pictureUrl" | "fullHeightPic"
             >
           >
         }
@@ -1482,6 +1469,7 @@ export const UserGroupMessageFragmentDoc = gql`
         message
         videoUrl
         pictureUrl
+        fullHeightPic
       }
     }
   }

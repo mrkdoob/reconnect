@@ -1,7 +1,7 @@
 import { Entity, OneToOne } from "typeorm"
 import { ObjectType } from "type-graphql"
 import { BaseEntity } from "../shared/base.entity"
-import { StringField, IntField } from "../shared/fields"
+import { StringField, IntField, BooleanField } from "../shared/fields"
 import { GroupMessage } from "../groupMessage/groupMessage.entity"
 
 @ObjectType()
@@ -18,6 +18,9 @@ export class Message extends BaseEntity<Message> {
 
   @StringField({ nullable: true })
   videoUrl: string
+
+  @BooleanField({ default: false })
+  fullHeightPic: boolean
 
   // RELATIONS TODO:
   @OneToOne(

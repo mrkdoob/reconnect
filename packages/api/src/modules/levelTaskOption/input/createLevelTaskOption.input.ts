@@ -11,20 +11,6 @@ export class CreateLevelTaskOptionInput implements Partial<LevelTaskOption> {
 
   @IsNotEmpty()
   @Field()
-  label: string
-
-  @IsNotEmpty()
-  @Field()
-  description: string
-
-  @Field()
-  fullDescription: string
-
-  @Field()
-  videoUrl: string
-
-  @IsNotEmpty()
-  @Field()
   levelId: string
 
   @IsNotEmpty()

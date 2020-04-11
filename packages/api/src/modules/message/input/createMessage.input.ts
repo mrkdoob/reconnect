@@ -17,4 +17,7 @@ export class CreateMessageInput implements Partial<Message> {
 
   @Field({ nullable: true })
   videoUrl: string
+
+  @Field({ nullable: true })
+  fullHeightPic: boolean
 }

@@ -1,5 +1,5 @@
 import React from "react"
-import { Flex, Box, Heading, Button, Text, useToast } from "@chakra-ui/core"
+import { Flex, Box, Button, Text, useToast } from "@chakra-ui/core"
 import gql from "graphql-tag.macro"
 import * as Yup from "yup"
 import { RouteComponentProps, Link, navigate } from "@reach/router"
@@ -16,6 +16,7 @@ import {
 
 import { useForm } from "../lib/hooks/useForm"
 import { Form } from "../components/Form"
+import { colors } from "../lib/colors"
 
 export const REGISTER = gql`
   mutation Register($data: RegisterInput!) {
@@ -76,7 +77,12 @@ export const Register: React.FC<RouteComponentProps> = () => {
       direction="column"
       mt="120px"
     >
-      <Heading pb={10}>Reconnect</Heading>
+      <Flex fontWeight="semibold" fontSize="4xl" pb={8}>
+        <Text color={colors[0]}>B</Text>
+        <Text color={colors[1]}>e</Text>
+        <Text color={colors[2]}>co</Text>
+        <Text color={colors[3]}>me</Text>
+      </Flex>
       <Box w={["100%", 400]}>
         <Form onSubmit={onSubmit} {...form}>
           <Input name="email" label="Email" placeholder="jim@gmail.com" />

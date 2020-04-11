@@ -14,4 +14,7 @@ export class UpdateMessageInput implements Partial<Message> {
 
   @Field({ nullable: true })
   order: number
+
+  @Field({ nullable: true })
+  fullHeightPic: boolean
 }

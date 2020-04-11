@@ -32,7 +32,7 @@ export const Modal: React.FC<Props> = props => {
             <ModalOverlay opacity={styles.opacity} />
             <StyledModalContent
               bg={bg[colorMode]}
-              p={4}
+              p={2}
               {...styles}
               borderRadius="lg"
               textAlign={props.textAlign}
@@ -49,8 +49,8 @@ export const Modal: React.FC<Props> = props => {
 }
 
 const StyledModalContent = styled(ModalContent)`
-  border-top: 3px solid ${p => p.theme.colors.blue[400]};
+  /* border-top: 3px solid ${p => p.theme.colors.blue[400]};
   border-left: 3px solid ${p => p.theme.colors.blue[200]};
   border-right: 3px solid ${p => p.theme.colors.green[100]};
-  border-bottom: 3px solid ${p => p.theme.colors.green[400]};
+  border-bottom: 3px solid ${p => p.theme.colors.green[400]}; */
 `

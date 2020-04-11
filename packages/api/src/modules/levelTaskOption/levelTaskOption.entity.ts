@@ -1,7 +1,7 @@
 import { Entity, ManyToOne } from "typeorm"
 import { ObjectType } from "type-graphql"
 import { BaseEntity } from "../shared/base.entity"
-import { StringField, IntField, UuidField } from "../shared/fields"
+import { IntField, UuidField } from "../shared/fields"
 import { LevelTask } from "../levelTask/levelTask.entity"
 import { Option } from "../option/option.entity"
 
@@ -10,18 +10,6 @@ import { Option } from "../option/option.entity"
 export class LevelTaskOption extends BaseEntity<LevelTaskOption> {
   @IntField()
   order: number
-
-  @StringField({ nullable: true })
-  label: string
-
-  @StringField({ nullable: true })
-  description: string
-
-  @StringField({ nullable: true })
-  fullDescription: string
-
-  @StringField({ nullable: true })
-  videoUrl: string
 
   //TODO: remove true
   @UuidField({ nullable: true })

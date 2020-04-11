@@ -13,12 +13,6 @@ export class CreateLevelTaskInput implements Partial<LevelTask> {
   @Field()
   description: string
 
-  @Field()
-  fullDescription: string
-
-  @Field()
-  videoUrl: string
-
   @IsNotEmpty()
   @Field()
   levelId: string
