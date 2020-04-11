@@ -18,6 +18,8 @@ import { Loaders } from "../shared/context/loaders"
 import { UserGroupMessage } from "./userGroupMessage.entity"
 import { UserGroupMessageRepository } from "./userGroupMessage.repository"
 import { GroupMessage } from "../groupMessage/groupMessage.entity"
+import { Message } from "../message/message.entity"
+import { MessageRepository } from "../message/message.repository"
 
 @Resolver(() => UserGroupMessage)
 export class UserGroupMessageResolver {
@@ -25,6 +27,8 @@ export class UserGroupMessageResolver {
   userGroupMessageService: UserGroupMessageService
   @Inject(() => UserGroupMessageRepository)
   userGroupMessageRepository: UserGroupMessageRepository
+  @Inject(() => MessageRepository)
+  messageRepository: MessageRepository
 
   @Inject(() => UserResolver)
   UserResolver: UserResolver
@@ -59,7 +63,7 @@ export class UserGroupMessageResolver {
 
   // TODO: @Authorized()
   @Mutation(() => UserGroupMessage, { nullable: true })
-  updateUserGroupMessage(
+  async updateUserGroupMessage(
     @Arg("userGroupMessageId") userGroupMessageId: string,
     @Arg("data") data: UpdateUserGroupMessageInput,
   ): Promise<UserGroupMessage> {
@@ -81,5 +85,13 @@ export class UserGroupMessageResolver {
     @Loaders() { groupMessageLoader }: Loaders,
   ) {
     return groupMessageLoader.load(userGroupMessage.groupMessageId)
+  }
+
+  @FieldResolver(() => Message, { nullable: true })
+  message(
+    @Root() groupMessage: GroupMessage,
+    @Loaders() { messageLoader }: Loaders,
+  ) {
+    return messageLoader.load(groupMessage.messageId)
   }
 }

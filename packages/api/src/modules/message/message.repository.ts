@@ -20,13 +20,27 @@ export class MessageRepository {
     return Message.find()
   }
 
-  findByOrder(order: number): Promise<Message> {
+  findByOrderCourse(order: number, courseId: string): Promise<Message> {
     try {
       return Message.findOneOrFail({
-        where: { order },
+        where: { order, courseId },
       })
     } catch {
       throw new UserInputError("No message found")
     }
+  }
+
+  async findNext(messageId: string): Promise<Message> {
+    const message = await Message.findOneOrFail(messageId)
+    return await this.findByOrderCourse(
+      message.order + 1,
+      message.courseId,
+    ).catch(() => {
+      try {
+        return this.findByOrderCourse(message.order + 1, message.courseId)
+      } catch {
+        throw new UserInputError("No message found")
+      }
+    })
   }
 }

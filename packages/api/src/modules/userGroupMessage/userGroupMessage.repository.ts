@@ -16,14 +16,20 @@ export class UserGroupMessageRepository {
     }
   }
 
-  findAll(): Promise<UserGroupMessage[]> {
-    return UserGroupMessage.find()
+  findAll(
+    options?: FindOneOptions<UserGroupMessage>,
+  ): Promise<UserGroupMessage[]> {
+    return UserGroupMessage.find(options)
   }
 
-  findByUserId(userId: string): Promise<UserGroupMessage> {
+  findByUserId(
+    userId: string,
+    options?: FindOneOptions<UserGroupMessage>,
+  ): Promise<UserGroupMessage> {
     try {
       return UserGroupMessage.findOneOrFail({
         where: { userId },
+        ...options,
       })
     } catch {
       throw new UserInputError("No tasks found")

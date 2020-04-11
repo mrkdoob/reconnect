@@ -12,7 +12,6 @@ import { createToken, decryptToken } from "../../lib/jwt"
 
 import { User } from "./user.entity"
 import { UserService } from "./user.service"
-// import { UserMailer } from "./user.mailer"
 
 import { ResetPasswordInput } from "./inputs/resetPassword.input"
 import { UserRepository } from "./user.repository"
@@ -120,8 +119,6 @@ export class UserResolver {
   async register(@Arg("data") data: RegisterInput): Promise<AuthResponse> {
     const user = await this.userService.create(data)
     const token = this.userService.createAuthToken(user)
-    console.log("user" + user)
-    console.log("token" + token)
     return { user, token }
   }
 
@@ -138,7 +135,6 @@ export class UserResolver {
     const user = await this.userRepository.findByEmail(email)
     if (user) {
       const token = createToken({ id: user.id })
-      console.log(token)
       // TODO:
       // this.userMailer.sendResetPasswordLink(user, token)
     }
@@ -164,7 +160,6 @@ export class UserResolver {
       currentUser.id,
     )
     if (userLevel.level.isLast) {
-      console.log("Is last is working")
       group = await this.groupService.completeMember(currentUser.groupId) // Don't update group score if last level
     }
     const data: CompleteMeInput = {
@@ -213,7 +208,7 @@ export class UserResolver {
     })
     await this.userLevelService.createFirst(userId, courseId)
     await this.userDayRewardService.createFirstReward(userId)
-    await this.userGroupMessageService.createFirst(userId, groupId)
+    await this.userGroupMessageService.createFirst(userId, groupId, courseId)
     return this.userService.update(currentUser.id, data)
   }
 
@@ -244,11 +239,11 @@ export class UserResolver {
   }
 
   @FieldResolver(() => UserGroupMessage, { nullable: true })
-  userGroupMessage(
+  async userGroupMessage(
     @Root() user: User,
     @Loaders() { userGroupMessageLoader }: Loaders,
   ) {
-    return userGroupMessageLoader.load(user.id)
+    return await userGroupMessageLoader.load(user.id)
   }
 
   @FieldResolver(() => UserDayReward, { nullable: true })

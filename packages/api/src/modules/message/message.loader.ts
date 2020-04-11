@@ -1,5 +1,5 @@
 import DataLoader from "dataloader"
-import { Message } from "../message/message.entity"
+import { Message } from "./message.entity"
 
 // MESSAGE
 export const messageLoader = () =>

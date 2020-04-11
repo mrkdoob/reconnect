@@ -20,4 +20,8 @@ export class CreateMessageInput implements Partial<Message> {
 
   @Field({ nullable: true })
   fullHeightPic: boolean
+
+  @IsNotEmpty()
+  @Field()
+  courseId: string
 }

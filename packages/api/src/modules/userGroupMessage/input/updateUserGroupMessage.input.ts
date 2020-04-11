@@ -12,4 +12,7 @@ export class UpdateUserGroupMessageInput implements Partial<UserGroupMessage> {
 
   @Field({ nullable: true })
   showOption: boolean
+
+  @Field({ nullable: true })
+  messageId: string
 }

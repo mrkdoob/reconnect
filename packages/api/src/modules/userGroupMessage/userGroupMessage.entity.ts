@@ -3,6 +3,7 @@ import { ObjectType } from "type-graphql"
 import { BaseEntity } from "../shared/base.entity"
 import { BooleanField, UuidField } from "../shared/fields"
 import { User } from "../user/user.entity"
+import { Message } from "../message/message.entity"
 
 @ObjectType()
 @Entity()
@@ -16,6 +17,9 @@ export class UserGroupMessage extends BaseEntity<UserGroupMessage> {
   @UuidField({ nullable: true })
   groupMessageId: string
 
+  @UuidField({ nullable: true })
+  messageId: string
+
   @UuidField()
   userId: string
 
@@ -25,4 +29,10 @@ export class UserGroupMessage extends BaseEntity<UserGroupMessage> {
     // user => user.groupMessage,
   )
   user: User
+
+  @ManyToOne(
+    () => Message,
+    message => message.userMessages,
+  )
+  message: Message
 }

@@ -35,19 +35,19 @@ export class GroupMessageService {
     const groupMessages = await this.groupMessageRepository.findAll()
     if (groupMessages.length === 0) return
 
-    const message = await this.messageRepository.findById(
-      groupMessages[0].messageId,
-    )
-    // TODO: Built and use find next
-    const newOrder = message.order + 1
-    const newMessage = await this.messageRepository
-      .findByOrder(newOrder)
-      .catch(() => {
-        return this.messageRepository.findByOrder(1) // Restart to first message
-      })
+    // TODO: Can be used for non-courses or continious programs
+    // const message = await this.messageRepository.findById(
+    //   groupMessages[0].messageId,
+    // )
 
-    // TODO: Calculate reward count
+    // const newOrder = message.order + 1
+    // const newMessage = await this.messageRepository
+    //   .findByOrder(newOrder)
+    //   .catch(() => {
+    //     return this.messageRepository.findByOrder(1) // Restart to first message
+    //   })
 
+    // Calculate reward count
     groupMessages.map(groupMessage => {
       let dayRewardCount = 0
       const group = this.groupRepository.findById(groupMessage.groupId)
@@ -55,7 +55,7 @@ export class GroupMessageService {
         dayRewardCount = res.rewardCount - res.oldRewardCount
         res.update({ oldRewardCount: res.rewardCount }).then(() => {
           groupMessage.update({
-            messageId: newMessage.id,
+            // messageId: newMessage.id,
             rewardCount: dayRewardCount,
             leftCoinsCount: res.groupCoins,
           })

@@ -19,10 +19,10 @@ import { courseLoader } from "../../userCourse/userCourse.loader"
 import { levelLoader } from "../../userLevel/userLevel.loader"
 import { levelTaskLoader } from "../../userTask/userTask.loader"
 import { groupMessageLoader } from "../../userGroupMessage/userGroupMessage.loader"
-import { messageLoader } from "../../groupMessage/groupMessage.loader"
 import { courseDayRewardLoader } from "../../userDayReward/userDayReward.loader"
 import { levelTaskOptionsLoader } from "../../levelTask/levelTask.loader"
 import { optionLoader } from "../../levelTaskOption/levelTaskOption.loader"
+import { messageLoader } from "../../message/message.loader"
 
 export interface Loaders {
   groupMembersLoader: ReturnType<typeof groupMembersLoader>

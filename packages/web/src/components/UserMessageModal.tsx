@@ -19,13 +19,13 @@ export const USER_GROUP_MESSAGE = gql`
       id
       rewardCount
       leftCoinsCount
-      message {
-        id
-        message
-        videoUrl
-        pictureUrl
-        fullHeightPic
-      }
+    }
+    message {
+      id
+      message
+      videoUrl
+      pictureUrl
+      fullHeightPic
     }
   }
 `
@@ -113,24 +113,18 @@ export const UserMessageModal: React.FC<Props> = props => {
             {props.rewardType}.
           </Text>
         )}
-        {props.userGroupMessage?.groupMessage?.message?.pictureUrl && (
+        {props.userGroupMessage?.message?.pictureUrl && (
           <Image
-            src={props.userGroupMessage.groupMessage.message.pictureUrl}
+            src={props.userGroupMessage.message.pictureUrl}
             alt="Message picture"
             w="625px"
-            h={
-              props.userGroupMessage.groupMessage.message.fullHeightPic
-                ? ""
-                : "300px"
-            }
+            h={props.userGroupMessage.message.fullHeightPic ? "" : "300px"}
             objectFit="cover"
             borderRadius="lg"
             mb={4}
           />
         )}
-        <Markup
-          content={props.userGroupMessage?.groupMessage?.message?.message}
-        />
+        <Markup content={props.userGroupMessage?.message?.message} />
 
         <Button my={6} onClick={handleClose} variantColor="blue">
           Continue

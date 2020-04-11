@@ -133,6 +133,7 @@ export type CreateMessageInput = {
   pictureUrl?: Maybe<Scalars["String"]>
   videoUrl?: Maybe<Scalars["String"]>
   fullHeightPic?: Maybe<Scalars["Boolean"]>
+  courseId: Scalars["String"]
 }
 
 export type CreateOptionInput = {
@@ -151,6 +152,7 @@ export type CreateUserCourseInput = {
 export type CreateUserGroupMessageInput = {
   groupMessageId: Scalars["String"]
   userId: Scalars["String"]
+  messageId: Scalars["String"]
 }
 
 export type CreateUserLevelInput = {
@@ -198,7 +200,6 @@ export type GroupMessage = {
   leftCoinsCount: Scalars["Int"]
   groupId: Scalars["String"]
   messageId?: Maybe<Scalars["String"]>
-  message?: Maybe<Message>
 }
 
 export type Level = {
@@ -257,6 +258,7 @@ export type Message = {
   pictureUrl?: Maybe<Scalars["String"]>
   videoUrl?: Maybe<Scalars["String"]>
   fullHeightPic: Scalars["Boolean"]
+  courseId?: Maybe<Scalars["String"]>
 }
 
 export type Mutation = {
@@ -746,6 +748,7 @@ export type UpdateMessageInput = {
   videoUrl?: Maybe<Scalars["String"]>
   order?: Maybe<Scalars["Float"]>
   fullHeightPic?: Maybe<Scalars["Boolean"]>
+  courseId?: Maybe<Scalars["String"]>
 }
 
 export type UpdateOptionInput = {
@@ -765,6 +768,7 @@ export type UpdateUserGroupMessageInput = {
   groupMessageId?: Maybe<Scalars["String"]>
   isRead?: Maybe<Scalars["Boolean"]>
   showOption?: Maybe<Scalars["Boolean"]>
+  messageId?: Maybe<Scalars["String"]>
 }
 
 export type UpdateUserLevelInput = {
@@ -832,8 +836,10 @@ export type UserGroupMessage = {
   isRead: Scalars["Boolean"]
   showOption: Scalars["Boolean"]
   groupMessageId?: Maybe<Scalars["String"]>
+  messageId?: Maybe<Scalars["String"]>
   userId: Scalars["String"]
   groupMessage?: Maybe<GroupMessage>
+  message?: Maybe<Message>
 }
 
 export type UserLevel = {
@@ -999,14 +1005,13 @@ export type UserGroupMessageFragment = {
       { __typename?: "GroupMessage" } & Pick<
         GroupMessage,
         "id" | "rewardCount" | "leftCoinsCount"
-      > & {
-          message?: Maybe<
-            { __typename?: "Message" } & Pick<
-              Message,
-              "id" | "message" | "videoUrl" | "pictureUrl" | "fullHeightPic"
-            >
-          >
-        }
+      >
+    >
+    message?: Maybe<
+      { __typename?: "Message" } & Pick<
+        Message,
+        "id" | "message" | "videoUrl" | "pictureUrl" | "fullHeightPic"
+      >
     >
   }
 
@@ -1464,13 +1469,13 @@ export const UserGroupMessageFragmentDoc = gql`
       id
       rewardCount
       leftCoinsCount
-      message {
-        id
-        message
-        videoUrl
-        pictureUrl
-        fullHeightPic
-      }
+    }
+    message {
+      id
+      message
+      videoUrl
+      pictureUrl
+      fullHeightPic
     }
   }
 `

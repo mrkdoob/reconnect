@@ -11,4 +11,8 @@ export class CreateUserGroupMessageInput implements Partial<UserGroupMessage> {
   @IsNotEmpty()
   @Field()
   userId: string
+
+  @IsNotEmpty()
+  @Field()
+  messageId: string
 }

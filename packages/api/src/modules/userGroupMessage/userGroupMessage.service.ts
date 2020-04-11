@@ -2,6 +2,7 @@ import { Service, Inject } from "typedi"
 import { UserGroupMessageRepository } from "./userGroupMessage.repository"
 import { UserGroupMessage } from "./userGroupMessage.entity"
 import { GroupMessageRepository } from "../groupMessage/groupMessage.repository"
+import { MessageRepository } from "../message/message.repository"
 
 @Service()
 export class UserGroupMessageService {
@@ -9,6 +10,8 @@ export class UserGroupMessageService {
   userGroupMessageRepository: UserGroupMessageRepository
   @Inject(() => GroupMessageRepository)
   groupMessageRepository: GroupMessageRepository
+  @Inject(() => MessageRepository)
+  messageRepository: MessageRepository
 
   async create(data: Partial<UserGroupMessage>): Promise<UserGroupMessage> {
     const group = await UserGroupMessage.create(data).save()
@@ -18,13 +21,19 @@ export class UserGroupMessageService {
   async createFirst(
     userId: string,
     groupId: string,
+    courseId: string,
   ): Promise<UserGroupMessage> {
     const groupMessage = await this.groupMessageRepository.findByGroupId(
       groupId,
     )
+    const firstMessage = await this.messageRepository.findByOrderCourse(
+      1,
+      courseId,
+    )
     return await UserGroupMessage.create({
       userId,
       groupMessageId: groupMessage.id,
+      messageId: firstMessage.id,
     }).save()
   }
 
@@ -32,10 +41,20 @@ export class UserGroupMessageService {
     userGroupMessageId: string,
     data: Partial<UserGroupMessage>,
   ): Promise<UserGroupMessage> {
-    const group = await this.userGroupMessageRepository.findById(
+    const userMessage = await this.userGroupMessageRepository.findById(
       userGroupMessageId,
     )
-    return group.update(data)
+    let messageId
+    await this.messageRepository // Update to next message
+      .findNext(userMessage.messageId)
+      .then(res => (messageId = res.id))
+
+    const newData = {
+      ...data,
+      messageId,
+    }
+
+    return userMessage.update(newData)
   }
 
   async destroy(userGroupMessageId: string): Promise<boolean> {
@@ -51,7 +70,11 @@ export class UserGroupMessageService {
   }
 
   async resetAllUserGroupMessages() {
-    const messages = await this.userGroupMessageRepository.findAll()
-    messages.map(message => message.update({ isRead: false }))
+    const userMessages = await this.userGroupMessageRepository.findAll()
+
+    userMessages.map(userMessage => {
+      userMessage.update({ isRead: false })
+      // this.updateToNextMessage(userMessage)
+    })
   }
 }

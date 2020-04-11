@@ -73,11 +73,12 @@ export class GroupMessageResolver {
     return this.groupMessageService.destroy(groupMessageId)
   }
 
-  @FieldResolver(() => Message, { nullable: true })
-  message(
-    @Root() groupMessage: GroupMessage,
-    @Loaders() { messageLoader }: Loaders,
-  ) {
-    return messageLoader.load(groupMessage.messageId)
-  }
+  // TODO: Use for continues programs or something. Far future feat
+  // @FieldResolver(() => Message, { nullable: true })
+  // message(
+  //   @Root() groupMessage: GroupMessage,
+  //   @Loaders() { messageLoader }: Loaders,
+  // ) {
+  //   return messageLoader.load(groupMessage.messageId)
+  // }
 }

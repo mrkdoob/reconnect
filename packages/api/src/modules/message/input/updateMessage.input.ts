@@ -17,4 +17,7 @@ export class UpdateMessageInput implements Partial<Message> {
 
   @Field({ nullable: true })
   fullHeightPic: boolean
+
+  @Field({ nullable: true })
+  courseId: string
 }

@@ -83,7 +83,6 @@ export class UserWorker extends Worker<JobType> {
           return
         case "updateDailyMessage":
           this.groupMessageService.updateDailyMessage()
-          this.userResolver.dailyReset(ONE_DAY)
           return
         case "repeatDaily":
           this.userResolver.dailyReset(ONE_DAY)
