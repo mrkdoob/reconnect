@@ -16,5 +16,5 @@ export const apiUrl = production
   : "http://localhost:5555/graphql"
 
 export const webUrl = production
-  ? "https://becomebetter.life.com"
+  ? "https://www.becomebetter.life"
   : "http://localhost:3000"
