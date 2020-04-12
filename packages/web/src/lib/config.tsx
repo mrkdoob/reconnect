@@ -3,6 +3,7 @@ let env: string
 const hostname = window?.location?.hostname
 if (hostname === "becomebetter.life") {
   env = "production"
+  console.log("Production")
 } else {
   env = "development"
 }
@@ -15,6 +16,8 @@ export const apiUrl = production
   ? "https://reconnect-app-15.herokuapp.com/graphql"
   : "http://localhost:5555/graphql"
 
+console.log("production: " + production)
+
 export const webUrl = production
-  ? "https://www.becomebetter.life"
+  ? "www.becomebetter.life"
   : "http://localhost:3000"
