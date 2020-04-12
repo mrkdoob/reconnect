@@ -16,5 +16,5 @@ export const apiUrl = production
   : "http://localhost:5555/graphql"
 
 export const webUrl = production
-  ? "https://reconnect.netlify.com"
+  ? "https://becomebetter.life.com"
   : "http://localhost:3000"
