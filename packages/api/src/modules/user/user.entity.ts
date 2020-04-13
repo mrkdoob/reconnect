@@ -27,6 +27,9 @@ export class User extends BaseEntity<User> {
   @StringField({ nullable: true })
   avatar: string
 
+  @StringField({ nullable: true })
+  continent: string
+
   @IntField({ default: 0 })
   groupOrder: number
 

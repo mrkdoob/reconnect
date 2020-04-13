@@ -22,6 +22,7 @@ import {
 import gql from "graphql-tag.macro"
 import { Modal } from "./Modal"
 import { mutationHandler } from "../lib/mutationHandler"
+import { Markup } from "interweave"
 
 export const LEVEL_TASK_OPTION_ITEM = gql`
   fragment LevelTaskOptionItem on LevelTaskOption {
@@ -74,7 +75,7 @@ export function LevelTaskItem({ levelTask, userTask, hideDescription }: Props) {
       <Text as="i" mt={6}>
         {!hideDescription && task?.description}
       </Text>
-      <Text>{task?.fullDescription}</Text>
+      <Markup content={task?.fullDescription} />
       {task?.videoUrl && (
         <>
           <AspectRatioBox ratio={4 / 3}>
@@ -210,7 +211,8 @@ function LevelTaskOptionItem({ taskOption, taskId, modalClose }: OptionProps) {
         </Stack>
       </Flex>
       <Collapse isOpen={isOpen} mt={4}>
-        <Text>{taskOption?.option?.fullDescription}</Text>
+        <Markup content={taskOption?.option?.fullDescription} />
+
         {taskOption?.option?.videoUrl && (
           <>
             <AspectRatioBox ratio={4 / 3}>

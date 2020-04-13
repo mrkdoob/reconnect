@@ -16,8 +16,8 @@ export class UserTaskRepository {
     }
   }
 
-  findAll(): Promise<UserTask[]> {
-    return UserTask.find()
+  findAll(options?: FindOneOptions<UserTask>): Promise<UserTask[]> {
+    return UserTask.find(options)
   }
 
   findUserTasks(userId: string): Promise<UserTask[]> {

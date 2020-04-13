@@ -94,14 +94,14 @@ export const DailyRewardModal = ({ dayCompleted, onClose }: Props) => {
                   >
                     Open
                   </Button>
-                  <Collapse mt={4} isOpen={show} fontSize="xl">
+                  <Collapse my={4} isOpen={show} fontSize="xl">
                     {reward?.courseDayReward?.pictureUrl && (
                       <Flex justify="center">
                         <Image
                           src={reward?.courseDayReward?.pictureUrl}
                           alt="Message picture"
-                          w="425px"
-                          h="200px"
+                          w="500px"
+                          h="275px"
                           objectFit="cover"
                           borderRadius="lg"
                           mb={6}

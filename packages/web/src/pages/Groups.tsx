@@ -90,7 +90,12 @@ export const Groups: React.FC<Props> = props => {
           Select a group
         </Heading>
         {groups.length > 0 ? (
-          <StyledSimpleGrid columns={1} boxShadow="lg" top={1}>
+          <StyledSimpleGrid
+            w={{ base: "98vw", md: "30rem" }}
+            columns={1}
+            boxShadow="lg"
+            top={1}
+          >
             {groups.map((group, index) => (
               <GroupItem
                 index={index}
@@ -113,7 +118,6 @@ export const Groups: React.FC<Props> = props => {
 }
 
 const StyledSimpleGrid = styled(SimpleGrid)`
-  width: ${p => p.theme.sizes.xl};
   border-radius: ${p => p.theme.radii.lg};
   border-top: 3px solid ${p => p.theme.colors.blue[400]};
   border-left: 3px solid ${p => p.theme.colors.blue[200]};

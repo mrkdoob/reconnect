@@ -55,8 +55,14 @@ export class UserTaskService {
     return levelTasks
   }
 
-  async resetAllUserTasks() {
-    const tasks = await this.userTaskRepository.findAll()
+  async resetAllUserTasks(continent: string) {
+    const tasks = await this.userTaskRepository.findAll({
+      relations: ["user"],
+      where: {
+        continent: continent,
+      },
+    })
+
     tasks.map(task => task.update({ completed: false }))
   }
 

@@ -25,6 +25,9 @@ export class UpdateInput implements Partial<User> {
 
   @Field({ nullable: true })
   groupOrder: number
+
+  @Field({ nullable: true })
+  continent: string
 }
 
 @InputType()
@@ -65,6 +68,9 @@ export class RegisterInput implements Partial<User> {
 
   @Field()
   password: string
+
+  @Field()
+  continent: string
 }
 
 @InputType()

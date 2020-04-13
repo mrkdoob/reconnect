@@ -36,7 +36,7 @@ export function GroupItem(props: Props) {
     >
       <Flex py={6} px={12} justify="space-between">
         <Flex align="flex-start" justify="center" direction="column">
-          <Heading fontWeight="normal" fontSize={{ sm: "xl", md: "2xl" }}>
+          <Heading fontWeight="normal" fontSize={{ base: "xl", md: "2xl" }}>
             {props.group.name}
           </Heading>
           {props.group.startDate && (
