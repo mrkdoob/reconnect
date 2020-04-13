@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React from "react"
 import { RouteComponentProps } from "@reach/router"
 
 import { Page } from "../components/Page"
@@ -10,7 +10,6 @@ import {
   Box,
   Button,
   Text,
-  Switch,
   FormLabel,
   useDisclosure,
   IconButton,
@@ -21,7 +20,6 @@ import {
   MySettingsFragmentDoc,
   useUpdateSettingsMutation,
   UpdateInput,
-  useUpdateUserGroupMessageMutation,
 } from "../lib/graphql"
 import { Form } from "../components/Form"
 import { useForm } from "../lib/hooks/useForm"
@@ -29,7 +27,6 @@ import Yup from "../lib/yup"
 import { Input } from "../components/Input"
 import { styled } from "../components/providers/ThemeProvider"
 import { useToast } from "../lib/hooks/useToast"
-import { mutationHandler } from "../lib/mutationHandler"
 import { NewAvatar } from "../components/NewAvatar"
 import { Modal } from "../components/Modal"
 
@@ -95,7 +92,7 @@ export const Settings: React.FC<Props> = props => {
   const form = useForm({ validationSchema: SettingsSchema })
   const [updateSettings] = useUpdateSettingsMutation()
   const toast = useToast()
-  const [updateUserGroupMessage] = useUpdateUserGroupMessageMutation()
+  // const [updateUserGroupMessage] = useUpdateUserGroupMessageMutation()
 
   const onSubmit = async (values: UpdateInput) => {
     const res = await updateSettings({
