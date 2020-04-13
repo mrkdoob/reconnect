@@ -651,6 +651,7 @@ export type RegisterInput = {
   lastName: Scalars["String"]
   email: Scalars["String"]
   password: Scalars["String"]
+  timeZone: Scalars["String"]
 }
 
 export type ResetPasswordInput = {
@@ -717,6 +718,7 @@ export type UpdateInput = {
   groupId?: Maybe<Scalars["String"]>
   avatar?: Maybe<Scalars["String"]>
   groupOrder?: Maybe<Scalars["Float"]>
+  timeZone?: Maybe<Scalars["String"]>
 }
 
 export type UpdateLevelInput = {
@@ -794,6 +796,7 @@ export type User = {
   firstName: Scalars["String"]
   lastName: Scalars["String"]
   avatar?: Maybe<Scalars["String"]>
+  timeZone?: Maybe<Scalars["String"]>
   groupOrder: Scalars["Int"]
   groupId?: Maybe<Scalars["String"]>
   fullName?: Maybe<Scalars["String"]>

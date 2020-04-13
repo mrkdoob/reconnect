@@ -44,10 +44,11 @@ export const Register: React.FC<RouteComponentProps> = () => {
   const [register] = useRegisterMutation()
   const form = useForm({ validationSchema: RegisterSchema })
   const toast = useToast()
+  const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone
 
   const onSubmit = async (values: RegisterInput) => {
     const res = await register({
-      variables: { data: values },
+      variables: { data: { ...values, timeZone } },
     })
     form.handler(res, {
       onSuccess: data => {
