@@ -134,7 +134,9 @@ export class UserResolver {
   async forgotPassword(@Arg("email") email: string): Promise<boolean> {
     const user = await this.userRepository.findByEmail(email)
     if (user) {
-      const token = createToken({ id: user.id })
+      // const token = createToken({ id: user.id })
+
+      createToken({ id: user.id })
       // TODO:
       // this.userMailer.sendResetPasswordLink(user, token)
     }
