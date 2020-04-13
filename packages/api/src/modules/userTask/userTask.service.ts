@@ -55,13 +55,13 @@ export class UserTaskService {
     return levelTasks
   }
 
-  async resetAllUserTasks(continent: string) {
-    const tasks = await this.userTaskRepository.findAll({
-      relations: ["user"],
-      where: {
-        continent: continent,
-      },
-    })
+  async resetAllUserTasks() {
+    const tasks = await this.userTaskRepository.findAll()
+    // TODO: use timeZone
+    // const tasksByTimeZone = await UserTask.createQueryBuilder("userTask")
+    //   .innerJoinAndSelect("userTask.user", "user")
+    //   .where("user.timeZone = :timeZone", { timeZone: timeZone })
+    //   .getMany()
 
     tasks.map(task => task.update({ completed: false }))
   }

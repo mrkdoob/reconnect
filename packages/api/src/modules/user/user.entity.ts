@@ -28,7 +28,7 @@ export class User extends BaseEntity<User> {
   avatar: string
 
   @StringField({ nullable: true })
-  continent: string
+  timeZone: string
 
   @IntField({ default: 0 })
   groupOrder: number

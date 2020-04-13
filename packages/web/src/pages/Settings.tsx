@@ -29,6 +29,7 @@ import { styled } from "../components/providers/ThemeProvider"
 import { useToast } from "../lib/hooks/useToast"
 import { NewAvatar } from "../components/NewAvatar"
 import { Modal } from "../components/Modal"
+import { User } from "styled-icons/boxicons-regular/User"
 
 export const MYSETTINGS_FRAGMENT = gql`
   fragment MySettings on User {
@@ -134,14 +135,24 @@ export const Settings: React.FC<Props> = props => {
           direction="column"
         >
           <Box position="relative" mb={12}>
-            <StyledImage
-              borderRadius="xl"
-              size="150px"
-              src={settings?.avatar || ""}
-              alt={settings?.firstName}
-              objectFit="cover"
-              onClick={onOpen}
-            />
+            {settings?.avatar ? (
+              <StyledImage
+                borderRadius="xl"
+                size="150px"
+                src={settings?.avatar || ""}
+                alt={settings?.firstName}
+                objectFit="cover"
+                onClick={onOpen}
+              />
+            ) : (
+              <StyledTile
+                as={User}
+                w="150px"
+                borderRadius="xl"
+                border="1px solid gray"
+                color="gray.300"
+              />
+            )}
             <IconButton
               pos="absolute"
               bottom={0}
@@ -176,11 +187,11 @@ export const Settings: React.FC<Props> = props => {
               defaultValue={settings?.lastName}
             />
             <Input name="email" label="Email" defaultValue={settings?.email} />
-            <Flex align="center" justify="space-between" mt={6}>
-              <FormLabel htmlFor="email-alerts">
+            {/* <Flex align="center" justify="space-between" mt={6}> */}
+            {/* <FormLabel htmlFor="email-alerts">
                 Show daily group summary?
-              </FormLabel>
-              {/* TODO: Add or remove? <Switch
+              </FormLabel> */}
+            {/* TODO: Add or remove? <Switch
                 id="email-alerts"
                 isChecked={showOptionState}
                 onChange={() => {
@@ -188,7 +199,7 @@ export const Settings: React.FC<Props> = props => {
                   handleUpdate()
                 }}
               /> */}
-            </Flex>
+            {/* </Flex> */}
             <Flex
               justify="space-between"
               direction="row-reverse"

@@ -27,7 +27,7 @@ export class UpdateInput implements Partial<User> {
   groupOrder: number
 
   @Field({ nullable: true })
-  continent: string
+  timeZone: string
 }
 
 @InputType()
@@ -70,7 +70,7 @@ export class RegisterInput implements Partial<User> {
   password: string
 
   @Field()
-  continent: string
+  timeZone: string
 }
 
 @InputType()
