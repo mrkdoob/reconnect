@@ -24,7 +24,11 @@ export class User extends BaseEntity<User> {
   @StringField()
   lastName: string
 
-  @StringField({ nullable: true })
+  @StringField({
+    default:
+      "https://pbs.twimg.com/profile_images/529214699041067008/fqPBAr5s_400x400.jpeg",
+    nullable: true,
+  })
   avatar: string
 
   @StringField({ nullable: true })
