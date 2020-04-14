@@ -10,7 +10,6 @@ import {
   Box,
   Button,
   Text,
-  FormLabel,
   useDisclosure,
   IconButton,
 } from "@chakra-ui/core"
