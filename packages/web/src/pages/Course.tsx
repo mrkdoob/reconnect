@@ -15,6 +15,7 @@ import { styled } from "../components/providers/ThemeProvider"
 import { Border } from "../components/Border"
 import { CourseLevelList } from "../components/CourseLevelList"
 import { CourseLeadIn } from "../components/CourseLeadIn"
+import { Markup } from "interweave"
 
 export const COURSE = gql`
   fragment Course on Course {
@@ -87,11 +88,12 @@ export const Course: React.FC<Props> = props => {
               </Heading>
               <Text mb={4}>{course?.description}</Text>
               <Link to={`/${course?.slug}/groups`}>
-                <Button variantColor="blue" px={8}>
+                <Button variantColor="gray" px={8}>
                   <Text
                     textTransform="uppercase"
                     letterSpacing="0.125rem"
                     fontSize="xs"
+                    color="text"
                   >
                     Start now
                   </Text>
@@ -108,9 +110,9 @@ export const Course: React.FC<Props> = props => {
             <Box w={["100%", "70%"]}>
               <Border mb={{ base: 12, md: 20 }} mt={8} />
               {/* Description */}
-              <Text px={4} fontSize="lg">
-                {course?.fullDescription}
-              </Text>
+              <Box px={4} fontSize="lg">
+                <Markup content={course?.fullDescription} />
+              </Box>
             </Box>
           </Flex>
 
