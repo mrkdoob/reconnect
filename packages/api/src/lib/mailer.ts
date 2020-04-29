@@ -4,9 +4,7 @@ import nodemailer, { Transporter } from "nodemailer"
 
 import { SENDGRID_API_KEY, DEV_EMAIL_OPTIONS } from "./config"
 
-sendgrid.setApiKey(
-  "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",
-)
+sendgrid.setApiKey(SENDGRID_API_KEY)
 sendgridClient.setApiKey(SENDGRID_API_KEY)
 
 interface MailArgs {
