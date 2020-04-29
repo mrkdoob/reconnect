@@ -81,4 +81,16 @@ export class User extends BaseEntity<User> {
   url() {
     return S3_URL + this.avatar
   }
+
+  // INSTANCE METHODS
+  async update(data: Partial<User>) {
+    if (data.password) {
+      data.password = await bcrypt.hash(data.password, 10)
+    }
+    if (data.email) {
+      data.email = data.email.trim().toLowerCase()
+    }
+    Object.assign(this, data)
+    return this.save()
+  }
 }

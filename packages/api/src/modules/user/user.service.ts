@@ -5,15 +5,20 @@ import { UserRepository } from "./user.repository"
 import { createAuthToken } from "../../lib/jwt"
 import { UserInputError } from "apollo-server-express"
 import { UserTaskService } from "../userTask/userTask.service"
+import { UserMailer } from "./user.mailer"
 
 @Service()
 export class UserService {
   constructor(private readonly userRepository: UserRepository) {} //TODO: Use inject?
   @Inject(() => UserTaskService)
   taskService: UserTaskService
+  @Inject(() => UserMailer)
+  userMailer: UserMailer
 
   async login(data: { email: string; password: string }): Promise<User> {
-    const user = await this.userRepository.findByEmail(data.email)
+    const user = await this.userRepository.findByEmail(
+      data.email.toLocaleLowerCase().trim(),
+    )
     if (!user?.password) throw new UserInputError("Account not set up")
     const isValidPassword = await bcrypt.compare(data.password, user.password)
     if (!isValidPassword)
@@ -26,9 +31,15 @@ export class UserService {
   }
 
   async create(data: Partial<User> & { email: string }): Promise<User> {
-    const userExists = await this.userRepository.findByEmail(data.email)
+    const userExists = await this.userRepository.findByEmail(
+      data.email.toLocaleLowerCase(),
+    )
     if (userExists) throw new Error("user already exists")
+    data = { ...data, email: data.email.toLocaleLowerCase().trim() }
     const user = await User.create(data).save()
+
+    this.userMailer.sendWelcomeEmail(user)
+
     return user
   }
 

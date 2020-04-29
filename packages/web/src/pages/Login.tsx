@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useState } from "react"
 import { Flex, Box, Button, Text, useToast } from "@chakra-ui/core"
 import gql from "graphql-tag.macro"
 import * as Yup from "yup"
@@ -18,6 +18,7 @@ import { useForm } from "../lib/hooks/useForm"
 import { Form } from "../components/Form"
 import { useMe } from "../components/providers/MeProvider"
 import { colors } from "../lib/colors"
+import { ForgotPasswordForm } from "../components/ForgotPasswordForm"
 
 export const LOGIN = gql`
   mutation Login($data: LoginInput!) {
@@ -44,6 +45,7 @@ export const Login: React.FC<RouteComponentProps> = () => {
   const form = useForm({ validationSchema: LoginSchema })
   const me = useMe()
   const toast = useToast()
+  const [showForgetPass, setShowForgetPass] = useState(false)
 
   const onSubmit = async (values: LoginInput) => {
     const res = await login({
@@ -72,7 +74,7 @@ export const Login: React.FC<RouteComponentProps> = () => {
   return (
     <Flex
       h="Calc(100vh - 120px)"
-      w="100%"
+      w={{ base: "100vw", md: "100%" }}
       align="center"
       justifyContent="flex-start"
       p={{ base: 10, lg: "10%" }}
@@ -86,32 +88,55 @@ export const Login: React.FC<RouteComponentProps> = () => {
         <Text color={colors[3]}>me</Text>
       </Flex>
       <Box w={["100%", 400]}>
-        <Form onSubmit={onSubmit} {...form}>
-          <Input name="email" label="Email" placeholder="jim@gmail.com" />
-          <Input
-            name="password"
-            label="Password"
-            type="password"
-            placeholder="********"
-          />
-          <Flex align="center" mt={4}>
+        {showForgetPass ? (
+          <ForgotPasswordForm handleClick={() => setShowForgetPass(false)} />
+        ) : (
+          <Form onSubmit={onSubmit} {...form}>
+            <Input name="email" label="Email" placeholder="jim@gmail.com" />
+            <Input
+              name="password"
+              label="Password"
+              type="password"
+              placeholder="********"
+            />
+            <Flex align="center" mt={8}>
+              <Button
+                variantColor="blue"
+                type="submit"
+                loadingText="loading"
+                isLoading={form.formState.isSubmitting}
+                mr={8}
+              >
+                Login
+              </Button>
+              {form.appError && <Text color="red.500">{form.appError}</Text>}
+            </Flex>
             <Button
               variantColor="blue"
-              type="submit"
+              variant="link"
               loadingText="loading"
-              isLoading={form.formState.isSubmitting}
-              mr={8}
+              size="xs"
+              mt={4}
+              onClick={() => setShowForgetPass(true)}
             >
-              Login
+              Forgot password
             </Button>
-            <Link to={`/register`}>
-              <Button variantColor="blue" variant="link" loadingText="loading">
-                Register
-              </Button>
-            </Link>
-            {form.appError && <Text color="red.500">{form.appError}</Text>}
-          </Flex>
-        </Form>
+            <Flex align="center" mt={6}>
+              <Text mr={4} mt={1}>
+                New to Become?
+              </Text>
+              <Link to={`/register`}>
+                <Button
+                  variantColor="blue"
+                  variant="link"
+                  loadingText="loading"
+                >
+                  Register
+                </Button>
+              </Link>
+            </Flex>
+          </Form>
+        )}
       </Box>
     </Flex>
   )

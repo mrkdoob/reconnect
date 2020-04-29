@@ -23,6 +23,7 @@ import { courseDayRewardLoader } from "../../userDayReward/userDayReward.loader"
 import { levelTaskOptionsLoader } from "../../levelTask/levelTask.loader"
 import { optionLoader } from "../../levelTaskOption/levelTaskOption.loader"
 import { messageLoader } from "../../message/message.loader"
+import { bidsLoader } from "../../auction/auction.loader"
 
 export interface Loaders {
   groupMembersLoader: ReturnType<typeof groupMembersLoader>
@@ -48,6 +49,8 @@ export interface Loaders {
   groupMessageLoader: ReturnType<typeof groupMessageLoader>
   userGroupMessageLoader: ReturnType<typeof userGroupMessageLoader>
   messageLoader: ReturnType<typeof messageLoader>
+
+  bidsLoader: ReturnType<typeof bidsLoader>
 }
 
 export function Loaders() {

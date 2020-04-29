@@ -141,7 +141,7 @@ export function UserGroupList({ group }: Props) {
                   return user.firstName + " have completed their tasks today"
                 }
               })}
-              isOpen={group.users.length < 5 ? false : undefined}
+              isOpen={group.groupMembersFinished < 5 ? false : undefined}
             >
               <Flex align="center" mt={8}>
                 <Flex justify="center" align="center" w={16}>
@@ -152,7 +152,7 @@ export function UserGroupList({ group }: Props) {
                     {group.groupMembersFinished} out of {group.users.length}{" "}
                     have completed their tasks
                   </Text>
-                  {group.users.length > 4 && (
+                  {group.groupMembersFinished > 4 && (
                     <Box
                       as={InfoCircle}
                       h={{ base: 12, md: 6 }}

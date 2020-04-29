@@ -118,6 +118,12 @@ export const Register: React.FC<RouteComponentProps> = () => {
             >
               Register
             </Button>
+            {form.appError && <Text color="red.500">{form.appError}</Text>}
+          </Flex>
+          <Flex align="center" mt={6}>
+            <Text mr={4} mt={1}>
+              Already have an account?
+            </Text>
             <Link to={`/login`}>
               <Button
                 variantColor="blue"
@@ -126,10 +132,8 @@ export const Register: React.FC<RouteComponentProps> = () => {
                 variant="link"
               >
                 Login
-              </Button>
+              </Button>{" "}
             </Link>
-
-            {form.appError && <Text color="red.500">{form.appError}</Text>}
           </Flex>
         </Form>
       </Box>

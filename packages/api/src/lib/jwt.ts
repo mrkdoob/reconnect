@@ -13,8 +13,8 @@ export const createToken = (
 ): string => {
   try {
     const token = jwt.sign(payload, APP_SECRET, {
-      issuer: "@commongrounds/api",
-      audience: ["@commongrounds/app", "@commongrounds/web"],
+      issuer: "@become/api",
+      audience: ["@become/web"],
       expiresIn: "4w",
       ...options,
     })
@@ -28,8 +28,8 @@ export const createToken = (
 export const createAuthToken = (payload: Payload): string => {
   try {
     const token = jwt.sign(payload, APP_AUTH_SECRET, {
-      issuer: "@commongrounds/api",
-      audience: ["@commongrounds/app", "@commongrounds/web"],
+      issuer: "@become/api",
+      audience: ["@become/web"],
       expiresIn: "4w",
     })
     return token

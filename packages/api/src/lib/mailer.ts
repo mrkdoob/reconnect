@@ -2,24 +2,22 @@ import sendgrid from "@sendgrid/mail"
 import sendgridClient from "@sendgrid/client"
 import nodemailer, { Transporter } from "nodemailer"
 
-import {
-  SENDGRID_API_KEY,
-  DEV_EMAIL_OPTIONS,
-  IS_PRODUCTION,
-  IS_STAGING,
-} from "./config"
+import { SENDGRID_API_KEY, DEV_EMAIL_OPTIONS } from "./config"
 
-sendgrid.setApiKey(SENDGRID_API_KEY)
+sendgrid.setApiKey(
+  "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",
+)
 sendgridClient.setApiKey(SENDGRID_API_KEY)
 
 interface MailArgs {
-  templateId: string
+  templateId?: string
   to: string | string[]
   variables?: any
+  data?: any
 }
 
 export class Mailer {
-  private readonly from: string = "Reconnect <noreply@reconnect.io>"
+  private readonly from: string = "Mark <mark-vdl@live.nl>"
   private devMail: Transporter
 
   constructor() {
@@ -27,18 +25,20 @@ export class Mailer {
   }
 
   send(args: MailArgs) {
-    const data = {
+    const msg = {
+      ...args.data,
       from: this.from,
       to: args.to,
-      templateId: args.templateId,
-      dynamicTemplateData: args.variables,
+      // templateId: args.templateId,
+      // dynamicTemplateData: args.variables,
     }
+
     try {
-      if (IS_PRODUCTION || IS_STAGING) {
-        sendgrid.send(data)
-      } else {
-        this.sendDev(args)
-      }
+      // if (IS_PRODUCTION || IS_STAGING) {
+      sendgrid.send(msg)
+      // } else {
+      // this.sendDev(args)
+      // }
     } catch (err) {
       // TODO: SENDGRID
       console.log("Error sending mail:", err)
@@ -58,13 +58,17 @@ export class Mailer {
       args.variables,
       version.plain_content,
     )
-    this.devMail.sendMail({
-      to: args.to,
-      from: this.from,
-      subject,
-      html,
-      text,
-    })
+    try {
+      this.devMail.sendMail({
+        to: args.to,
+        from: this.from,
+        subject,
+        html,
+        text,
+      })
+    } catch (e) {
+      console.log("Error sending devMail: " + e)
+    }
   }
 
   interpolateVariables(params: any, html: string) {

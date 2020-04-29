@@ -11,7 +11,8 @@ export const {
   FACEBOOK_SECRET = "FACEBOOK_SECRET",
   FACEBOOK_CLIENT_TOKEN = "FACEBOOK_CLIENT_TOKEN",
   DATABASE_URL = "",
-  WEB_URL = "localhost:3000",
+  WEB_URL = "becomebetter.life",
+  LOCAL_WEB_URL = "localhost:3000",
   REDIS_URL = "",
   STRIPE_SECRET_KEY = "STRIPE_SECRET_KEY",
   SENTRY_DSN = "SENTRY_DSN",
@@ -81,5 +82,5 @@ export const FB_URL = "https://graph.facebook.com/v4.0"
 // WEB URL
 export const FULL_WEB_URL = () => {
   const protocol = IS_PRODUCTION ? "https://" : "http://"
-  return `${protocol}.${WEB_URL}`
+  return IS_PRODUCTION ? `${protocol}${WEB_URL}` : `${protocol}${LOCAL_WEB_URL}`
 }

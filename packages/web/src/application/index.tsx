@@ -14,6 +14,7 @@ import { Progress } from "../pages/Progress"
 import { Register } from "../pages/Register"
 import { Login } from "../pages/Login"
 import { CurrentLevelReward } from "../pages/CurrentLevelReward"
+import { ResetPassword } from "../pages/ResetPassword"
 
 export function Application() {
   return (
@@ -33,6 +34,7 @@ export function Application() {
             <Progress path="/progress" />
             <Register path="/register" />
             <Login path="/login" />
+            <ResetPassword path="/reset-password/:token" />
           </Router>
         </Flex>
         {/* </CheckAuth> */}

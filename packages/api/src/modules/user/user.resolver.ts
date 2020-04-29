@@ -40,6 +40,7 @@ import { UserLevelService } from "../userLevel/userLevel.service"
 import { UserDayRewardService } from "../userDayReward/userDayReward.service"
 import { UserGroupMessageService } from "../userGroupMessage/userGroupMessage.service"
 import { UserCourseService } from "../userCourse/userCourse.service"
+import { UserMailer } from "./user.mailer"
 
 @Resolver(() => User)
 export class UserResolver {
@@ -59,6 +60,8 @@ export class UserResolver {
   userRepository: UserRepository
   @Inject(() => UserWorker)
   userWorker: UserWorker
+  @Inject(() => UserMailer)
+  userMailer: UserMailer
 
   @Query(() => Boolean)
   async dailyReset(
@@ -134,11 +137,11 @@ export class UserResolver {
   async forgotPassword(@Arg("email") email: string): Promise<boolean> {
     const user = await this.userRepository.findByEmail(email)
     if (user) {
-      // const token = createToken({ id: user.id })
+      const token = createToken({ id: user.id })
 
       createToken({ id: user.id })
-      // TODO:
-      // this.userMailer.sendResetPasswordLink(user, token)
+
+      this.userMailer.sendResetPasswordLink(user, token)
     }
     return true
   }
@@ -148,7 +151,9 @@ export class UserResolver {
   async resetPassword(@Arg("data") data: ResetPasswordInput): Promise<boolean> {
     const payload = decryptToken<{ id: string }>(data.token)
     /// TODO: catch error and handle error message
-    await this.userService.update(payload.id, { password: data.password })
+    await this.userService.update(payload.id, {
+      password: data.password,
+    })
     return true
   }
 

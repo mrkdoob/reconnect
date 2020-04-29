@@ -10,21 +10,25 @@ export class UserMailer {
   sendWelcomeEmail(user: User) {
     if (!user.email) return
     this.mailer.send({
-      templateId: "d-ba08db2f63594c2a80ae5869cf16f48d",
+      // templateId: "d-ba08db2f63594c2a80ae5869cf16f48d",
       to: user.email,
-      variables: {
-        firstName: user.firstName,
+      data: {
+        subject: `Welcome to Become!`,
+        html: `<p>Hi ${user.firstName}, </p></br> <p>Thank you for your registration!<p>`,
       },
     })
   }
 
   sendResetPasswordLink(user: User, token: string) {
     if (!user.email) return
+
     this.mailer.send({
-      templateId: "d-ef3598195e6c4d5d889e9e45585ed1a2",
       to: user.email,
-      variables: {
-        link: `${FULL_WEB_URL()}/reset-password?token=${token}`,
+      data: {
+        subject: `Reset your Become password`,
+        html: `<p>Hi ${
+          user.firstName
+        }, </p></br> <p>Reset your password at ${FULL_WEB_URL()}/reset-password/${token}</p>`,
       },
     })
   }
