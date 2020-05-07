@@ -7,7 +7,6 @@ import { UserLevel } from "../userLevel/userLevel.entity"
 import { UserTask } from "../userTask/userTask.entity"
 import { UserGroupMessage } from "../userGroupMessage/userGroupMessage.entity"
 import { UserDayReward } from "../userDayReward/userDayReward.entity"
-// import { UserProgress } from "../userProgress/userProgress.entity"
 
 // USER TASKS
 export const userTasksLoader = () =>

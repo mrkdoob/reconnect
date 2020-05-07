@@ -8,6 +8,7 @@ import {
 } from "../../lib/graphql"
 import { useToast } from "../../lib/hooks/useToast"
 
+//TODO: Remove group & userLevel ?? else groupId
 export const ME_FRAGMENT = gql`
   fragment Me on User {
     id
@@ -15,6 +16,7 @@ export const ME_FRAGMENT = gql`
     email
     groupOrder
     avatar
+    groupId
     group {
       ...UserGroupItem
     }

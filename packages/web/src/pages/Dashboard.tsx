@@ -19,12 +19,14 @@ import {
   MyDashboardDocument,
   LevelItemFragmentDoc,
   UserGroupMessageFragmentDoc,
+  UserPetItemFragmentDoc,
 } from "../lib/graphql"
 import { UserTaskList } from "../components/UserTaskList"
 import { UserGroupList } from "../components/UserGroupList"
 import { UserMessageModal } from "../components/UserMessageModal"
 import { DailyRewardModal } from "../components/DailyRewardModal"
 import { LevelRewardModal } from "../components/LevelRewardModal"
+import { UserPetItem } from "../components/UserPetItem"
 
 export const USER_LEVEL = gql`
   fragment UserLevelItem on UserLevel {
@@ -54,11 +56,15 @@ export const MY_DASHBOARD_FRAGMENT = gql`
     userGroupMessage {
       ...UserGroupMessage
     }
+    userPet {
+      ...UserPetItem
+    }
   }
   ${UserLevelItemFragmentDoc}
   ${UserTaskItemFragmentDoc}
   ${UserGroupItemFragmentDoc}
   ${UserGroupMessageFragmentDoc}
+  ${UserPetItemFragmentDoc}
 `
 
 export const MY_DASHBOARD = gql`
@@ -150,6 +156,7 @@ export const Dashboard: React.FC<RouteComponentProps> = () => {
               {me?.userLevel?.level?.maxProgressDays}
             </Text>
           </Flex>
+          {me?.userPet && <UserPetItem userPet={me.userPet} />}
         </Box>
 
         {/* Trees planted */}
@@ -194,10 +201,11 @@ export const Dashboard: React.FC<RouteComponentProps> = () => {
         align="space-between"
         flexWrap={{ base: "wrap", md: "nowrap" }}
         justify="center"
+        mt={{ base: 6, md: 0 }}
       >
         {/* User tasks */}
         <StyledTile
-          my={{ base: 4, lg: 8 }}
+          my={{ base: 4, lg: 2 }}
           mx={{ base: 0, md: 2, lg: 6 }}
           w={{ base: "lg", md: "50%", lg: "lg" }}
           p={{ base: 6, md: 8 }}
@@ -209,7 +217,7 @@ export const Dashboard: React.FC<RouteComponentProps> = () => {
         </StyledTile>
         {/* Group progress */}
         <StyledTile
-          my={{ base: 4, lg: 8 }}
+          my={{ base: 4, lg: 2 }}
           mx={{ base: 0, md: 2, lg: 6 }}
           w={{ base: "lg", md: "50%", lg: "lg" }}
           p={{ base: 6, md: 8 }}

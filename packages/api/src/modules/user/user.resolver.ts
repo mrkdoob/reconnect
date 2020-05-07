@@ -41,6 +41,8 @@ import { UserDayRewardService } from "../userDayReward/userDayReward.service"
 import { UserGroupMessageService } from "../userGroupMessage/userGroupMessage.service"
 import { UserCourseService } from "../userCourse/userCourse.service"
 import { UserMailer } from "./user.mailer"
+import { UserPet } from "../userPet/userPet.entity"
+import { UserPetService } from "../userPet/userPet.service"
 
 @Resolver(() => User)
 export class UserResolver {
@@ -56,6 +58,8 @@ export class UserResolver {
   userGroupMessageService: UserGroupMessageService
   @Inject(() => UserCourseService)
   userCourseService: UserCourseService
+  @Inject(() => UserPetService)
+  userPetService: UserPetService
   @Inject(() => UserRepository)
   userRepository: UserRepository
   @Inject(() => UserWorker)
@@ -74,7 +78,10 @@ export class UserResolver {
       { name: "resetMembersFinished", data: {} },
       { delay },
     )
-    this.userWorker.addJob({ name: "resetAllGroupOrders", data: {} }, { delay })
+    this.userWorker.addJob(
+      { name: "resetAllGroupOrdersAndSetPetLifes", data: {} },
+      { delay },
+    )
     this.userWorker.addJob(
       { name: "resetAllUserGroupMessages", data: {} },
       { delay },
@@ -163,7 +170,7 @@ export class UserResolver {
   async completeMe(@CurrentUser() currentUser: User): Promise<User> {
     let group
     // userLevelService returns boolean true if last level
-    const userLevel = await this.userLevelService.updateDayProgress(
+    const userLevel = await this.userLevelService.incrementDayProgress(
       currentUser.id,
     )
     if (!userLevel.level.isLast) {
@@ -172,6 +179,7 @@ export class UserResolver {
     const data: CompleteMeInput = {
       groupOrder: group?.groupMembersFinished || 0,
     }
+    await this.userPetService.resetHealthByUserId(currentUser.id)
     return this.userService.update(currentUser.id, data)
   }
 
@@ -187,15 +195,13 @@ export class UserResolver {
   @Authorized()
   @Mutation(() => User, { nullable: true })
   async endMyCourse(@CurrentUser() currentUser: User) {
-    const data: EndMyCourseInput = { groupOrder: 0, groupId: null }
-    await this.groupService.endOfCourseSetFinalTreeCount(
-      currentUser.groupId,
-      currentUser.id,
-    )
-    await this.userLevelService.destroyByUserId(currentUser.id)
-    await this.userDayRewardService.destroyByUserId(currentUser.id)
-    await this.userGroupMessageService.destroyByUserId(currentUser.id)
-    return await this.userService.update(currentUser.id, data)
+    return await this.userService.endCourseByUserId(currentUser.id)
+  }
+
+  @Authorized("admin")
+  @Mutation(() => User, { nullable: true })
+  async endCourseByUserId(@Arg("userId") userId: string) {
+    return await this.userService.endCourseByUserId(userId)
   }
 
   // START COURSE
@@ -216,6 +222,7 @@ export class UserResolver {
     await this.userLevelService.createFirst(userId, courseId)
     await this.userDayRewardService.createFirstReward(userId)
     await this.userGroupMessageService.createFirst(userId, groupId, courseId)
+    await this.userPetService.createFirst(userId, courseId)
     return this.userService.update(currentUser.id, data)
   }
 
@@ -259,5 +266,10 @@ export class UserResolver {
     @Loaders() { userDayRewardLoader }: Loaders,
   ) {
     return userDayRewardLoader.load(user.id)
+  }
+
+  @FieldResolver(() => UserPet, { nullable: true })
+  userPet(@Root() user: User, @Loaders() { activeUserPetLoader }: Loaders) {
+    return activeUserPetLoader.load(user.id)
   }
 }

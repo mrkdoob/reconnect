@@ -49,6 +49,7 @@ export type Course = {
   benefits?: Maybe<Scalars["String"]>
   cover?: Maybe<Scalars["String"]>
   rewardType?: Maybe<Scalars["String"]>
+  petId?: Maybe<Scalars["String"]>
   levels?: Maybe<Array<Level>>
   groups?: Maybe<Array<Group>>
   courseDayRewards?: Maybe<Array<CourseDayReward>>
@@ -84,6 +85,7 @@ export type CreateCourseInput = {
   cover: Scalars["String"]
   endText?: Maybe<Scalars["String"]>
   rewardType?: Maybe<Scalars["String"]>
+  petId?: Maybe<Scalars["String"]>
 }
 
 export type CreateGroupInput = {
@@ -143,6 +145,14 @@ export type CreateOptionInput = {
   videoUrl: Scalars["String"]
 }
 
+export type CreatePetInput = {
+  name: Scalars["String"]
+  description: Scalars["String"]
+  levelNumber: Scalars["Float"]
+  pictureUrl: Scalars["String"]
+  avatarUrl: Scalars["String"]
+}
+
 export type CreateUserCourseInput = {
   courseId: Scalars["String"]
   isActive: Scalars["Boolean"]
@@ -158,6 +168,11 @@ export type CreateUserGroupMessageInput = {
 export type CreateUserLevelInput = {
   levelId: Scalars["String"]
   userId: Scalars["String"]
+}
+
+export type CreateUserPetInput = {
+  userId: Scalars["String"]
+  petId: Scalars["String"]
 }
 
 export type CreateUserTaskInput = {
@@ -281,6 +296,7 @@ export type Mutation = {
   completeMe?: Maybe<User>
   leaveGroup?: Maybe<User>
   endMyCourse?: Maybe<User>
+  endCourseByUserId?: Maybe<User>
   startMyCourse?: Maybe<User>
   createGroupMessage: GroupMessage
   updateGroupMessage?: Maybe<GroupMessage>
@@ -300,6 +316,9 @@ export type Mutation = {
   createOption: Option
   updateOption?: Maybe<Option>
   destroyOption: Scalars["Boolean"]
+  createPet: Pet
+  updatePet?: Maybe<Pet>
+  destroyPet?: Maybe<Scalars["Boolean"]>
   getSignedS3Url?: Maybe<Scalars["String"]>
   getBulkSignedS3Url?: Maybe<Array<BulkSignedResponse>>
   createUserCourse: UserCourse
@@ -313,6 +332,9 @@ export type Mutation = {
   createUserLevel: UserLevel
   updateUserLevel?: Maybe<UserLevel>
   destroyUserLevel: Scalars["Boolean"]
+  createUserPet: UserPet
+  updateUserPet?: Maybe<UserPet>
+  destroyUserPet: Scalars["Boolean"]
   createUserTask: UserTask
   updateUserTask?: Maybe<UserTask>
   destroyUserTask?: Maybe<Scalars["Boolean"]>
@@ -375,6 +397,10 @@ export type MutationForgotPasswordArgs = {
 
 export type MutationResetPasswordArgs = {
   data: ResetPasswordInput
+}
+
+export type MutationEndCourseByUserIdArgs = {
+  userId: Scalars["String"]
 }
 
 export type MutationStartMyCourseArgs = {
@@ -460,6 +486,19 @@ export type MutationDestroyOptionArgs = {
   optionId: Scalars["String"]
 }
 
+export type MutationCreatePetArgs = {
+  data: CreatePetInput
+}
+
+export type MutationUpdatePetArgs = {
+  data: UpdatePetInput
+  petId: Scalars["String"]
+}
+
+export type MutationDestroyPetArgs = {
+  petId: Scalars["String"]
+}
+
 export type MutationGetSignedS3UrlArgs = {
   data: S3SignedUrlInput
 }
@@ -511,6 +550,19 @@ export type MutationDestroyUserLevelArgs = {
   userLevelId: Scalars["String"]
 }
 
+export type MutationCreateUserPetArgs = {
+  data: CreateUserPetInput
+}
+
+export type MutationUpdateUserPetArgs = {
+  data: UpdateUserPetInput
+  userPetId: Scalars["String"]
+}
+
+export type MutationDestroyUserPetArgs = {
+  userPetId: Scalars["String"]
+}
+
 export type MutationCreateUserTaskArgs = {
   data: CreateUserTaskInput
 }
@@ -533,6 +585,18 @@ export type Option = {
   description: Scalars["String"]
   fullDescription?: Maybe<Scalars["String"]>
   videoUrl?: Maybe<Scalars["String"]>
+}
+
+export type Pet = {
+  __typename?: "Pet"
+  id: Scalars["ID"]
+  createdAt: Scalars["DateTime"]
+  updatedAt: Scalars["DateTime"]
+  name: Scalars["String"]
+  description?: Maybe<Scalars["String"]>
+  levelNumber: Scalars["Int"]
+  pictureUrl: Scalars["String"]
+  avatarUrl: Scalars["String"]
 }
 
 export type Query = {
@@ -562,6 +626,7 @@ export type Query = {
   allMessages: Array<Message>
   getOption: Option
   getAllOptions: Array<Option>
+  getPet: Pet
   getUserCourse: UserCourse
   myDayReward?: Maybe<UserDayReward>
   testAllMessageReset: Scalars["Boolean"]
@@ -569,6 +634,7 @@ export type Query = {
   allUserGroupMessages: Array<UserGroupMessage>
   getUserLevel: UserLevel
   getAllUserLevels: Array<UserLevel>
+  getUserPet: UserPet
   getUserTask: UserTask
   allUserTasks: Array<UserTask>
 }
@@ -630,6 +696,10 @@ export type QueryGetOptionArgs = {
   optionId: Scalars["String"]
 }
 
+export type QueryGetPetArgs = {
+  petId: Scalars["String"]
+}
+
 export type QueryGetUserCourseArgs = {
   userProgressId: Scalars["String"]
 }
@@ -640,6 +710,10 @@ export type QueryGetUserGroupMessageArgs = {
 
 export type QueryGetUserLevelArgs = {
   userLevelId: Scalars["String"]
+}
+
+export type QueryGetUserPetArgs = {
+  userPetId: Scalars["String"]
 }
 
 export type QueryGetUserTaskArgs = {
@@ -690,6 +764,7 @@ export type UpdateCourseInput = {
   cover?: Maybe<Scalars["String"]>
   endText?: Maybe<Scalars["String"]>
   rewardType?: Maybe<Scalars["String"]>
+  petId?: Maybe<Scalars["String"]>
 }
 
 export type UpdateGroupInput = {
@@ -760,6 +835,14 @@ export type UpdateOptionInput = {
   videoUrl?: Maybe<Scalars["String"]>
 }
 
+export type UpdatePetInput = {
+  name?: Maybe<Scalars["String"]>
+  description?: Maybe<Scalars["String"]>
+  levelNumber?: Maybe<Scalars["Float"]>
+  pictureUrl?: Maybe<Scalars["String"]>
+  avatarUrl?: Maybe<Scalars["String"]>
+}
+
 export type UpdateUserCourseInput = {
   courseId?: Maybe<Scalars["String"]>
   isActive?: Maybe<Scalars["Boolean"]>
@@ -776,7 +859,14 @@ export type UpdateUserGroupMessageInput = {
 export type UpdateUserLevelInput = {
   completed?: Maybe<Scalars["Boolean"]>
   progressDay?: Maybe<Scalars["Float"]>
+  retriesRemaining?: Maybe<Scalars["Float"]>
   levelId?: Maybe<Scalars["String"]>
+}
+
+export type UpdateUserPetInput = {
+  lifes?: Maybe<Scalars["Float"]>
+  petId?: Maybe<Scalars["String"]>
+  isActive?: Maybe<Scalars["Boolean"]>
 }
 
 export type UpdateUserTaskInput = {
@@ -807,6 +897,7 @@ export type User = {
   group?: Maybe<Group>
   userGroupMessage?: Maybe<UserGroupMessage>
   userDayReward?: Maybe<UserDayReward>
+  userPet?: Maybe<UserPet>
 }
 
 export type UserCourse = {
@@ -852,9 +943,22 @@ export type UserLevel = {
   updatedAt: Scalars["DateTime"]
   completed: Scalars["Boolean"]
   progressDay: Scalars["Int"]
+  retriesRemaining: Scalars["Int"]
   levelId?: Maybe<Scalars["String"]>
   userId?: Maybe<Scalars["String"]>
   level?: Maybe<Level>
+}
+
+export type UserPet = {
+  __typename?: "UserPet"
+  id: Scalars["ID"]
+  createdAt: Scalars["DateTime"]
+  updatedAt: Scalars["DateTime"]
+  lifes: Scalars["Int"]
+  isActive: Scalars["Boolean"]
+  petId?: Maybe<Scalars["String"]>
+  userId?: Maybe<Scalars["String"]>
+  pet?: Maybe<Pet>
 }
 
 export type UserTask = {
@@ -1041,6 +1145,16 @@ export type UpdateUserGroupMessageMutation = { __typename?: "Mutation" } & {
   >
 }
 
+export type PetItemFragment = { __typename?: "Pet" } & Pick<
+  Pet,
+  "id" | "description" | "name" | "levelNumber" | "pictureUrl" | "avatarUrl"
+>
+
+export type UserPetItemFragment = { __typename?: "UserPet" } & Pick<
+  UserPet,
+  "id" | "lifes" | "isActive"
+> & { pet?: Maybe<{ __typename?: "Pet" } & PetItemFragment> }
+
 export type UserTaskOptionItemFragment = {
   __typename?: "LevelTaskOption"
 } & Pick<LevelTaskOption, "id" | "order"> & {
@@ -1087,7 +1201,7 @@ export type UpdateUserTaskMutation = { __typename?: "Mutation" } & {
 
 export type MeFragment = { __typename?: "User" } & Pick<
   User,
-  "id" | "fullName" | "email" | "groupOrder" | "avatar"
+  "id" | "fullName" | "email" | "groupOrder" | "avatar" | "groupId"
 > & {
     group?: Maybe<{ __typename?: "Group" } & UserGroupItemFragment>
     userLevel?: Maybe<{ __typename?: "UserLevel" } & Pick<UserLevel, "levelId">>
@@ -1147,6 +1261,7 @@ export type MyDashboardFragment = { __typename?: "User" } & Pick<
     userGroupMessage?: Maybe<
       { __typename?: "UserGroupMessage" } & UserGroupMessageFragment
     >
+    userPet?: Maybe<{ __typename?: "UserPet" } & UserPetItemFragment>
   }
 
 export type MyDashboardQueryVariables = {}
@@ -1381,6 +1496,7 @@ export const MeFragmentDoc = gql`
     email
     groupOrder
     avatar
+    groupId
     group {
       ...UserGroupItem
     }
@@ -1500,6 +1616,27 @@ export const UserGroupMessageFragmentDoc = gql`
     }
   }
 `
+export const PetItemFragmentDoc = gql`
+  fragment PetItem on Pet {
+    id
+    description
+    name
+    levelNumber
+    pictureUrl
+    avatarUrl
+  }
+`
+export const UserPetItemFragmentDoc = gql`
+  fragment UserPetItem on UserPet {
+    id
+    lifes
+    isActive
+    pet {
+      ...PetItem
+    }
+  }
+  ${PetItemFragmentDoc}
+`
 export const MyDashboardFragmentDoc = gql`
   fragment MyDashboard on User {
     id
@@ -1516,11 +1653,15 @@ export const MyDashboardFragmentDoc = gql`
     userGroupMessage {
       ...UserGroupMessage
     }
+    userPet {
+      ...UserPetItem
+    }
   }
   ${UserTaskItemFragmentDoc}
   ${UserGroupItemFragmentDoc}
   ${UserLevelItemFragmentDoc}
   ${UserGroupMessageFragmentDoc}
+  ${UserPetItemFragmentDoc}
 `
 export const MyLevelProgressFragmentDoc = gql`
   fragment MyLevelProgress on UserLevel {

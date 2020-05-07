@@ -3,6 +3,10 @@ import { UserLevelRepository } from "./userLevel.repository"
 import { UserLevel } from "./userLevel.entity"
 import { LevelRepository } from "../level/level.repository"
 import { UserTaskService } from "../userTask/userTask.service"
+import { UserMailer } from "../user/user.mailer"
+import { UserRepository } from "../user/user.repository"
+import { UserPetService } from "../userPet/userPet.service"
+import { UserService } from "../user/user.service"
 
 @Service()
 export class UserLevelService {
@@ -12,6 +16,14 @@ export class UserLevelService {
   levelRepository: LevelRepository
   @Inject(() => UserTaskService)
   userTaskService: UserTaskService
+  @Inject(() => UserMailer)
+  userMailer: UserMailer
+  @Inject(() => UserRepository)
+  userRepository: UserRepository
+  @Inject(() => UserPetService)
+  userPetService: UserPetService
+  @Inject(() => UserService)
+  userService: UserService
 
   async create(data: Partial<UserLevel>): Promise<UserLevel> {
     const userLevel = await UserLevel.create(data).save()
@@ -42,16 +54,12 @@ export class UserLevelService {
     return userLevel.destroy()
   }
 
-  // TODO:
-  async updateDayProgress(userId: string): Promise<UserLevel> {
-    // Return boolean true if next is last level
+  async incrementDayProgress(userId: string): Promise<UserLevel> {
     const userLevel = await this.userLevelRepository.findByUserId(userId, {
       relations: ["level"],
     })
 
-    // TODO: use relations: {"level"}
-    const level = await this.levelRepository.findById(userLevel.levelId)
-    if (userLevel.progressDay + 1 === level.maxProgressDays) {
+    if (userLevel.progressDay + 1 === userLevel.level.maxProgressDays) {
       const nextUserLevel = await this.updateToNextLevel(userLevel)
       return nextUserLevel
     } else {
@@ -63,11 +71,37 @@ export class UserLevelService {
     }
   }
 
+  async decrementDayProgress(userId: string): Promise<UserLevel | null> {
+    const userLevel = await this.userLevelRepository
+      .findByUserId(userId, {
+        relations: ["level"], // TODO: Somehow adding user relation is not working
+      })
+      .catch(e => {
+        console.log("Error in decrementDayProgress: " + e)
+        return null
+      })
+    const user = await this.userRepository.findById(userId)
+    if (!userLevel || !user) return null
+    if (userLevel.retriesRemaining === 0) {
+      // End course
+      this.userService.endCourseByUserId(userId)
+      this.userMailer.sendEndOfCourseByFailureEmail(user)
+      return null
+    } else {
+      await this.userPetService.resetHealthByUserId(userId)
+      this.userMailer.sendRetryLevelEmail(user, userLevel.retriesRemaining)
+      userLevel.update({
+        completed: false,
+        progressDay: 0,
+        retriesRemaining: userLevel.retriesRemaining - 1,
+      })
+      return userLevel
+    }
+  }
+
   async updateToNextLevel(userLevel: UserLevel): Promise<UserLevel> {
     const nextLevel = await this.levelRepository.findNext(userLevel.levelId)
-    if (nextLevel.isLast) {
-      await this.userTaskService.destroyAllTasks(userLevel.userId)
-    } else {
+    if (!nextLevel.isLast) {
       await this.userTaskService.updateAllToNextTasks(
         nextLevel.id,
         userLevel.userId,

@@ -40,4 +40,8 @@ export class UpdateCourseInput implements Partial<Course> {
   @IsNotEmpty()
   @Field({ nullable: true })
   rewardType: string
+
+  @IsNotEmpty()
+  @Field({ nullable: true })
+  petId: string
 }

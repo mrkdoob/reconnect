@@ -1,7 +1,7 @@
 import { Entity, OneToMany, OneToOne } from "typeorm"
 import { ObjectType } from "type-graphql"
 import { BaseEntity } from "../shared/base.entity"
-import { StringField, IntField, DateField } from "../shared/fields"
+import { StringField, IntField, DateField, UuidField } from "../shared/fields"
 import { User } from "../user/user.entity"
 import { GroupMessage } from "../groupMessage/groupMessage.entity"
 
@@ -38,10 +38,10 @@ export class Group extends BaseEntity<Group> {
   @DateField({ nullable: true })
   endDate: Date
 
-  @IntField({ nullable: true }) //TODO: Remove nullable?
+  @IntField({ nullable: true })
   groupSize: number // Max group size
 
-  @StringField() //TODO: Maybe uuid?
+  @UuidField()
   courseId: string
 
   // RELATIONS

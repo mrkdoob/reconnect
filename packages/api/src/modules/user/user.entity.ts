@@ -8,6 +8,8 @@ import { UserTask } from "../userTask/userTask.entity"
 import { UserCourse } from "../userCourse/userCourse.entity"
 import { UserDayReward } from "../userDayReward/userDayReward.entity"
 import { S3_URL } from "../../lib/config"
+import { UserPet } from "../userPet/userPet.entity"
+import { UserLevel } from "../userLevel/userLevel.entity"
 
 @ObjectType()
 @Entity()
@@ -59,6 +61,18 @@ export class User extends BaseEntity<User> {
     userCourse => userCourse.user,
   )
   userCourse: UserCourse
+
+  @OneToMany(
+    () => UserPet,
+    userPet => userPet.user,
+  )
+  userPets: UserPet[]
+
+  @OneToOne(
+    () => UserLevel,
+    userLevel => userLevel.user,
+  )
+  userLevel: UserLevel
 
   @OneToOne(
     () => UserDayReward,

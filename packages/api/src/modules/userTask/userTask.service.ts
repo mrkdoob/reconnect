@@ -63,7 +63,9 @@ export class UserTaskService {
     //   .where("user.timeZone = :timeZone", { timeZone: timeZone })
     //   .getMany()
 
-    tasks.map(task => task.update({ completed: false }))
+    tasks.map(task => {
+      task.update({ completed: false })
+    })
   }
 
   async updateAllToNextTasks(levelId: string, userId: string) {

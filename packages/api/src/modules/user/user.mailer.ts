@@ -21,7 +21,6 @@ export class UserMailer {
 
   sendResetPasswordLink(user: User, token: string) {
     if (!user.email) return
-
     this.mailer.send({
       to: user.email,
       data: {
@@ -29,6 +28,31 @@ export class UserMailer {
         html: `<p>Hi ${
           user.firstName
         }, </p></br> <p>Reset your password at ${FULL_WEB_URL()}/reset-password/${token}</p>`,
+      },
+    })
+  }
+
+  sendEndOfCourseByFailureEmail(user: User) {
+    if (!user.email) return
+    this.mailer.send({
+      to: user.email,
+      data: {
+        subject: `Oh no! You have lost your course progress`,
+        html: `<p>Hi ${user.firstName}, </p></br> <p>Unfortunately, you have been idle for too long and are out of retry attempts.</p>
+        <p>You can try the program again whenever you like.</p>`,
+      },
+    })
+  }
+
+  // TODO: Make better mail
+  sendRetryLevelEmail(user: User, retries: number) {
+    if (!user.email) return
+    this.mailer.send({
+      to: user.email,
+      data: {
+        subject: `Oh no! You have lost your level progress`,
+        html: `<p>Hi ${user.firstName}, </p></br> <p>Unfortunately, you have run out of lifes.</p>
+        <p>You have ${retries} retry left.</p>`,
       },
     })
   }

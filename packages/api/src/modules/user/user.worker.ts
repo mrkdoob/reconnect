@@ -18,8 +18,8 @@ export type resetMembersFinished = {
   data: {}
 }
 
-export type resetAllGroupOrders = {
-  name: "resetAllGroupOrders"
+export type resetAllGroupOrdersAndSetPetLifes = {
+  name: "resetAllGroupOrdersAndSetPetLifes"
   data: {}
 }
 
@@ -40,7 +40,7 @@ export type repeatDaily = {
 
 export type JobType =
   | resetGroupUserTasks
-  | resetAllGroupOrders
+  | resetAllGroupOrdersAndSetPetLifes
   | resetMembersFinished
   | resetAllUserGroupMessages
   | updateDailyMessage
@@ -78,8 +78,8 @@ export class UserWorker extends Worker<JobType> {
         case "resetAllUserGroupMessages":
           this.userGroupMessageService.resetAllUserGroupMessages()
           return
-        case "resetAllGroupOrders":
-          this.userService.resetAllGroupOrders()
+        case "resetAllGroupOrdersAndSetPetLifes":
+          this.userService.resetAllGroupOrdersAndSetPetLifes()
           return
         case "updateDailyMessage":
           this.groupMessageService.updateDailyMessage()

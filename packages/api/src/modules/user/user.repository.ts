@@ -31,6 +31,6 @@ export class UserRepository {
   findAllActive(): Promise<User[] | undefined> {
     return User.find()
     // TODO: Make more efficient
-    // return User.find({ where: { groupId: !null } })
+    // return User.find({ where: { groupId } })
   }
 }

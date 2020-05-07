@@ -4,8 +4,14 @@ import { Service, Inject } from "typedi"
 import { UserRepository } from "./user.repository"
 import { createAuthToken } from "../../lib/jwt"
 import { UserInputError } from "apollo-server-express"
-import { UserTaskService } from "../userTask/userTask.service"
 import { UserMailer } from "./user.mailer"
+import { UserPetService } from "../userPet/userPet.service"
+import { GroupService } from "../group/group.service"
+import { UserLevelService } from "../userLevel/userLevel.service"
+import { UserDayRewardService } from "../userDayReward/userDayReward.service"
+import { UserGroupMessageService } from "../userGroupMessage/userGroupMessage.service"
+import { EndMyCourseInput } from "./user.input"
+import { UserTaskService } from "../userTask/userTask.service"
 
 @Service()
 export class UserService {
@@ -14,6 +20,16 @@ export class UserService {
   taskService: UserTaskService
   @Inject(() => UserMailer)
   userMailer: UserMailer
+  @Inject(() => UserPetService)
+  userPetService: UserPetService
+  @Inject(() => GroupService)
+  groupService: GroupService
+  @Inject(() => UserLevelService)
+  userLevelService: UserLevelService
+  @Inject(() => UserDayRewardService)
+  userDayRewardService: UserDayRewardService
+  @Inject(() => UserGroupMessageService)
+  userGroupMessageService: UserGroupMessageService
 
   async login(data: { email: string; password: string }): Promise<User> {
     const user = await this.userRepository.findByEmail(
@@ -58,8 +74,25 @@ export class UserService {
     }
   }
 
-  async resetAllGroupOrders() {
+  async resetAllGroupOrdersAndSetPetLifes() {
     const users = await this.userRepository.findAllActive()
-    users?.map(user => user.update({ groupOrder: 0 }))
+    users?.map(user => {
+      if (user.groupOrder === 0 && user.groupId)
+        this.userPetService.reduceLifeByUserId(user.id) // Reduce pet life if user did not complete tasks
+      user.update({ groupOrder: 0 })
+    })
+  }
+
+  async endCourseByUserId(userId: string): Promise<boolean> {
+    const user = await this.userRepository.findById(userId)
+    const data: EndMyCourseInput = { groupOrder: 0, groupId: null }
+    await this.groupService.endOfCourseSetFinalTreeCount(user.groupId, userId)
+    await this.userLevelService.destroyByUserId(userId)
+    await this.userDayRewardService.destroyByUserId(userId)
+    await this.userGroupMessageService.destroyByUserId(userId)
+    await this.userPetService.setInactiveByUserId(userId)
+    await this.taskService.destroyAllTasks(userId)
+    await this.update(userId, data)
+    return true
   }
 }

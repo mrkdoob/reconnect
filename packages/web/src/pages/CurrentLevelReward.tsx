@@ -5,6 +5,7 @@ import {
   LevelRewardFragmentDoc,
   useGetCurrentLevelRewardQuery,
   UserTaskItemFragmentDoc,
+  MeDocument,
 } from "../lib/graphql"
 import { LevelRewardItem } from "../components/LevelRewardItem"
 

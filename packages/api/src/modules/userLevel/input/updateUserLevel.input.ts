@@ -14,5 +14,9 @@ export class UpdateUserLevelInput implements Partial<UserLevel> {
 
   @IsNotEmpty()
   @Field({ nullable: true })
+  retriesRemaining: number
+
+  @IsNotEmpty()
+  @Field({ nullable: true })
   levelId: string
 }

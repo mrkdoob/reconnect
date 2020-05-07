@@ -80,9 +80,11 @@ export const Navbar: React.FC = () => {
               <NavLink to="/">
                 <Box cursor="pointer" as={Home} h={8} color="gray.300" />
               </NavLink>
-              <NavLink to="/mylevelreward">
-                <Box as={Book} h={8} color="gray.300" />
-              </NavLink>
+              {me.groupId && (
+                <NavLink to="/mylevelreward">
+                  <Box as={Book} h={8} color="gray.300" />
+                </NavLink>
+              )}
             </>
           )}
           {me?.avatar && me.avatar ? (

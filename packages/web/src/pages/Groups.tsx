@@ -8,6 +8,7 @@ import {
   useGetCourseGroupsQuery,
   useStartMyCourseMutation,
   MyDashboardFragmentDoc,
+  MeDocument,
 } from "../lib/graphql"
 import { SimpleGrid, Flex, Text, Box, Heading, useToast } from "@chakra-ui/core"
 import { GroupItem } from "../components/GroupItem"

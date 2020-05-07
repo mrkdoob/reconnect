@@ -1,9 +1,10 @@
-import { Entity, ManyToOne } from "typeorm"
+import { Entity, ManyToOne, OneToOne } from "typeorm"
 import { ObjectType } from "type-graphql"
 import { BaseEntity } from "../shared/base.entity"
 import { UuidField, BooleanField, IntField } from "../shared/fields"
 import { User } from "../user/user.entity"
 import { Level } from "../level/level.entity"
+import { MAX_RETRIES } from "../../lib/globalVars"
 
 @ObjectType()
 @Entity()
@@ -14,6 +15,9 @@ export class UserLevel extends BaseEntity<UserLevel> {
   @IntField({ default: 0 })
   progressDay: number
 
+  @IntField({ default: MAX_RETRIES })
+  retriesRemaining: number
+
   //TODO: Remove nullable?
   @UuidField({ nullable: true })
   levelId: string
@@ -22,9 +26,9 @@ export class UserLevel extends BaseEntity<UserLevel> {
   userId: string
 
   // RELATIONS
-  @ManyToOne(
+  @OneToOne(
     () => User,
-    User => User,
+    User => User.userLevel,
   )
   user: User
 
