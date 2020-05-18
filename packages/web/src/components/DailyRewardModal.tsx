@@ -18,6 +18,7 @@ import {
 import { MyDailyRewardFragmentDoc, useMyDayRewardQuery } from "../lib/graphql"
 import { Markup } from "interweave"
 import { Border } from "./Border"
+import { Coin } from "../lib/imageLinks"
 
 export const MY_DAILY_REWARD = gql`
   fragment MyDailyReward on UserDayReward {
@@ -52,9 +53,16 @@ export const GET_MY_DAYREWARD = gql`
 interface Props {
   dayCompleted: boolean
   onClose: () => void
+  coinRewardAmount: number
+  daysLeft: number
 }
 
-export const DailyRewardModal = ({ dayCompleted, onClose }: Props) => {
+export const DailyRewardModal = ({
+  dayCompleted,
+  onClose,
+  coinRewardAmount,
+  daysLeft,
+}: Props) => {
   const [show, setShow] = React.useState(false)
 
   const { data } = useMyDayRewardQuery()
@@ -83,6 +91,12 @@ export const DailyRewardModal = ({ dayCompleted, onClose }: Props) => {
               <ModalCloseButton />
               <ModalBody>
                 <Flex direction="column">
+                  {/* TODO: Dynamic coins amount and days amount */}
+                  <Flex mb={4} align="center" justify="center">
+                    <Text>You have earned {coinRewardAmount} coins </Text>
+                    <Image src={Coin} size={6} mx={2} />
+                    <Text>and have {daysLeft} days left to level up.</Text>
+                  </Flex>
                   <Text mb={4}>You have unlocked a wisdom scroll.</Text>
                   <Border mb={4} />
                   <Button

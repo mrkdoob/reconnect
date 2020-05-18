@@ -33,13 +33,6 @@ export class UserGroupMessageResolver {
   @Inject(() => UserResolver)
   UserResolver: UserResolver
 
-  // TODO: Remove
-  @Query(() => Boolean)
-  async testAllMessageReset() {
-    this.userGroupMessageService.resetAllUserGroupMessages()
-    return true
-  }
-
   @Query(() => UserGroupMessage)
   getUserGroupMessage(
     @Arg("userGroupMessageId") userGroupMessageId: string,
@@ -66,8 +59,13 @@ export class UserGroupMessageResolver {
   async updateUserGroupMessage(
     @Arg("userGroupMessageId") userGroupMessageId: string,
     @Arg("data") data: UpdateUserGroupMessageInput,
+    @Arg("updateToNextMessage") updateToNextMessage: boolean,
   ): Promise<UserGroupMessage> {
-    return this.userGroupMessageService.update(userGroupMessageId, data)
+    return this.userGroupMessageService.update(
+      userGroupMessageId,
+      data,
+      updateToNextMessage,
+    )
   }
 
   // TODO: @Authorized()

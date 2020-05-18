@@ -1,11 +1,4 @@
-import {
-  Resolver,
-  Query,
-  Mutation,
-  Arg,
-  FieldResolver,
-  Root,
-} from "type-graphql"
+import { Resolver, Query, Mutation, Arg } from "type-graphql"
 
 import { Inject } from "typedi"
 
@@ -16,8 +9,6 @@ import { UpdateGroupMessageInput } from "./input/updateGroupMessage.input"
 import { GroupMessageService } from "./groupMessage.service"
 import { GroupMessage } from "./groupMessage.entity"
 import { GroupMessageRepository } from "./groupMessage.repository"
-import { Message } from "../message/message.entity"
-import { Loaders } from "../shared/context/loaders"
 
 @Resolver(() => GroupMessage)
 export class GroupMessageResolver {
@@ -25,15 +16,8 @@ export class GroupMessageResolver {
   groupMessageService: GroupMessageService
   @Inject(() => GroupMessageRepository)
   groupMessageRepository: GroupMessageRepository
-
   @Inject(() => UserResolver)
   UserResolver: UserResolver
-
-  @Query(() => Boolean)
-  async testUpdateDailyMessage() {
-    this.groupMessageService.updateDailyMessage()
-    return true
-  }
 
   @Query(() => GroupMessage)
   getGroupMessage(

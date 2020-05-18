@@ -17,6 +17,7 @@ import { Level } from "../level/level.entity"
 import { Loaders } from "../shared/context/loaders"
 import { Group } from "../group/group.entity"
 import { CourseDayReward } from "../courseDayReward/courseDayReward.entity"
+import { User } from "../user/user.entity"
 
 @Resolver(() => Course)
 export class CourseResolver {
@@ -78,5 +79,11 @@ export class CourseResolver {
     @Loaders() { courseDayRewardsLoader }: Loaders,
   ) {
     return courseDayRewardsLoader.load(level.id)
+  }
+
+  @FieldResolver(() => User, { nullable: true })
+  mentor(@Root() course: Course, @Loaders() { mentorLoader }: Loaders) {
+    if (!course.mentorId) return null
+    return mentorLoader.load(course.mentorId)
   }
 }

@@ -1,7 +1,12 @@
 import { Entity, ManyToOne } from "typeorm"
 import { ObjectType } from "type-graphql"
 import { BaseEntity } from "../shared/base.entity"
-import { UuidField, IntField, BooleanField } from "../shared/fields"
+import {
+  UuidField,
+  IntField,
+  BooleanField,
+  StringField,
+} from "../shared/fields"
 import { User } from "../user/user.entity"
 import { Pet } from "../pet/pet.entity"
 import { MAX_LIFES } from "../../lib/globalVars"
@@ -16,7 +21,7 @@ export class UserPet extends BaseEntity<UserPet> {
   isActive: boolean
 
   //TODO: Remove nullable?
-  @UuidField({ nullable: true })
+  @StringField({ nullable: true })
   petId: string
 
   @UuidField({ nullable: true })

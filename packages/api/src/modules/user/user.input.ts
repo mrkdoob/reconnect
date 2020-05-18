@@ -18,6 +18,9 @@ export class UpdateInput implements Partial<User> {
   password?: string
 
   @Field({ nullable: true })
+  bio: string
+
+  @Field({ nullable: true })
   groupId?: string
 
   @Field({ nullable: true })
@@ -43,6 +46,9 @@ export class EndMyCourseInput implements Partial<User> {
 
   @Field(() => String, { nullable: true })
   groupId?: string | null
+
+  @Field({ nullable: true })
+  hasFailed: boolean
 }
 
 @InputType()

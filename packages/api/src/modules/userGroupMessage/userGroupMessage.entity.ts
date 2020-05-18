@@ -8,7 +8,7 @@ import { Message } from "../message/message.entity"
 @ObjectType()
 @Entity()
 export class UserGroupMessage extends BaseEntity<UserGroupMessage> {
-  @BooleanField({ default: true })
+  @BooleanField({ default: false })
   isRead: boolean // Resets daily
 
   @BooleanField({ default: true })

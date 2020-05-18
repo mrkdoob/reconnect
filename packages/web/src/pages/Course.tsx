@@ -9,7 +9,7 @@ import {
   useGetCourseQuery,
   CourseLevelFragmentDoc,
 } from "../lib/graphql"
-import { Flex, Text, Box, Heading, Button } from "@chakra-ui/core"
+import { Flex, Text, Box, Heading, Button, Image } from "@chakra-ui/core"
 import { styled } from "../components/providers/ThemeProvider"
 
 import { Border } from "../components/Border"
@@ -113,6 +113,35 @@ export const Course: React.FC<Props> = props => {
               <Box px={4} fontSize="lg">
                 <Markup content={course?.fullDescription} />
               </Box>
+              {/* Mentor */}
+              {course.mentor && (
+                <>
+                  <Border my={{ base: 12, md: 20 }} mt={8} />
+                  <Flex
+                    px={4}
+                    fontSize="lg"
+                    justify="center"
+                    align="center"
+                    direction={{ base: "column", md: "row" }}
+                  >
+                    {course.mentor.avatar && (
+                      <Image
+                        src={course.mentor?.avatar}
+                        size={24}
+                        rounded="full"
+                        mr={{ base: 0, md: 8 }}
+                        mb={{ base: 8, md: 0 }}
+                      />
+                    )}
+                    <Box>
+                      <Text fontWeight="semibold">
+                        Get mentored by {course.mentor.fullName}
+                      </Text>
+                      <Markup content={course.mentor.bio} />
+                    </Box>
+                  </Flex>
+                </>
+              )}
             </Box>
           </Flex>
 

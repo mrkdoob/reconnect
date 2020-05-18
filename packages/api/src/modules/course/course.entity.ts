@@ -1,4 +1,10 @@
-import { Entity, OneToMany, BeforeInsert, BeforeUpdate } from "typeorm"
+import {
+  Entity,
+  OneToMany,
+  BeforeInsert,
+  BeforeUpdate,
+  ManyToOne,
+} from "typeorm"
 import { ObjectType } from "type-graphql"
 import { BaseEntity } from "../shared/base.entity"
 import { StringField, UuidField } from "../shared/fields"
@@ -6,6 +12,7 @@ import { Level } from "../level/level.entity"
 import slug from "limax"
 import { Group } from "../group/group.entity"
 import { CourseDayReward } from "../courseDayReward/courseDayReward.entity"
+import { User } from "../user/user.entity"
 
 @ObjectType()
 @Entity()
@@ -42,7 +49,16 @@ export class Course extends BaseEntity<Course> {
   @UuidField({ nullable: true })
   petId: string
 
+  @UuidField({ nullable: true })
+  mentorId: string
+
   // RELATIONS
+  @ManyToOne(
+    () => User,
+    mentor => mentor.coursesTaught,
+  )
+  mentor: User
+
   @OneToMany(
     () => Level,
     level => level.courseId,

@@ -44,6 +44,7 @@ export const MY_DASHBOARD_FRAGMENT = gql`
   fragment MyDashboard on User {
     id
     groupOrder
+    hasFailed
     tasks {
       ...UserTaskItem
     }
@@ -102,6 +103,11 @@ export const Dashboard: React.FC<RouteComponentProps> = () => {
       }
     },
   })
+
+  const daysLeft =
+    me?.userLevel?.level?.maxProgressDays && me?.userLevel?.progressDay
+      ? me?.userLevel?.level?.maxProgressDays - me?.userLevel?.progressDay
+      : 0
 
   const progressPercent = me?.userLevel?.level
     ? (me.userLevel.progressDay / me.userLevel.level.maxProgressDays) * 100
@@ -225,16 +231,22 @@ export const Dashboard: React.FC<RouteComponentProps> = () => {
           {me?.group && <UserGroupList group={me.group} />}
         </StyledTile>
       </Flex>
-      {me?.userGroupMessage && (
+      {me?.userGroupMessage && me?.userPet && (
         <UserMessageModal
           userGroupMessage={me.userGroupMessage}
           rewardType={me?.group?.rewardType}
+          userHasFailed={me?.hasFailed}
+          userPet={me.userPet}
         />
       )}
-      <DailyRewardModal
-        dayCompleted={dayCompleted}
-        onClose={() => setDayCompleted(false)}
-      />
+      {me?.group?.coinRewardAmount && (
+        <DailyRewardModal
+          dayCompleted={dayCompleted}
+          onClose={() => setDayCompleted(false)}
+          coinRewardAmount={me.group.coinRewardAmount}
+          daysLeft={daysLeft}
+        />
+      )}
       <LevelRewardModal
         levelCompleted={me?.tasks?.length === 0 || levelCompleted}
         onClose={() => setDayCompleted(false)}

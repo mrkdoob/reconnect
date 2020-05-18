@@ -179,7 +179,6 @@ export class UserResolver {
     const data: CompleteMeInput = {
       groupOrder: group?.groupMembersFinished || 0,
     }
-    await this.userPetService.resetHealthByUserId(currentUser.id)
     return this.userService.update(currentUser.id, data)
   }
 
@@ -187,21 +186,28 @@ export class UserResolver {
   @Authorized()
   @Mutation(() => User, { nullable: true })
   async leaveGroup(@CurrentUser() currentUser: User): Promise<User> {
-    const data: EndMyCourseInput = { groupOrder: 0, groupId: null }
+    const data: EndMyCourseInput = {
+      groupOrder: 0,
+      groupId: null,
+      hasFailed: true,
+    }
     return await this.userService.update(currentUser.id, data)
   }
 
   // END COURSE
   @Authorized()
   @Mutation(() => User, { nullable: true })
-  async endMyCourse(@CurrentUser() currentUser: User) {
-    return await this.userService.endCourseByUserId(currentUser.id)
+  async endMyCourse(
+    @CurrentUser() currentUser: User,
+    @Arg("hasFailed") hasFailed: boolean,
+  ) {
+    return await this.userService.endCourseByUserId(currentUser.id, hasFailed)
   }
 
   @Authorized("admin")
   @Mutation(() => User, { nullable: true })
   async endCourseByUserId(@Arg("userId") userId: string) {
-    return await this.userService.endCourseByUserId(userId)
+    return await this.userService.endCourseByUserId(userId, true)
   }
 
   // START COURSE

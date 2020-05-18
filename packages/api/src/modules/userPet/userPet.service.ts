@@ -6,11 +6,14 @@ import { UserTaskService } from "../userTask/userTask.service"
 import { CourseRepository } from "../course/course.repository"
 import { MAX_LIFES } from "../../lib/globalVars"
 import { UserLevelService } from "../userLevel/userLevel.service"
+import { PetRepository } from "../pet/pet.repository"
 
 @Service()
 export class UserPetService {
   @Inject(() => UserPetRepository)
   userPetRepository: UserPetRepository
+  @Inject(() => PetRepository)
+  petRepository: PetRepository
   @Inject(() => CourseRepository)
   courseRepository: CourseRepository
   @Inject(() => LevelRepository)
@@ -40,15 +43,35 @@ export class UserPetService {
     return userPet.destroy()
   }
 
-  async setInactiveByUserId(userId: string): Promise<UserPet> {
+  async setInactiveByUserId(
+    userId: string,
+    hasFailed: boolean,
+  ): Promise<UserPet | boolean> {
     const userPet = await this.userPetRepository.findByUserId(userId)
-    const data = { isActive: false }
-    return userPet.update(data)
+    return hasFailed ? userPet.destroy() : userPet.update({ isActive: false })
   }
 
   async resetHealthByUserId(userId: string): Promise<UserPet> {
     const userPet = await this.userPetRepository.findByUserId(userId)
     const data = { lifes: MAX_LIFES }
+    return userPet.update(data)
+  }
+
+  async levelUpPetByUserId(userId: string): Promise<UserPet> {
+    const userPet = await this.userPetRepository.findByUserId(userId, {
+      relations: ["pet"],
+    })
+
+    const nextLevelPet =
+      userPet.pet && (await this.petRepository.findNextLevelById(userPet.pet))
+    const data = nextLevelPet
+      ? {
+          lifes: MAX_LIFES,
+          petId: nextLevelPet.id,
+        }
+      : {
+          lifes: MAX_LIFES,
+        }
     return userPet.update(data)
   }
 

@@ -15,3 +15,6 @@ export const Food =
 
 export const Mask =
   "https://reconnectapp-dev.s3.eu-central-1.amazonaws.com/mask-png"
+
+export const HealthPotion =
+  "https://reconnectapp-dev.s3.eu-central-1.amazonaws.com/health-potion-png"

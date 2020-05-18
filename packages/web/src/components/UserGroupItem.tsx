@@ -18,6 +18,7 @@ export const USER_GROUP = gql`
     groupMembersFinished
     groupSize
     coinsForReward
+    coinRewardAmount
     groupCoins
     rewardType
     users {

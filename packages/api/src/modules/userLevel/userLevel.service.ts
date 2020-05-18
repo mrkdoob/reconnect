@@ -60,6 +60,9 @@ export class UserLevelService {
     })
 
     if (userLevel.progressDay + 1 === userLevel.level.maxProgressDays) {
+      const userPet = await this.userPetService.levelUpPetByUserId(userId)
+      console.log("userPet.petId" + userPet.petId)
+
       const nextUserLevel = await this.updateToNextLevel(userLevel)
       return nextUserLevel
     } else {
@@ -84,7 +87,7 @@ export class UserLevelService {
     if (!userLevel || !user) return null
     if (userLevel.retriesRemaining === 0) {
       // End course
-      this.userService.endCourseByUserId(userId)
+      this.userService.endCourseByUserId(userId, true)
       this.userMailer.sendEndOfCourseByFailureEmail(user)
       return null
     } else {

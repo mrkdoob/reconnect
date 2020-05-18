@@ -2,9 +2,17 @@ import React from "react"
 import { Flex, Image, Box, Text, Heading, Tag } from "@chakra-ui/core"
 import { Link } from "@reach/router"
 import gql from "graphql-tag.macro"
-import { CourseItemFragment } from "../lib/graphql"
+import { CourseItemFragment, MentorItemFragmentDoc } from "../lib/graphql"
 import { styled } from "./providers/ThemeProvider"
 
+export const MENTOR_ITEM = gql`
+  fragment MentorItem on User {
+    id
+    fullName
+    avatar
+    bio
+  }
+`
 export const COURSE_ITEM = gql`
   fragment CourseItem on Course {
     id
@@ -17,7 +25,11 @@ export const COURSE_ITEM = gql`
     duration
     benefits
     rewardType
+    mentor {
+      ...MentorItem
+    }
   }
+  ${MentorItemFragmentDoc}
 `
 
 interface Props {

@@ -3,6 +3,7 @@ import { In } from "typeorm"
 import { Level } from "../level/level.entity"
 import { Group } from "../group/group.entity"
 import { CourseDayReward } from "../courseDayReward/courseDayReward.entity"
+import { User } from "../user/user.entity"
 
 // TODO: Level loader
 
@@ -74,4 +75,15 @@ export const courseDayRewardsLoader = () =>
       }
     })
     return courseIds.map(courseId => map[courseId] || [])
+  })
+
+export const mentorLoader = () =>
+  new DataLoader(async (keys: ReadonlyArray<string>) => {
+    const userIds = [...keys]
+    const mentors = await User.getRepository().findByIds(userIds, {
+      cache: true,
+    })
+    const map: { [key: string]: User } = {}
+    mentors.forEach(mentor => (map[mentor.id] = mentor))
+    return userIds.map(id => map[id])
   })

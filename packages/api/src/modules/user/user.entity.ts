@@ -1,7 +1,12 @@
 import { Entity, BeforeInsert, OneToMany, OneToOne, ManyToOne } from "typeorm"
 import { ObjectType, Field } from "type-graphql"
 import bcrypt from "bcryptjs"
-import { StringField, UuidField, IntField } from "../shared/fields"
+import {
+  StringField,
+  UuidField,
+  IntField,
+  BooleanField,
+} from "../shared/fields"
 import { BaseEntity } from "../shared/base.entity"
 import { Group } from "../group/group.entity"
 import { UserTask } from "../userTask/userTask.entity"
@@ -10,6 +15,7 @@ import { UserDayReward } from "../userDayReward/userDayReward.entity"
 import { S3_URL } from "../../lib/config"
 import { UserPet } from "../userPet/userPet.entity"
 import { UserLevel } from "../userLevel/userLevel.entity"
+import { Course } from "../course/course.entity"
 
 @ObjectType()
 @Entity()
@@ -26,6 +32,9 @@ export class User extends BaseEntity<User> {
   @StringField()
   lastName: string
 
+  @StringField({ nullable: true })
+  bio: string
+
   @StringField({
     default:
       "https://pbs.twimg.com/profile_images/529214699041067008/fqPBAr5s_400x400.jpeg",
@@ -39,10 +48,19 @@ export class User extends BaseEntity<User> {
   @IntField({ default: 0 })
   groupOrder: number
 
+  @BooleanField({ default: false })
+  hasFailed: boolean
+
   @UuidField({ nullable: true })
   groupId: string | null
 
   // Relations
+  @OneToMany(
+    () => Course,
+    courses => courses.mentorId,
+  )
+  coursesTaught: Course[]
+
   @ManyToOne(
     () => Group,
     group => group.users,

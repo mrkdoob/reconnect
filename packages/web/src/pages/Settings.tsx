@@ -19,6 +19,8 @@ import {
   MySettingsFragmentDoc,
   useUpdateSettingsMutation,
   UpdateInput,
+  useEndMyCourseMutation,
+  MeDocument,
 } from "../lib/graphql"
 import { Form } from "../components/Form"
 import { useForm } from "../lib/hooks/useForm"
@@ -29,6 +31,7 @@ import { useToast } from "../lib/hooks/useToast"
 import { NewAvatar } from "../components/NewAvatar"
 import { Modal } from "../components/Modal"
 import { User } from "styled-icons/boxicons-regular/User"
+import { Confirmation } from "../components/Confirmation"
 
 export const MYSETTINGS_FRAGMENT = gql`
   fragment MySettings on User {
@@ -54,7 +57,7 @@ export const GET_MY_SETTINGS = gql`
   ${MySettingsFragmentDoc}
 `
 
-export const UPDATE_SETTINGS = gql`
+export const END_MY_COURSE = gql`
   mutation UpdateSettings($data: UpdateInput!) {
     updateMe(data: $data) {
       ...MySettings
@@ -92,6 +95,9 @@ export const Settings: React.FC<Props> = props => {
   const form = useForm({ validationSchema: SettingsSchema })
   const [updateSettings] = useUpdateSettingsMutation()
   const toast = useToast()
+  const [endCourse] = useEndMyCourseMutation({
+    refetchQueries: [{ query: MeDocument }],
+  })
   // const [updateUserGroupMessage] = useUpdateUserGroupMessageMutation()
 
   const onSubmit = async (values: UpdateInput) => {
@@ -108,6 +114,27 @@ export const Settings: React.FC<Props> = props => {
         form.reset(values)
       },
     })
+  }
+
+  const handleEndCourse = async () => {
+    await endCourse({
+      variables: {
+        hasFailed: true,
+      },
+    })
+      .then(() => {
+        toast({
+          title: "Done!",
+          status: "success",
+        })
+      })
+      .catch(() => {
+        toast({
+          title: "Oops!",
+          description: "Something went wrong",
+          status: "error",
+        })
+      })
   }
 
   // TODO: Add or remove?
@@ -199,6 +226,7 @@ export const Settings: React.FC<Props> = props => {
                 }}
               /> */}
             {/* </Flex> */}
+
             <Flex
               justify="space-between"
               direction="row-reverse"
@@ -216,6 +244,15 @@ export const Settings: React.FC<Props> = props => {
               </Button>
             </Flex>
           </Form>
+          {settings?.groupId && (
+            <Flex justify="flex-end" w="100%" mt={8}>
+              <Confirmation onSubmit={handleEndCourse}>
+                <Button variantColor="gray" size="sm">
+                  Stop course
+                </Button>
+              </Confirmation>
+            </Flex>
+          )}
         </StyledTile>
       </Flex>
     </Page>

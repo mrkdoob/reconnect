@@ -50,9 +50,11 @@ export type Course = {
   cover?: Maybe<Scalars["String"]>
   rewardType?: Maybe<Scalars["String"]>
   petId?: Maybe<Scalars["String"]>
+  mentorId?: Maybe<Scalars["String"]>
   levels?: Maybe<Array<Level>>
   groups?: Maybe<Array<Group>>
   courseDayRewards?: Maybe<Array<CourseDayReward>>
+  mentor?: Maybe<User>
 }
 
 export type CourseDayReward = {
@@ -86,6 +88,7 @@ export type CreateCourseInput = {
   endText?: Maybe<Scalars["String"]>
   rewardType?: Maybe<Scalars["String"]>
   petId?: Maybe<Scalars["String"]>
+  mentorId?: Maybe<Scalars["String"]>
 }
 
 export type CreateGroupInput = {
@@ -184,6 +187,7 @@ export type CreateUserTaskInput = {
 export type EndMyCourseInput = {
   groupOrder?: Maybe<Scalars["Float"]>
   groupId?: Maybe<Scalars["String"]>
+  hasFailed?: Maybe<Scalars["Boolean"]>
 }
 
 export type Group = {
@@ -399,6 +403,10 @@ export type MutationResetPasswordArgs = {
   data: ResetPasswordInput
 }
 
+export type MutationEndMyCourseArgs = {
+  hasFailed: Scalars["Boolean"]
+}
+
 export type MutationEndCourseByUserIdArgs = {
   userId: Scalars["String"]
 }
@@ -529,6 +537,7 @@ export type MutationCreateUserGroupMessageArgs = {
 }
 
 export type MutationUpdateUserGroupMessageArgs = {
+  updateToNextMessage: Scalars["Boolean"]
   data: UpdateUserGroupMessageInput
   userGroupMessageId: Scalars["String"]
 }
@@ -611,7 +620,6 @@ export type Query = {
   dailyReset: Scalars["Boolean"]
   getUser?: Maybe<User>
   me?: Maybe<User>
-  testUpdateDailyMessage: Scalars["Boolean"]
   getGroupMessage: GroupMessage
   allGroupMessages: Array<GroupMessage>
   getLevel: Level
@@ -629,7 +637,6 @@ export type Query = {
   getPet: Pet
   getUserCourse: UserCourse
   myDayReward?: Maybe<UserDayReward>
-  testAllMessageReset: Scalars["Boolean"]
   getUserGroupMessage: UserGroupMessage
   allUserGroupMessages: Array<UserGroupMessage>
   getUserLevel: UserLevel
@@ -765,6 +772,7 @@ export type UpdateCourseInput = {
   endText?: Maybe<Scalars["String"]>
   rewardType?: Maybe<Scalars["String"]>
   petId?: Maybe<Scalars["String"]>
+  mentorId?: Maybe<Scalars["String"]>
 }
 
 export type UpdateGroupInput = {
@@ -790,6 +798,7 @@ export type UpdateInput = {
   lastName?: Maybe<Scalars["String"]>
   email?: Maybe<Scalars["String"]>
   password?: Maybe<Scalars["String"]>
+  bio?: Maybe<Scalars["String"]>
   groupId?: Maybe<Scalars["String"]>
   avatar?: Maybe<Scalars["String"]>
   groupOrder?: Maybe<Scalars["Float"]>
@@ -885,9 +894,11 @@ export type User = {
   password: Scalars["String"]
   firstName: Scalars["String"]
   lastName: Scalars["String"]
+  bio?: Maybe<Scalars["String"]>
   avatar?: Maybe<Scalars["String"]>
   timeZone?: Maybe<Scalars["String"]>
   groupOrder: Scalars["Int"]
+  hasFailed: Scalars["Boolean"]
   groupId?: Maybe<Scalars["String"]>
   fullName?: Maybe<Scalars["String"]>
   url: Scalars["String"]
@@ -975,6 +986,11 @@ export type UserTask = {
   levelTaskOption?: Maybe<LevelTaskOption>
 }
 
+export type MentorItemFragment = { __typename?: "User" } & Pick<
+  User,
+  "id" | "fullName" | "avatar" | "bio"
+>
+
 export type CourseItemFragment = { __typename?: "Course" } & Pick<
   Course,
   | "id"
@@ -987,7 +1003,7 @@ export type CourseItemFragment = { __typename?: "Course" } & Pick<
   | "duration"
   | "benefits"
   | "rewardType"
->
+> & { mentor?: Maybe<{ __typename?: "User" } & MentorItemFragment> }
 
 export type CourseLevelFragment = { __typename?: "Level" } & Pick<
   Level,
@@ -1049,7 +1065,9 @@ export type LevelItemFragment = { __typename?: "Level" } & Pick<
   | "isLast"
 >
 
-export type EndMyCourseMutationVariables = {}
+export type EndMyCourseMutationVariables = {
+  hasFailed: Scalars["Boolean"]
+}
 
 export type EndMyCourseMutation = { __typename?: "Mutation" } & {
   endMyCourse?: Maybe<{ __typename?: "User" } & Pick<User, "id" | "groupId">>
@@ -1093,6 +1111,7 @@ export type UserGroupItemFragment = { __typename?: "Group" } & Pick<
   | "groupMembersFinished"
   | "groupSize"
   | "coinsForReward"
+  | "coinRewardAmount"
   | "groupCoins"
   | "rewardType"
 > & {
@@ -1126,7 +1145,7 @@ export type UserGroupMessageFragment = {
     message?: Maybe<
       { __typename?: "Message" } & Pick<
         Message,
-        "id" | "message" | "videoUrl" | "pictureUrl" | "fullHeightPic"
+        "id" | "message" | "videoUrl" | "pictureUrl" | "fullHeightPic" | "order"
       >
     >
   }
@@ -1134,6 +1153,7 @@ export type UserGroupMessageFragment = {
 export type UpdateUserGroupMessageMutationVariables = {
   userGroupMessageId: Scalars["String"]
   data: UpdateUserGroupMessageInput
+  updateToNextMessage: Scalars["Boolean"]
 }
 
 export type UpdateUserGroupMessageMutation = { __typename?: "Mutation" } & {
@@ -1152,7 +1172,7 @@ export type PetItemFragment = { __typename?: "Pet" } & Pick<
 
 export type UserPetItemFragment = { __typename?: "UserPet" } & Pick<
   UserPet,
-  "id" | "lifes" | "isActive"
+  "id" | "lifes" | "isActive" | "petId"
 > & { pet?: Maybe<{ __typename?: "Pet" } & PetItemFragment> }
 
 export type UserTaskOptionItemFragment = {
@@ -1253,7 +1273,7 @@ export type UserLevelItemFragment = { __typename?: "UserLevel" } & Pick<
 
 export type MyDashboardFragment = { __typename?: "User" } & Pick<
   User,
-  "id" | "groupOrder"
+  "id" | "groupOrder" | "hasFailed"
 > & {
     tasks?: Maybe<Array<{ __typename?: "UserTask" } & UserTaskItemFragment>>
     group?: Maybe<{ __typename?: "Group" } & UserGroupItemFragment>
@@ -1283,6 +1303,9 @@ export type GetCourseGroupsQueryVariables = {
 export type GetCourseGroupsQuery = { __typename?: "Query" } & {
   courseBySlug: { __typename?: "Course" } & Pick<Course, "id"> & {
       groups?: Maybe<Array<{ __typename?: "Group" } & GroupItemFragment>>
+      mentor?: Maybe<
+        { __typename?: "User" } & Pick<User, "firstName"> & MentorItemFragment
+      >
     }
 }
 
@@ -1481,6 +1504,7 @@ export const UserGroupItemFragmentDoc = gql`
     groupMembersFinished
     groupSize
     coinsForReward
+    coinRewardAmount
     groupCoins
     rewardType
     users {
@@ -1516,6 +1540,14 @@ export const CourseLevelFragmentDoc = gql`
     isLast
   }
 `
+export const MentorItemFragmentDoc = gql`
+  fragment MentorItem on User {
+    id
+    fullName
+    avatar
+    bio
+  }
+`
 export const CourseItemFragmentDoc = gql`
   fragment CourseItem on Course {
     id
@@ -1528,7 +1560,11 @@ export const CourseItemFragmentDoc = gql`
     duration
     benefits
     rewardType
+    mentor {
+      ...MentorItem
+    }
   }
+  ${MentorItemFragmentDoc}
 `
 export const CourseFragmentDoc = gql`
   fragment Course on Course {
@@ -1613,6 +1649,7 @@ export const UserGroupMessageFragmentDoc = gql`
       videoUrl
       pictureUrl
       fullHeightPic
+      order
     }
   }
 `
@@ -1631,6 +1668,7 @@ export const UserPetItemFragmentDoc = gql`
     id
     lifes
     isActive
+    petId
     pet {
       ...PetItem
     }
@@ -1641,6 +1679,7 @@ export const MyDashboardFragmentDoc = gql`
   fragment MyDashboard on User {
     id
     groupOrder
+    hasFailed
     tasks {
       ...UserTaskItem
     }
@@ -1813,8 +1852,8 @@ export type ForgotPasswordMutationOptions = ApolloReactCommon.BaseMutationOption
   ForgotPasswordMutationVariables
 >
 export const EndMyCourseDocument = gql`
-  mutation EndMyCourse {
-    endMyCourse {
+  mutation EndMyCourse($hasFailed: Boolean!) {
+    endMyCourse(hasFailed: $hasFailed) {
       id
       groupId
     }
@@ -1834,6 +1873,7 @@ export const EndMyCourseDocument = gql`
  * @example
  * const [endMyCourseMutation, { data, loading, error }] = useEndMyCourseMutation({
  *   variables: {
+ *      hasFailed: // value for 'hasFailed'
  *   },
  * });
  */
@@ -1906,10 +1946,12 @@ export const UpdateUserGroupMessageDocument = gql`
   mutation UpdateUserGroupMessage(
     $userGroupMessageId: String!
     $data: UpdateUserGroupMessageInput!
+    $updateToNextMessage: Boolean!
   ) {
     updateUserGroupMessage(
       userGroupMessageId: $userGroupMessageId
       data: $data
+      updateToNextMessage: $updateToNextMessage
     ) {
       isRead
       showOption
@@ -1932,6 +1974,7 @@ export const UpdateUserGroupMessageDocument = gql`
  *   variables: {
  *      userGroupMessageId: // value for 'userGroupMessageId'
  *      data: // value for 'data'
+ *      updateToNextMessage: // value for 'updateToNextMessage'
  *   },
  * });
  */
@@ -2337,9 +2380,14 @@ export const GetCourseGroupsDocument = gql`
       groups {
         ...GroupItem
       }
+      mentor {
+        ...MentorItem
+        firstName
+      }
     }
   }
   ${GroupItemFragmentDoc}
+  ${MentorItemFragmentDoc}
 `
 
 /**

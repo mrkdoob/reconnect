@@ -21,8 +21,8 @@ export const LEVEL_ITEM = gql`
 `
 
 export const END_MY_COURSE = gql`
-  mutation EndMyCourse {
-    endMyCourse {
+  mutation EndMyCourse($hasFailed: Boolean!) {
+    endMyCourse(hasFailed: $hasFailed) {
       id
       groupId
     }
@@ -49,7 +49,11 @@ export const LevelRewardModal = ({
   })
 
   const handleEndOfCourse = () => {
-    endCourse()
+    endCourse({
+      variables: {
+        hasFailed: false,
+      },
+    })
     onClose()
   }
 

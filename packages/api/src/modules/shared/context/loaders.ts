@@ -13,6 +13,7 @@ import {
   levelsLoader,
   groupsLoader,
   courseDayRewardsLoader,
+  mentorLoader,
 } from "../../course/course.loader"
 import { levelTasksLoader } from "../../level/level.loader"
 import { courseLoader } from "../../userCourse/userCourse.loader"
@@ -47,6 +48,7 @@ export interface Loaders {
 
   courseDayRewardLoader: ReturnType<typeof courseDayRewardLoader>
   courseDayRewardsLoader: ReturnType<typeof courseDayRewardsLoader>
+  mentorLoader: ReturnType<typeof mentorLoader>
 
   groupMessageLoader: ReturnType<typeof groupMessageLoader>
   userGroupMessageLoader: ReturnType<typeof userGroupMessageLoader>

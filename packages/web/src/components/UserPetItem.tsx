@@ -32,9 +32,9 @@ interface Props {
   userPet: UserPetItemFragment
 }
 
-export function UserPetItem({ userPet }: Props) {
-  const MAX_LIFES = 3
+export const MAX_LIFES = 3
 
+export function UserPetItem({ userPet }: Props) {
   return (
     <>
       {userPet && (

@@ -11,7 +11,7 @@ export class GroupService {
   @Inject(() => UserRepository)
   userRepository: UserRepository
   @Inject(() => UserCourseRepository)
-  UserCourseRepository: UserCourseRepository
+  userCourseRepository: UserCourseRepository
 
   async create(data: Partial<Group>): Promise<Group> {
     const group = await Group.create(data).save()
@@ -23,14 +23,20 @@ export class GroupService {
     return group.update(data)
   }
 
-  async endOfCourseSetFinalTreeCount(groupId: string | null, userId: string) {
-    const group = groupId && (await this.groupRepository.findById(groupId))
-    const userCourse = await this.UserCourseRepository.findByUserId(userId)
-    group &&
-      userCourse.update({
-        isActive: false,
-        finishedRewardCount: group.rewardCount,
-      })
+  async endOfCourseSetFinalTreeCount(userId: string, hasFailed: boolean) {
+    const user = await this.userRepository.findById(userId)
+    const group =
+      user.groupId && (await this.groupRepository.findById(user.groupId))
+    const userCourse = await this.userCourseRepository.findByUserId(userId)
+    if (!hasFailed) {
+      group &&
+        userCourse.update({
+          isActive: false,
+          finishedRewardCount: group.rewardCount,
+        })
+    } else {
+      userCourse.destroy()
+    }
   }
 
   async completeMember(groupId: string | null): Promise<Group | undefined> {

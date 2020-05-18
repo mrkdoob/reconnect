@@ -8,13 +8,26 @@ import {
   useGetCourseGroupsQuery,
   useStartMyCourseMutation,
   MyDashboardFragmentDoc,
+  MentorItemFragmentDoc,
+  useEndMyCourseMutation,
   MeDocument,
 } from "../lib/graphql"
-import { SimpleGrid, Flex, Text, Box, Heading, useToast } from "@chakra-ui/core"
+import {
+  SimpleGrid,
+  Flex,
+  Text,
+  Box,
+  Heading,
+  useToast,
+  Button,
+  Image,
+} from "@chakra-ui/core"
 import { GroupItem } from "../components/GroupItem"
 import { styled } from "../components/providers/ThemeProvider"
 import { Badge } from "styled-icons/boxicons-regular/Badge"
 import { useMe } from "../components/providers/MeProvider"
+import { Confirmation } from "../components/Confirmation"
+import { useState } from "react"
 
 export const GET_COURSE_GROUPS = gql`
   query GetCourseGroups($slug: String!) {
@@ -23,9 +36,14 @@ export const GET_COURSE_GROUPS = gql`
       groups {
         ...GroupItem
       }
+      mentor {
+        ...MentorItem
+        firstName
+      }
     }
   }
   ${GroupItemFragmentDoc}
+  ${MentorItemFragmentDoc}
 `
 
 export const START_MY_COURSE = gql`
@@ -43,10 +61,11 @@ export const Groups: React.FC<Props> = props => {
   const slug = props.slug as string
   const { data, loading } = useGetCourseGroupsQuery({ variables: { slug } })
 
-  // TODO: Filter groups that are full and dates in past?
-  const groups = data?.courseBySlug.groups || []
-  const courseId = data?.courseBySlug.id
+  const course = data?.courseBySlug
+  const groups = course?.groups || []
+  const courseId = course?.id
   const me = useMe()
+  const [stopCourse, setStopCourse] = React.useState(false)
 
   const [startCourse] = useStartMyCourseMutation()
 
@@ -58,7 +77,7 @@ export const Groups: React.FC<Props> = props => {
     startCourse({
       variables: { courseId, groupId },
     })
-      .then(res => {
+      .then(() => {
         navigate("/mylevelreward")
       })
       .catch(() => {
@@ -70,48 +89,124 @@ export const Groups: React.FC<Props> = props => {
       })
   }
 
-  if (me?.group) {
-    return <Redirect noThrow={true} to="/" />
+  const [endCourse] = useEndMyCourseMutation({
+    refetchQueries: [{ query: MeDocument }],
+  })
+
+  const handleEndCourse = async () => {
+    await endCourse({
+      variables: {
+        hasFailed: true,
+      },
+    })
+      .then(() => {
+        toast({
+          title: "Done!",
+          status: "success",
+        })
+        setStopCourse(true)
+      })
+      .catch(() => {
+        toast({
+          title: "Oops!",
+          description: "Something went wrong",
+          status: "error",
+        })
+      })
   }
+
+  // if (me?.group) {
+  //   return <Redirect noThrow={true} to="/" />
+  // }
+  console.log(stopCourse)
+
   return (
     <Page loading={loading}>
       <Flex
         justify="center"
-        w="100%"
+        // w="100%"
+        w={{ base: "100%", md: "30rem" }}
         h="100%"
         direction="column"
         align="center"
         pb={32}
       >
-        <Flex align="center">
-          <Box mb={1} color="blue.500" h="2rem" as={Badge} />
-        </Flex>
-
-        <Heading mb={6} fontWeight="normal" fontSize="2xl">
-          Select a group
-        </Heading>
-        {groups.length > 0 ? (
-          <StyledSimpleGrid
-            w={{ base: "98vw", md: "30rem" }}
-            columns={1}
-            boxShadow="lg"
-            top={1}
-          >
-            {groups.map((group, index) => (
-              <GroupItem
-                index={index}
-                key={group.id}
-                group={group}
-                isLast={groups.length === index + 1}
-                handleGroupSelect={handleGroupSelect}
-              />
-            ))}
-          </StyledSimpleGrid>
+        {me?.groupId && !stopCourse ? (
+          <>
+            <Text mb={4}>
+              It seems that you are already following a course.
+            </Text>
+            <Text fontWeight="semibold" mb={4}>
+              Would you like to quit this course?
+            </Text>
+            <Confirmation onSubmit={handleEndCourse}>
+              <Button variantColor="blue">Stop course</Button>
+            </Confirmation>
+          </>
         ) : (
-          <Flex align="center" justify="center">
-            <Text>No groups created yet</Text>
-            {/* TODO: Create new group? */}
-          </Flex>
+          <>
+            {groups.length === 1 && course?.mentor ? (
+              <Flex textAlign="center" align="center" direction="column">
+                {course.mentor.avatar && (
+                  <Image
+                    src={course.mentor?.avatar}
+                    size={24}
+                    rounded="full"
+                    mb={8}
+                  />
+                )}
+                <Text fontWeight="semibold" mb={4}>
+                  {course.mentor.firstName} will guide you through the program
+                  and assist if you are having difficulties.
+                </Text>
+                <Text fontWeight="semibold" mb={8}>
+                  He or she would like to know if you are able to commit to the
+                  program?
+                </Text>
+
+                <Button
+                  variantColor="blue"
+                  onClick={() => handleGroupSelect(groups[0].id)}
+                >
+                  I commit
+                </Button>
+              </Flex>
+            ) : (
+              <>
+                <Flex align="center">
+                  <Box mb={1} color="blue.500" h="2rem" as={Badge} />
+                </Flex>
+
+                <Heading mb={6} fontWeight="normal" fontSize="2xl">
+                  Select a group
+                </Heading>
+                {groups.length > 0 ? (
+                  <StyledSimpleGrid
+                    // w={{ base: "98vw", md: "30rem" }}
+                    w="100%"
+                    columns={1}
+                    boxShadow="lg"
+                    top={1}
+                  >
+                    {groups.map((group, index) => (
+                      <GroupItem
+                        index={index}
+                        key={group.id}
+                        group={group}
+                        isLast={groups.length === index + 1}
+                        handleGroupSelect={handleGroupSelect}
+                      />
+                    ))}
+                  </StyledSimpleGrid>
+                ) : (
+                  <Flex align="center" justify="center">
+                    <Text>No groups created yet</Text>
+                    {/* TODO: Create new group? */}
+                  </Flex>
+                )}
+              </>
+            )}
+          </>
         )}
       </Flex>
     </Page>

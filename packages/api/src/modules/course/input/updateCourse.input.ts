@@ -44,4 +44,8 @@ export class UpdateCourseInput implements Partial<Course> {
   @IsNotEmpty()
   @Field({ nullable: true })
   petId: string
+
+  @IsNotEmpty()
+  @Field({ nullable: true })
+  mentorId: string
 }

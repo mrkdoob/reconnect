@@ -40,18 +40,20 @@ export class UserGroupMessageService {
   async update(
     userGroupMessageId: string,
     data: Partial<UserGroupMessage>,
+    updateToNextMessage: boolean,
   ): Promise<UserGroupMessage> {
     const userMessage = await this.userGroupMessageRepository.findById(
       userGroupMessageId,
     )
     let messageId
-    await this.messageRepository // Update to next message
-      .findNext(userMessage.messageId)
-      .then(res => (messageId = res.id))
+    updateToNextMessage &&
+      (await this.messageRepository // Update to next message
+        .findNext(userMessage.messageId)
+        .then(res => (messageId = res.id)))
 
     const newData = {
       ...data,
-      messageId,
+      messageId: updateToNextMessage ? messageId : userMessage.messageId,
     }
 
     return userMessage.update(newData)

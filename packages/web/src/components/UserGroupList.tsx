@@ -110,13 +110,13 @@ export function UserGroupList({ group }: Props) {
             </Flex>
             <Flex align="center" mt={8}>
               <Flex w={16} justify="center" align="center">
-                <Image src={Coin} h={8} w={8} />
+                <Image src={Coin} size={8} />
               </Flex>
               <Text ml={4} fontSize="lg">
                 {group.groupCoins} coins earned
               </Text>
             </Flex>
-            <Flex align="center" mt={8}>
+            {/* <Flex align="center" mt={8}>
               <Flex justify="center" align="center" w={16}>
                 {group.rewardType === "tree" ? (
                   <Image src={Tree} h={12} w={16} />
@@ -131,7 +131,7 @@ export function UserGroupList({ group }: Props) {
                 {group.rewardCount - group.oldRewardCount !== 1 && "s"}{" "}
                 {group.rewardType === "tree" ? "planted" : "donated"} today
               </Text>
-            </Flex>
+            </Flex> */}
             <Tooltip
               // @ts-ignore
               label={completedMembers.map((user, index) => {
@@ -149,8 +149,10 @@ export function UserGroupList({ group }: Props) {
                 </Flex>
                 <Flex align="center">
                   <Text ml={4} fontSize="lg">
-                    {group.groupMembersFinished} out of {group.users.length}{" "}
-                    have completed their tasks
+                    {group.groupMembersFinished}{" "}
+                    {group.groupMembersFinished === 1
+                      ? "person has completed his/her tasks"
+                      : "people have completed their tasks"}
                   </Text>
                   {group.groupMembersFinished > 4 && (
                     <Box

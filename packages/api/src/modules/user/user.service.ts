@@ -77,20 +77,30 @@ export class UserService {
   async resetAllGroupOrdersAndSetPetLifes() {
     const users = await this.userRepository.findAllActive()
     users?.map(user => {
-      if (user.groupOrder === 0 && user.groupId)
-        this.userPetService.reduceLifeByUserId(user.id) // Reduce pet life if user did not complete tasks
-      user.update({ groupOrder: 0 })
+      if (user.groupOrder === 0 && user.groupId) {
+        // Reduce pet life if user did not complete tasks
+        this.userPetService.reduceLifeByUserId(user.id)
+        user.update({ groupOrder: 0, hasFailed: true })
+      } else {
+        user.update({ groupOrder: 0, hasFailed: false })
+      }
     })
   }
 
-  async endCourseByUserId(userId: string): Promise<boolean> {
-    const user = await this.userRepository.findById(userId)
-    const data: EndMyCourseInput = { groupOrder: 0, groupId: null }
-    await this.groupService.endOfCourseSetFinalTreeCount(user.groupId, userId)
+  async endCourseByUserId(
+    userId: string,
+    hasFailed: boolean,
+  ): Promise<boolean> {
+    const data: EndMyCourseInput = {
+      groupOrder: 0,
+      groupId: null,
+      hasFailed: false,
+    }
+    await this.groupService.endOfCourseSetFinalTreeCount(userId, hasFailed)
     await this.userLevelService.destroyByUserId(userId)
     await this.userDayRewardService.destroyByUserId(userId)
     await this.userGroupMessageService.destroyByUserId(userId)
-    await this.userPetService.setInactiveByUserId(userId)
+    await this.userPetService.setInactiveByUserId(userId, hasFailed)
     await this.taskService.destroyAllTasks(userId)
     await this.update(userId, data)
     return true

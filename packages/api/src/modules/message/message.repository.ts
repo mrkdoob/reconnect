@@ -37,7 +37,7 @@ export class MessageRepository {
       message.courseId,
     ).catch(() => {
       try {
-        return this.findByOrderCourse(message.order + 1, message.courseId)
+        return this.findByOrderCourse(1, message.courseId)
       } catch {
         throw new UserInputError("No message found")
       }

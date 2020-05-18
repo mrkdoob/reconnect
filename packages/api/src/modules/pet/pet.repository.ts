@@ -16,4 +16,18 @@ export class PetRepository {
   findAll(): Promise<Pet[]> {
     return Pet.find()
   }
+
+  findNextLevelById(pet: Pet): Promise<Pet> {
+    try {
+      return Pet.findOneOrFail({
+        where: { name: pet.name, levelNumber: pet.levelNumber + 1 },
+      }).catch(() => {
+        return Pet.findOneOrFail({
+          where: { name: pet.name, levelNumber: 1 },
+        })
+      })
+    } catch {
+      throw new UserInputError("No UserPet found")
+    }
+  }
 }
