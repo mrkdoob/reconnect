@@ -15,4 +15,10 @@ export class UpdateUserTaskInput implements Partial<UserTask> {
 
   @Field({ nullable: true })
   order: number
+
+  @Field({ nullable: true })
+  description: string
+
+  @Field({ nullable: true })
+  fullDescription: string
 }

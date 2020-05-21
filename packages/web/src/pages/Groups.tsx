@@ -1,5 +1,5 @@
 import React from "react"
-import { RouteComponentProps, Redirect, navigate } from "@reach/router"
+import { RouteComponentProps, navigate } from "@reach/router"
 
 import { Page } from "../components/Page"
 import gql from "graphql-tag.macro"
@@ -27,7 +27,6 @@ import { styled } from "../components/providers/ThemeProvider"
 import { Badge } from "styled-icons/boxicons-regular/Badge"
 import { useMe } from "../components/providers/MeProvider"
 import { Confirmation } from "../components/Confirmation"
-import { useState } from "react"
 
 export const GET_COURSE_GROUPS = gql`
   query GetCourseGroups($slug: String!) {
@@ -118,7 +117,6 @@ export const Groups: React.FC<Props> = props => {
   // if (me?.group) {
   //   return <Redirect noThrow={true} to="/" />
   // }
-  console.log(stopCourse)
 
   return (
     <Page loading={loading}>

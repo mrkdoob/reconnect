@@ -13,6 +13,7 @@ interface Props {
 export const Page: React.FC<Props> = props => {
   const me = useMe()
 
+  // TODO: Use CheckAuth component
   if (!me && !props.disableRedirect)
     return <Redirect noThrow={true} to={`/login`} />
   return (

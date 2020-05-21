@@ -4,7 +4,14 @@ import { Markup } from "interweave"
 
 import { Page } from "../components/Page"
 import { styled } from "../components/providers/ThemeProvider"
-import { Flex, Text, Button, Heading } from "@chakra-ui/core"
+import {
+  Flex,
+  Text,
+  Button,
+  Heading,
+  useDisclosure,
+  Box,
+} from "@chakra-ui/core"
 import { Border } from "../components/Border"
 import {
   LevelRewardFragment,
@@ -13,6 +20,8 @@ import {
 } from "../lib/graphql"
 import gql from "graphql-tag.macro"
 import { LevelTaskItem } from "./LevelTaskItem"
+import { Modal } from "./Modal"
+import { LevelRewardItemForm } from "./LevelRewardItemForm"
 
 export const LEVEL_REWARD = gql`
   fragment LevelReward on Level {
@@ -36,39 +45,71 @@ interface Props {
 }
 
 export function LevelRewardItem({ levelReward, tasks, loading }: Props) {
-  return (
-    <Page loading={loading}>
-      <Flex
-        justify="center"
-        w="100%"
-        h="100%"
-        direction="column"
-        align="center"
-        pb={{ base: 8, md: 32 }}
-      >
-        <StyledTile p={{ base: "2", md: "8" }} w={{ base: "100%", md: "3xl" }}>
-          <Border mt={12} mb={{ base: 8, md: 16 }} />
-          <Text mb={6}>{levelReward?.rewardDescription}</Text>
-          {/* Renders HTML in string */}
-          <Heading mb={4}>{levelReward?.title}</Heading>
-          <Markup content={levelReward?.rewardText} />
+  const { isOpen, onOpen, onClose } = useDisclosure()
 
-          {tasks && tasks?.length > 0
-            ? tasks.map(task => <LevelTaskItem key={task.id} userTask={task} />)
-            : levelReward?.levelTasks?.map(task => (
-                <LevelTaskItem key={task.id} levelTask={task} />
-              ))}
-          <Border my={16} />
-          <Link to={"/"}>
-            <Flex justify="center" w="100%">
-              <Button variantColor="blue" w="60%">
-                Continue
+  return (
+    <>
+      <Page loading={loading}>
+        <Flex
+          justify="center"
+          w="100%"
+          h="100%"
+          direction="column"
+          align="center"
+          pb={{ base: 8, md: 32 }}
+        >
+          <StyledTile
+            p={{ base: "2", md: "8" }}
+            w={{ base: "100%", md: "3xl" }}
+          >
+            <Border mt={12} mb={{ base: 8, md: 16 }} />
+            <Text mb={6}>{levelReward?.rewardDescription}</Text>
+            {/* Renders HTML in string */}
+            <Heading mb={4}>{levelReward?.title}</Heading>
+            <Markup content={levelReward?.rewardText} />
+
+            {tasks && tasks?.length > 0
+              ? tasks.map(task => (
+                  <LevelTaskItem key={task.id} userTask={task} />
+                ))
+              : levelReward?.levelTasks?.map(task => (
+                  <LevelTaskItem key={task.id} levelTask={task} />
+                ))}
+            <Flex justify="space-between" align="center" mt={8}>
+              <Text fontWeight="semibold">
+                Want to challenge yourself a bit more?
+              </Text>
+              <Button
+                leftIcon="add"
+                w="fit-content"
+                variantColor="green"
+                onClick={onOpen}
+              >
+                Add your own practice
               </Button>
             </Flex>
-          </Link>
-        </StyledTile>
-      </Flex>
-    </Page>
+            <Border my={16} />
+            <Link to={"/"}>
+              <Flex justify="center" w="100%">
+                <Button variantColor="blue" w="60%">
+                  Continue
+                </Button>
+              </Flex>
+            </Link>
+          </StyledTile>
+        </Flex>
+      </Page>
+      <Modal
+        size="xl"
+        title="Create your own practice"
+        onClose={onClose}
+        isOpen={isOpen}
+      >
+        <Box w="100%">
+          <LevelRewardItemForm onClose={onClose} />
+        </Box>
+      </Modal>
+    </>
   )
 }
 

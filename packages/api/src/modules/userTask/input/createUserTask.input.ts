@@ -16,3 +16,14 @@ export class CreateUserTaskInput implements Partial<UserTask> {
   @Field()
   order: number
 }
+
+@InputType()
+export class CreateCustomUserTaskInput implements Partial<UserTask> {
+  @IsNotEmpty()
+  @Field()
+  description: string
+
+  @IsNotEmpty()
+  @Field()
+  fullDescription: string
+}

@@ -15,6 +15,7 @@ import { Register } from "../pages/Register"
 import { Login } from "../pages/Login"
 import { CurrentLevelReward } from "../pages/CurrentLevelReward"
 import { ResetPassword } from "../pages/ResetPassword"
+import { Portfolio } from "../pages/Portfolio"
 
 export function Application() {
   return (
@@ -35,6 +36,7 @@ export function Application() {
             <Register path="/register" />
             <Login path="/login" />
             <ResetPassword path="/reset-password/:token" />
+            <Portfolio path="/portfolio" />
           </Router>
         </Flex>
         {/* </CheckAuth> */}

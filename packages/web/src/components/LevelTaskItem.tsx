@@ -75,6 +75,7 @@ export function LevelTaskItem({ levelTask, userTask, hideDescription }: Props) {
       <Text as="i" mt={6}>
         {!hideDescription && task?.description}
       </Text>
+
       <Markup content={task?.fullDescription} />
       {task?.videoUrl && (
         <>
@@ -94,7 +95,7 @@ export function LevelTaskItem({ levelTask, userTask, hideDescription }: Props) {
       )}
       {otherOptions && otherOptions.length > 1 && (
         <Flex justify="flex-end" mt={8}>
-          <Button size="sm" w="fit-content" onClick={onOpen}>
+          <Button leftIcon="edit" size="sm" w="fit-content" onClick={onOpen}>
             More options
           </Button>
         </Flex>

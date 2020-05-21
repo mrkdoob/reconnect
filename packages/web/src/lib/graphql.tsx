@@ -91,6 +91,11 @@ export type CreateCourseInput = {
   mentorId?: Maybe<Scalars["String"]>
 }
 
+export type CreateCustomUserTaskInput = {
+  description: Scalars["String"]
+  fullDescription: Scalars["String"]
+}
+
 export type CreateGroupInput = {
   name: Scalars["String"]
   rewardCount: Scalars["Float"]
@@ -340,6 +345,7 @@ export type Mutation = {
   updateUserPet?: Maybe<UserPet>
   destroyUserPet: Scalars["Boolean"]
   createUserTask: UserTask
+  createCustomUserTask: UserTask
   updateUserTask?: Maybe<UserTask>
   destroyUserTask?: Maybe<Scalars["Boolean"]>
 }
@@ -574,6 +580,10 @@ export type MutationDestroyUserPetArgs = {
 
 export type MutationCreateUserTaskArgs = {
   data: CreateUserTaskInput
+}
+
+export type MutationCreateCustomUserTaskArgs = {
+  data: CreateCustomUserTaskInput
 }
 
 export type MutationUpdateUserTaskArgs = {
@@ -883,6 +893,8 @@ export type UpdateUserTaskInput = {
   levelTaskId?: Maybe<Scalars["String"]>
   levelTaskOptionId?: Maybe<Scalars["String"]>
   order?: Maybe<Scalars["Float"]>
+  description?: Maybe<Scalars["String"]>
+  fullDescription?: Maybe<Scalars["String"]>
 }
 
 export type User = {
@@ -982,6 +994,8 @@ export type UserTask = {
   levelTaskOptionId?: Maybe<Scalars["String"]>
   order?: Maybe<Scalars["Int"]>
   userId: Scalars["String"]
+  description?: Maybe<Scalars["String"]>
+  fullDescription?: Maybe<Scalars["String"]>
   levelTask?: Maybe<LevelTask>
   levelTaskOption?: Maybe<LevelTaskOption>
 }
@@ -1054,6 +1068,17 @@ export type LevelRewardFragment = { __typename?: "Level" } & Pick<
       Array<{ __typename?: "LevelTask" } & LevelTaskItemFragment>
     >
   }
+
+export type CreateCustomUserTaskMutationVariables = {
+  data: CreateCustomUserTaskInput
+}
+
+export type CreateCustomUserTaskMutation = { __typename?: "Mutation" } & {
+  createCustomUserTask: { __typename?: "UserTask" } & Pick<
+    UserTask,
+    "id" | "description" | "fullDescription"
+  >
+}
 
 export type LevelItemFragment = { __typename?: "Level" } & Pick<
   Level,
@@ -1172,7 +1197,7 @@ export type PetItemFragment = { __typename?: "Pet" } & Pick<
 
 export type UserPetItemFragment = { __typename?: "UserPet" } & Pick<
   UserPet,
-  "id" | "lifes" | "isActive" | "petId"
+  "id" | "lifes" | "isActive"
 > & { pet?: Maybe<{ __typename?: "Pet" } & PetItemFragment> }
 
 export type UserTaskOptionItemFragment = {
@@ -1668,7 +1693,6 @@ export const UserPetItemFragmentDoc = gql`
     id
     lifes
     isActive
-    petId
     pet {
       ...PetItem
     }
@@ -1850,6 +1874,54 @@ export type ForgotPasswordMutationResult = ApolloReactCommon.MutationResult<
 export type ForgotPasswordMutationOptions = ApolloReactCommon.BaseMutationOptions<
   ForgotPasswordMutation,
   ForgotPasswordMutationVariables
+>
+export const CreateCustomUserTaskDocument = gql`
+  mutation CreateCustomUserTask($data: CreateCustomUserTaskInput!) {
+    createCustomUserTask(data: $data) {
+      id
+      description
+      fullDescription
+    }
+  }
+`
+
+/**
+ * __useCreateCustomUserTaskMutation__
+ *
+ * To run a mutation, you first call `useCreateCustomUserTaskMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateCustomUserTaskMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createCustomUserTaskMutation, { data, loading, error }] = useCreateCustomUserTaskMutation({
+ *   variables: {
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useCreateCustomUserTaskMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    CreateCustomUserTaskMutation,
+    CreateCustomUserTaskMutationVariables
+  >,
+) {
+  return ApolloReactHooks.useMutation<
+    CreateCustomUserTaskMutation,
+    CreateCustomUserTaskMutationVariables
+  >(CreateCustomUserTaskDocument, baseOptions)
+}
+export type CreateCustomUserTaskMutationHookResult = ReturnType<
+  typeof useCreateCustomUserTaskMutation
+>
+export type CreateCustomUserTaskMutationResult = ApolloReactCommon.MutationResult<
+  CreateCustomUserTaskMutation
+>
+export type CreateCustomUserTaskMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  CreateCustomUserTaskMutation,
+  CreateCustomUserTaskMutationVariables
 >
 export const EndMyCourseDocument = gql`
   mutation EndMyCourse($hasFailed: Boolean!) {

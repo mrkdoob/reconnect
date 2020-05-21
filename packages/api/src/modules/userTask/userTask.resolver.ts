@@ -5,6 +5,7 @@ import {
   Arg,
   FieldResolver,
   Root,
+  Authorized,
 } from "type-graphql"
 
 import { Inject } from "typedi"
@@ -12,13 +13,18 @@ import { Inject } from "typedi"
 import { UserResolver } from "../user/user.resolver"
 import { UserTask } from "./userTask.entity"
 import { UserTaskRepository } from "./userTask.repository"
-import { CreateUserTaskInput } from "./input/createUserTask.input"
+import {
+  CreateUserTaskInput,
+  CreateCustomUserTaskInput,
+} from "./input/createUserTask.input"
 import { UpdateUserTaskInput } from "./input/updateUserTask.input"
 import { UserTaskService } from "./userTask.service"
 import { LevelTask } from "../levelTask/levelTask.entity"
 import { Loaders } from "../shared/context/loaders"
 import { LevelTaskOptionRepository } from "../levelTaskOption/levelTaskOption.repository"
 import { LevelTaskOption } from "../levelTaskOption/levelTaskOption.entity"
+import { CurrentUser } from "../shared/context/currentUser"
+import { User } from "../user/user.entity"
 
 @Resolver(() => UserTask)
 export class UserTaskResolver {
@@ -32,23 +38,35 @@ export class UserTaskResolver {
   @Inject(() => UserResolver)
   UserResolver: UserResolver
 
+  @Authorized()
   @Query(() => UserTask)
   getUserTask(@Arg("taskId") taskId: string): Promise<UserTask> {
     return this.taskRepository.findById(taskId)
   }
 
+  @Authorized()
   @Query(() => [UserTask])
   allUserTasks(): Promise<UserTask[]> {
     return this.taskRepository.findAll()
   }
 
-  // @Authorized()  TODO: Authorized
+  @Authorized()
   @Mutation(() => UserTask)
   createUserTask(@Arg("data") data: CreateUserTaskInput): Promise<UserTask> {
     return this.taskService.create(data)
   }
 
-  // TODO: @Authorized()
+  @Authorized()
+  @Mutation(() => UserTask)
+  createCustomUserTask(
+    @Arg("data") data: CreateCustomUserTaskInput,
+    @CurrentUser() currentUser: User,
+  ): Promise<UserTask> {
+    const finalData = { ...data, userId: currentUser.id }
+    return this.taskService.create(finalData)
+  }
+
+  @Authorized()
   @Mutation(() => UserTask, { nullable: true })
   updateUserTask(
     @Arg("taskId") taskId: string,
@@ -57,7 +75,7 @@ export class UserTaskResolver {
     return this.taskService.update(taskId, data)
   }
 
-  // TODO: @Authorized()
+  @Authorized()
   @Mutation(() => Boolean, { nullable: true })
   destroyUserTask(@Arg("taskId") taskId: string): Promise<boolean> {
     return this.taskService.destroy(taskId)
