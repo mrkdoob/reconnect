@@ -20,6 +20,9 @@ export class UserPet extends BaseEntity<UserPet> {
   @BooleanField({ default: true })
   isActive: boolean
 
+  @BooleanField({ default: true })
+  challengeActive: boolean
+
   //TODO: Remove nullable?
   @StringField({ nullable: true })
   petId: string

@@ -22,6 +22,7 @@ import gql from "graphql-tag.macro"
 import { LevelTaskItem } from "./LevelTaskItem"
 import { Modal } from "./Modal"
 import { LevelRewardItemForm } from "./LevelRewardItemForm"
+import { SelfCreatedTaskItem } from "./SelfCreatedTaskItem"
 
 export const LEVEL_REWARD = gql`
   fragment LevelReward on Level {
@@ -68,13 +69,26 @@ export function LevelRewardItem({ levelReward, tasks, loading }: Props) {
             <Heading mb={4}>{levelReward?.title}</Heading>
             <Markup content={levelReward?.rewardText} />
 
-            {tasks && tasks?.length > 0
-              ? tasks.map(task => (
-                  <LevelTaskItem key={task.id} userTask={task} />
-                ))
-              : levelReward?.levelTasks?.map(task => (
-                  <LevelTaskItem key={task.id} levelTask={task} />
-                ))}
+            {tasks &&
+              tasks?.length > 0 &&
+              tasks.map(task => (
+                <React.Fragment key={task.id}>
+                  {task.description ? (
+                    <SelfCreatedTaskItem userTask={task} />
+                  ) : (
+                    <LevelTaskItem userTask={task} />
+                  )}
+                </React.Fragment>
+              ))}
+
+            {/* TODO: Show levelTasks if not current level 
+
+            {levelReward?.levelTasks &&
+              levelReward?.levelTasks?.length > 0 &&
+              levelReward?.levelTasks?.map(task => (
+                <LevelTaskItem key={task.id} levelTask={task} />
+              ))} */}
+
             <Flex justify="space-between" align="center" mt={8}>
               <Text fontWeight="semibold">
                 Want to challenge yourself a bit more?

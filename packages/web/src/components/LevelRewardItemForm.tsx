@@ -7,7 +7,11 @@ import { useForm } from "../lib/hooks/useForm"
 import { Form } from "./Form"
 import { Input } from "./Input"
 import { FormError } from "./FormError"
-import { useCreateCustomUserTaskMutation } from "../lib/graphql"
+import {
+  useCreateCustomUserTaskMutation,
+  GetCurrentLevelRewardDocument,
+} from "../lib/graphql"
+import { Textarea } from "./Textarea"
 
 // TODO: Fragment
 export const CREATE_USER_TASK = gql`
@@ -31,11 +35,12 @@ export const LevelRewardItemForm: React.FC<Props> = props => {
   const toast = useToast()
 
   const form = useForm({
-    defaultValues: { password: "" },
     validationSchema: UserTaskSchema,
   })
 
-  const [createUserTask] = useCreateCustomUserTaskMutation()
+  const [createUserTask] = useCreateCustomUserTaskMutation({
+    refetchQueries: [{ query: GetCurrentLevelRewardDocument }],
+  })
 
   const handleSubmit = async (data: {
     description: string
@@ -47,7 +52,9 @@ export const LevelRewardItemForm: React.FC<Props> = props => {
       onSuccess: () => {
         toast({
           status: "success",
-          description: "Good luck with your practice!",
+          title: "Good luck!",
+          description: "You will find your addition in your dashboard",
+          // TODO: Change when shown in LevelRewardItem
         })
         props.onClose()
       },
@@ -64,7 +71,7 @@ export const LevelRewardItemForm: React.FC<Props> = props => {
           isRequired={true}
           placeholder="Become a little bit better"
         />
-        <Input
+        <Textarea
           name="fullDescription"
           label="Description"
           isRequired={true}

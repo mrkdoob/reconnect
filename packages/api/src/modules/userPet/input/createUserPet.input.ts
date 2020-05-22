@@ -11,4 +11,8 @@ export class CreateUserPetInput implements Partial<UserPet> {
   @IsNotEmpty()
   @Field()
   petId: string
+
+  @IsNotEmpty()
+  @Field()
+  challengeActive: boolean
 }

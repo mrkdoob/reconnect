@@ -15,4 +15,8 @@ export class UpdateUserPetInput implements Partial<UserPet> {
   @IsNotEmpty()
   @Field({ nullable: true })
   isActive: boolean
+
+  @IsNotEmpty()
+  @Field({ nullable: true })
+  challengeActive: boolean
 }

@@ -7,6 +7,8 @@ import { CourseRepository } from "../course/course.repository"
 import { MAX_LIFES } from "../../lib/globalVars"
 import { UserLevelService } from "../userLevel/userLevel.service"
 import { PetRepository } from "../pet/pet.repository"
+import { UserMailer } from "../user/user.mailer"
+import { UserRepository } from "../user/user.repository"
 
 @Service()
 export class UserPetService {
@@ -18,10 +20,14 @@ export class UserPetService {
   courseRepository: CourseRepository
   @Inject(() => LevelRepository)
   levelRepository: LevelRepository
+  @Inject(() => UserRepository)
+  userRepository: UserRepository
   @Inject(() => UserTaskService)
   userTaskService: UserTaskService
   @Inject(() => UserLevelService)
   userLevelService: UserLevelService
+  @Inject(() => UserMailer)
+  userMailer: UserMailer
 
   async create(data: Partial<UserPet>): Promise<UserPet> {
     const userPet = await UserPet.create(data).save()
@@ -85,7 +91,13 @@ export class UserPetService {
     if (!userPet) return null
     if (userPet.lifes - 1 === 0) {
       // Lose progress
-      await this.userLevelService.decrementDayProgress(userId)
+      if (userPet.challengeActive) {
+        await this.userLevelService.decrementDayProgress(userId)
+      } else {
+        const user = await this.userRepository.findById(userId)
+        this.userMailer.sendCoachingEmail(user)
+      }
+
       return null
     } else {
       const data = { lifes: userPet.lifes - 1 }

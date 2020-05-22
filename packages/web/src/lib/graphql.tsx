@@ -181,6 +181,7 @@ export type CreateUserLevelInput = {
 export type CreateUserPetInput = {
   userId: Scalars["String"]
   petId: Scalars["String"]
+  challengeActive: Scalars["Boolean"]
 }
 
 export type CreateUserTaskInput = {
@@ -886,6 +887,7 @@ export type UpdateUserPetInput = {
   lifes?: Maybe<Scalars["Float"]>
   petId?: Maybe<Scalars["String"]>
   isActive?: Maybe<Scalars["Boolean"]>
+  challengeActive?: Maybe<Scalars["Boolean"]>
 }
 
 export type UpdateUserTaskInput = {
@@ -979,6 +981,7 @@ export type UserPet = {
   updatedAt: Scalars["DateTime"]
   lifes: Scalars["Int"]
   isActive: Scalars["Boolean"]
+  challengeActive: Scalars["Boolean"]
   petId?: Maybe<Scalars["String"]>
   userId?: Maybe<Scalars["String"]>
   pet?: Maybe<Pet>
@@ -1127,6 +1130,15 @@ export type GetSignedUrlMutation = { __typename?: "Mutation" } & Pick<
   "getSignedS3Url"
 >
 
+export type DestroyUserTaskMutationVariables = {
+  taskId: Scalars["String"]
+}
+
+export type DestroyUserTaskMutation = { __typename?: "Mutation" } & Pick<
+  Mutation,
+  "destroyUserTask"
+>
+
 export type UserGroupItemFragment = { __typename?: "Group" } & Pick<
   Group,
   | "id"
@@ -1228,7 +1240,12 @@ export type UserTaskOptionItemFragment = {
 
 export type UserTaskItemFragment = { __typename?: "UserTask" } & Pick<
   UserTask,
-  "id" | "completed" | "levelTaskId" | "levelTaskOptionId"
+  | "id"
+  | "completed"
+  | "levelTaskId"
+  | "levelTaskOptionId"
+  | "description"
+  | "fullDescription"
 > & {
     levelTaskOption?: Maybe<
       { __typename?: "LevelTaskOption" } & UserTaskOptionItemFragment
@@ -1631,6 +1648,8 @@ export const UserTaskItemFragmentDoc = gql`
     completed
     levelTaskId
     levelTaskOptionId
+    description
+    fullDescription
     levelTaskOption {
       ...UserTaskOptionItem
     }
@@ -2013,6 +2032,50 @@ export type GetSignedUrlMutationResult = ApolloReactCommon.MutationResult<
 export type GetSignedUrlMutationOptions = ApolloReactCommon.BaseMutationOptions<
   GetSignedUrlMutation,
   GetSignedUrlMutationVariables
+>
+export const DestroyUserTaskDocument = gql`
+  mutation DestroyUserTask($taskId: String!) {
+    destroyUserTask(taskId: $taskId)
+  }
+`
+
+/**
+ * __useDestroyUserTaskMutation__
+ *
+ * To run a mutation, you first call `useDestroyUserTaskMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDestroyUserTaskMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [destroyUserTaskMutation, { data, loading, error }] = useDestroyUserTaskMutation({
+ *   variables: {
+ *      taskId: // value for 'taskId'
+ *   },
+ * });
+ */
+export function useDestroyUserTaskMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    DestroyUserTaskMutation,
+    DestroyUserTaskMutationVariables
+  >,
+) {
+  return ApolloReactHooks.useMutation<
+    DestroyUserTaskMutation,
+    DestroyUserTaskMutationVariables
+  >(DestroyUserTaskDocument, baseOptions)
+}
+export type DestroyUserTaskMutationHookResult = ReturnType<
+  typeof useDestroyUserTaskMutation
+>
+export type DestroyUserTaskMutationResult = ApolloReactCommon.MutationResult<
+  DestroyUserTaskMutation
+>
+export type DestroyUserTaskMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  DestroyUserTaskMutation,
+  DestroyUserTaskMutationVariables
 >
 export const UpdateUserGroupMessageDocument = gql`
   mutation UpdateUserGroupMessage(

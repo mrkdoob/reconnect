@@ -77,7 +77,7 @@ export class UserTaskService {
     )
 
     // const userTasks = await this.userTaskRepository.findUserTasks(userId)
-    await this.destroyAllTasks(userId)
+    await this.destroyAllLevelTasks(userId)
 
     nextLevelTasks.map(task => {
       const data = {
@@ -95,6 +95,15 @@ export class UserTaskService {
     const userTasks = await this.userTaskRepository.findUserTasks(userId)
     userTasks.map(task => {
       task.destroy()
+    })
+    return true
+  }
+
+  async destroyAllLevelTasks(userId: string) {
+    // Keeps user created tasks
+    const userTasks = await this.userTaskRepository.findUserTasks(userId)
+    userTasks.map(task => {
+      task.levelTaskId && task.destroy()
     })
     return true
   }

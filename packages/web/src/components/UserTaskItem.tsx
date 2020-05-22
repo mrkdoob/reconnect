@@ -10,6 +10,7 @@ import {
 import { mutationHandler } from "../lib/mutationHandler"
 import { useToggle } from "../lib/hooks/useToggle"
 import { LevelTaskItem } from "./LevelTaskItem"
+import { SelfCreatedTaskItem } from "./SelfCreatedTaskItem"
 
 export const USER_TASK_OPTION_ITEM = gql`
   fragment UserTaskOptionItem on LevelTaskOption {
@@ -41,7 +42,9 @@ export const USER_TASK = gql`
     id
     completed
     levelTaskId
-    levelTaskOptionId
+    levelTaskOptionId # TODO: Remove
+    description
+    fullDescription
     levelTaskOption {
       ...UserTaskOptionItem
     }
@@ -123,7 +126,9 @@ export function UserTaskItem({ task, isLast, handleTaskCompletion }: Props) {
             color={complete ? "gray.400" : "text"}
             textDecoration={complete ? "line-through" : ""}
           >
-            {task.levelTaskOption?.option?.description}
+            {task.description
+              ? task.description
+              : task.levelTaskOption?.option?.description}
           </Box>
           <Icon
             size="1.5rem"
@@ -136,7 +141,12 @@ export function UserTaskItem({ task, isLast, handleTaskCompletion }: Props) {
         </Flex>
       </Flex>
       <Collapse mt={2} isOpen={descriptionOpen}>
-        <LevelTaskItem userTask={task} hideDescription={true} />
+        {/* Checks if self created task */}
+        {task?.fullDescription ? (
+          <SelfCreatedTaskItem userTask={task} hideDescription={true} />
+        ) : (
+          <LevelTaskItem userTask={task} hideDescription={true} />
+        )}
       </Collapse>
 
       {/* TODO: move divider */}

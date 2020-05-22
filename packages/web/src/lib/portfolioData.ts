@@ -16,7 +16,7 @@ export const items: {
       "A personal project to discover if it is possible to use information technology to achieve behavioral change and in turn wellbeing. It uses gamification techniques and social theories in an attempt to help people stick to a daily practice or habit. I am currently in the process of interviewing users to improve and iterate it into the perfect solution.",
     tag: "Self-development",
     url: "https://www.becomebetter.life",
-    githubUrl: "https://www.becomebetter.life",
+    githubUrl: "https://github.com/mrkdoob/reconnect",
   },
   {
     cover:

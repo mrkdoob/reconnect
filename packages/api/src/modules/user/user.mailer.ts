@@ -56,4 +56,17 @@ export class UserMailer {
       },
     })
   }
+
+  // TODO: Make better
+  sendCoachingEmail(user: User) {
+    if (!user.email) return
+    this.mailer.send({
+      to: user.email,
+      data: {
+        subject: `Need help?`,
+        html: `<p>Hi ${user.firstName}, </p></br> <p>I have noticed that you have fallen behind.</p>
+        <p>If you need any help or tips, please let me know. I believe you can do it!</p>`,
+      },
+    })
+  }
 }
