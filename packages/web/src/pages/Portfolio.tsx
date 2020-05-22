@@ -26,66 +26,29 @@ import { Link as LinkIcon } from "@styled-icons/boxicons-regular/Link"
 
 import { Modal } from "../components/Modal"
 import { colors } from "../lib/colors"
-
-const items: {
-  cover: string
-  name: string
-  description: string
-  fullDescription: string
-  tag: string
-  url: string
-  githubUrl?: string
-}[] = [
-  {
-    cover:
-      "https://reconnectapp-dev.s3.eu-central-1.amazonaws.com/screenshot-2020-05-20-at-15-19-30-png",
-    name: "Become",
-    description: "A platform that promotes behavioral change and wellbeing",
-    fullDescription:
-      "A personal project to discover if it is possible to use information technology to achieve behavioral change and in turn wellbeing. It uses gamification techniques and social theories in an attempt to help people stick to a daily practice or habit. I am currently in the process of interviewing users to improve and iterate it into the perfect solution.",
-    tag: "Self-development",
-    url: "https://www.becomebetter.life",
-    githubUrl: "https://www.becomebetter.life",
-  },
-  {
-    cover:
-      "https://reconnectapp-dev.s3.eu-central-1.amazonaws.com/screenshot-2020-05-20-at-15-18-36-png",
-    name: "Common Grounds",
-    description:
-      "Access the most interesting co-working spaces and creative communities",
-    fullDescription:
-      " Common Grounds allows freelancers, entrepreneurs & start-ups to access the most interesting co-working spaces and creative communities for the same price as one. I worked mostly on the web front-end and the admin panel.",
-    tag: "Co-working",
-    url: "https://www.commongrounds.co/en",
-  },
-  {
-    cover:
-      "https://reconnectapp-dev.s3.eu-central-1.amazonaws.com/screenshot-2020-05-19-at-12-43-17-png",
-    name: "Envestry",
-    description: "A secure online funding platform",
-    fullDescription:
-      "Envestry is a secure online funding platform, a confidential space where sophisticated investors and high-growth businesses can connect, share information, secure deals and grow. I helped with a rebuild and worked mostly on the front-end, admin panel and a few things in the back-end",
-    tag: "Fintech",
-    url: "https://envestors.envestry.com/",
-  },
-]
+import { items } from "../lib/portfolioData"
 
 export const Portfolio: React.FC<RouteComponentProps> = () => {
   return (
     <Page disableRedirect={true}>
-      <Flex justify="space-between" h="100%">
+      <Flex
+        justify="space-between"
+        h="100%"
+        flexWrap="wrap"
+        mt={{ base: 16, md: 0 }}
+      >
         <Flex
           justify="center"
           align="center"
           direction="column"
-          w="30%"
+          w={{ base: "100%", md: "30%" }}
           textAlign="center"
         >
           <StyledBorderImage
             size="100px"
             rounded="full"
             src={
-              "https://pbs.twimg.com/profile_images/529214699041067008/fqPBAr5s_400x400.jpeg"
+              "https://avatars3.githubusercontent.com/u/11900068?s=460&u=026263fe9014a9301a19a80f55636d8a8ac43ecc&v=4"
             }
           />
           <Text fontSize="lg" mt={4} fontWeight="semibold">
@@ -120,6 +83,7 @@ export const Portfolio: React.FC<RouteComponentProps> = () => {
           <ProgressItem label="TypeScript" value={80} />
           <ProgressItem label="GraphQL" value={75} />
           <ProgressItem label="Vanilla JavaScript" value={60} />
+          <ProgressItem label="SQL" value={60} />
           <ProgressItem label="Python" value={60} />
           <ProgressItem label="Java" value={60} />
           <Link href="https://github.com/mrkdoob">
@@ -128,8 +92,8 @@ export const Portfolio: React.FC<RouteComponentProps> = () => {
         </Flex>
         {items.length > 0 ? (
           <SimpleGrid
-            w="60%"
-            h="60%"
+            w={{ base: "100%", md: "60%" }}
+            h={{ base: "40%", md: "60%" }}
             margin="auto 0"
             spacing={6}
             columns={{ base: 1, md: 2 }}
@@ -188,7 +152,12 @@ export function PortfolioItem(props: Props) {
       <StyledCourseItem borderRadius="lg" onClick={onOpen}>
         <Box w="100%" h={{ base: 120, lg: 150 }} bg="gray.100" rounded="lg">
           {props.item.cover && (
-            <StyledCover rounded="lg" src={props.item.cover} />
+            <StyledBorderImage
+              h="100%"
+              w="100%"
+              rounded="lg"
+              src={props.item.cover}
+            />
           )}
           <Tag
             size="sm"
@@ -260,16 +229,6 @@ const StyledHoverIcon = styled(Box)`
   &:hover {
     transform: scale(1.01);
   }
-`
-
-const StyledCover = styled(Image)`
-  height: 100%;
-  width: 100%;
-  object-fit: cover;
-  border-top: 1px solid ${p => p.theme.colors.blue[400]};
-  border-left: 1px solid ${p => p.theme.colors.blue[200]};
-  border-right: 1px solid ${p => p.theme.colors.green[100]};
-  border-bottom: 1px solid ${p => p.theme.colors.green[400]};
 `
 
 const StyledBorderImage = styled(Image)`
