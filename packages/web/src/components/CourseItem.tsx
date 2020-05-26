@@ -40,10 +40,8 @@ export function CourseItem(props: Props) {
   return (
     <Link to={`/courses/${props.course.slug}`}>
       <StyledCourseItem borderRadius="lg">
-        <Box w="100%" h={{ base: 120, lg: 150 }} bg="gray.100" roundedTop="lg">
-          {props.course.cover && (
-            <StyledCover rounded="lg" src={props.course.cover} />
-          )}
+        <Box w="100%" h={{ base: 120, lg: 150 }} bg="gray.100" rounded="lg">
+          <StyledCover rounded="lg" src={props.course.cover || ""} />
           <Tag
             size="sm"
             position="relative"

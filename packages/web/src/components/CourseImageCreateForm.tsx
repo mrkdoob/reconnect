@@ -1,33 +1,39 @@
 import React from "react"
-import { Button, Box, Flex } from "@chakra-ui/core"
+import { Button, Box, Image, IconButton, Flex } from "@chakra-ui/core"
 import { useDropzone } from "react-dropzone"
 import gql from "graphql-tag.macro"
 import {
-  useUpdateSettingsMutation,
-  MySettingsDocument,
   useGetSignedUrlMutation,
-  MeDocument,
+  CourseItemFragmentDoc,
+  GetCourseDocument,
+  useUpdateCourseMutation,
 } from "../lib/graphql"
 import { formatFileName } from "../lib/helpers"
 import { useToast } from "../lib/hooks/useToast"
 import { useOpen } from "../lib/hooks/useOpen"
-import { PreviewImage } from "./CourseImageCreateForm"
 
-export const GET_SIGNED_URL = gql`
-  mutation GetSignedUrl($data: S3SignedUrlInput!) {
-    getSignedS3Url(data: $data)
+export const UPDATE_COURSE = gql`
+  mutation UpdateCourse($id: String!, $data: UpdateCourseInput!) {
+    updateCourse(id: $id, data: $data) {
+      ...CourseItem
+    }
   }
+  ${CourseItemFragmentDoc}
 `
 
 interface Props {
   onClose?: () => void
+  courseId: string
 }
-export const NewAvatar: React.FC<Props> = props => {
+
+// TODO: Create generic component to use amzn upload for NewCover and NewAvatar
+
+export const CourseImageCreateForm: React.FC<Props> = props => {
   const [images, setImages] = React.useState<File[]>([])
   const [loading, setLoading, setStopLoading] = useOpen()
   const [getSigned] = useGetSignedUrlMutation()
-  const [updateSettings] = useUpdateSettingsMutation({
-    refetchQueries: [{ query: MeDocument }],
+  const [updateCourse] = useUpdateCourseMutation({
+    refetchQueries: [{ query: GetCourseDocument }],
   })
   const toast = useToast()
 
@@ -79,13 +85,13 @@ export const NewAvatar: React.FC<Props> = props => {
 
       const amzUrl = "https://reconnectapp-dev.s3.eu-central-1.amazonaws.com/"
 
-      await updateSettings({
+      await updateCourse({
         variables: {
+          id: props.courseId,
           data: {
-            avatar: amzUrl + imageData.key,
+            cover: amzUrl + imageData.key,
           },
         },
-        refetchQueries: [{ query: MySettingsDocument }],
       }).then(() => {
         props.onClose && props.onClose()
       })
@@ -115,6 +121,7 @@ export const NewAvatar: React.FC<Props> = props => {
             src={URL.createObjectURL(images[0])}
             loading={loading}
             onRemove={() => setImages([])}
+            width="300px"
           />
         )}
       </Box>
@@ -136,6 +143,38 @@ export const NewAvatar: React.FC<Props> = props => {
           Submit
         </Button>
       </Flex>
+    </Box>
+  )
+}
+
+interface PreviewImageProps {
+  src: string
+  onRemove: () => void
+  loading: boolean
+  width?: string
+}
+export function PreviewImage(props: PreviewImageProps) {
+  return (
+    <Box
+      pos="relative"
+      size="150px"
+      w={props.width || "150px"}
+      h="150px"
+      m="0 auto"
+    >
+      <IconButton
+        pos="absolute"
+        top={0}
+        size="sm"
+        isLoading={props.loading}
+        isDisabled={props.loading}
+        right={0}
+        icon="delete"
+        variantColor="red"
+        aria-label="Remove image"
+        onClick={props.onRemove}
+      />
+      <Image src={props.src} rounded="lg" objectFit="cover" w="100%" h="100%" />
     </Box>
   )
 }

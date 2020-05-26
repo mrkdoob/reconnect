@@ -16,6 +16,9 @@ import { Border } from "../components/Border"
 import { CourseLevelList } from "../components/CourseLevelList"
 import { CourseLeadIn } from "../components/CourseLeadIn"
 import { Markup } from "interweave"
+import { useMe } from "../components/providers/MeProvider"
+import { CourseImageModal } from "../components/CourseImageModal"
+import { CourseEditModal } from "../components/CourseEditModal"
 
 export const COURSE = gql`
   fragment Course on Course {
@@ -43,6 +46,7 @@ export const Course: React.FC<Props> = props => {
   const slug = props.slug as string
   const { data, loading } = useGetCourseQuery({ variables: { slug } })
   const course = data?.courseBySlug
+  const me = useMe()
 
   return (
     <Page disableRedirect={true} loading={loading}>
@@ -54,6 +58,12 @@ export const Course: React.FC<Props> = props => {
             backgroundImage={`url("${course?.cover}")` || ""}
             mt={{ base: 8, md: 0 }}
           >
+            {me && me?.role === "admin" && (
+              <>
+                <CourseEditModal course={course} />
+                <CourseImageModal courseId={course.id} />
+              </>
+            )}
             <Box
               rounded="lg"
               bg="black"

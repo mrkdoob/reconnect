@@ -84,7 +84,7 @@ export type CreateCourseInput = {
   fullDescription: Scalars["String"]
   duration?: Maybe<Scalars["String"]>
   benefits?: Maybe<Scalars["String"]>
-  cover: Scalars["String"]
+  cover?: Maybe<Scalars["String"]>
   endText?: Maybe<Scalars["String"]>
   rewardType?: Maybe<Scalars["String"]>
   petId?: Maybe<Scalars["String"]>
@@ -814,6 +814,7 @@ export type UpdateInput = {
   avatar?: Maybe<Scalars["String"]>
   groupOrder?: Maybe<Scalars["Float"]>
   timeZone?: Maybe<Scalars["String"]>
+  role?: Maybe<Scalars["String"]>
 }
 
 export type UpdateLevelInput = {
@@ -911,6 +912,7 @@ export type User = {
   bio?: Maybe<Scalars["String"]>
   avatar?: Maybe<Scalars["String"]>
   timeZone?: Maybe<Scalars["String"]>
+  role?: Maybe<Scalars["String"]>
   groupOrder: Scalars["Int"]
   hasFailed: Scalars["Boolean"]
   groupId?: Maybe<Scalars["String"]>
@@ -1001,6 +1003,14 @@ export type UserTask = {
   fullDescription?: Maybe<Scalars["String"]>
   levelTask?: Maybe<LevelTask>
   levelTaskOption?: Maybe<LevelTaskOption>
+}
+
+export type CreateCourseMutationVariables = {
+  data: CreateCourseInput
+}
+
+export type CreateCourseMutation = { __typename?: "Mutation" } & {
+  createCourse: { __typename?: "Course" } & CourseItemFragment
 }
 
 export type MentorItemFragment = { __typename?: "User" } & Pick<
@@ -1129,6 +1139,15 @@ export type GetSignedUrlMutation = { __typename?: "Mutation" } & Pick<
   Mutation,
   "getSignedS3Url"
 >
+
+export type UpdateCourseMutationVariables = {
+  id: Scalars["String"]
+  data: UpdateCourseInput
+}
+
+export type UpdateCourseMutation = { __typename?: "Mutation" } & {
+  updateCourse?: Maybe<{ __typename?: "Course" } & CourseItemFragment>
+}
 
 export type DestroyUserTaskMutationVariables = {
   taskId: Scalars["String"]
@@ -1263,7 +1282,7 @@ export type UpdateUserTaskMutation = { __typename?: "Mutation" } & {
 
 export type MeFragment = { __typename?: "User" } & Pick<
   User,
-  "id" | "fullName" | "email" | "groupOrder" | "avatar" | "groupId"
+  "id" | "fullName" | "email" | "groupOrder" | "avatar" | "groupId" | "role"
 > & {
     group?: Maybe<{ __typename?: "Group" } & UserGroupItemFragment>
     userLevel?: Maybe<{ __typename?: "UserLevel" } & Pick<UserLevel, "levelId">>
@@ -1563,6 +1582,7 @@ export const MeFragmentDoc = gql`
     groupOrder
     avatar
     groupId
+    role
     group {
       ...UserGroupItem
     }
@@ -1796,6 +1816,53 @@ export const MySettingsFragmentDoc = gql`
     }
   }
 `
+export const CreateCourseDocument = gql`
+  mutation CreateCourse($data: CreateCourseInput!) {
+    createCourse(data: $data) {
+      ...CourseItem
+    }
+  }
+  ${CourseItemFragmentDoc}
+`
+
+/**
+ * __useCreateCourseMutation__
+ *
+ * To run a mutation, you first call `useCreateCourseMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateCourseMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createCourseMutation, { data, loading, error }] = useCreateCourseMutation({
+ *   variables: {
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useCreateCourseMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    CreateCourseMutation,
+    CreateCourseMutationVariables
+  >,
+) {
+  return ApolloReactHooks.useMutation<
+    CreateCourseMutation,
+    CreateCourseMutationVariables
+  >(CreateCourseDocument, baseOptions)
+}
+export type CreateCourseMutationHookResult = ReturnType<
+  typeof useCreateCourseMutation
+>
+export type CreateCourseMutationResult = ApolloReactCommon.MutationResult<
+  CreateCourseMutation
+>
+export type CreateCourseMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  CreateCourseMutation,
+  CreateCourseMutationVariables
+>
 export const MyDayRewardDocument = gql`
   query MyDayReward {
     myDayReward {
@@ -2032,6 +2099,54 @@ export type GetSignedUrlMutationResult = ApolloReactCommon.MutationResult<
 export type GetSignedUrlMutationOptions = ApolloReactCommon.BaseMutationOptions<
   GetSignedUrlMutation,
   GetSignedUrlMutationVariables
+>
+export const UpdateCourseDocument = gql`
+  mutation UpdateCourse($id: String!, $data: UpdateCourseInput!) {
+    updateCourse(id: $id, data: $data) {
+      ...CourseItem
+    }
+  }
+  ${CourseItemFragmentDoc}
+`
+
+/**
+ * __useUpdateCourseMutation__
+ *
+ * To run a mutation, you first call `useUpdateCourseMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateCourseMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateCourseMutation, { data, loading, error }] = useUpdateCourseMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useUpdateCourseMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    UpdateCourseMutation,
+    UpdateCourseMutationVariables
+  >,
+) {
+  return ApolloReactHooks.useMutation<
+    UpdateCourseMutation,
+    UpdateCourseMutationVariables
+  >(UpdateCourseDocument, baseOptions)
+}
+export type UpdateCourseMutationHookResult = ReturnType<
+  typeof useUpdateCourseMutation
+>
+export type UpdateCourseMutationResult = ApolloReactCommon.MutationResult<
+  UpdateCourseMutation
+>
+export type UpdateCourseMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  UpdateCourseMutation,
+  UpdateCourseMutationVariables
 >
 export const DestroyUserTaskDocument = gql`
   mutation DestroyUserTask($taskId: String!) {

@@ -45,6 +45,9 @@ export class User extends BaseEntity<User> {
   @StringField({ nullable: true })
   timeZone: string
 
+  @StringField({ nullable: true })
+  role: string
+
   @IntField({ default: 0 })
   groupOrder: number
 

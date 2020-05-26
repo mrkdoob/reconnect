@@ -30,7 +30,7 @@ export class CreateCourseInput implements Partial<Course> {
   benefits: string
 
   @IsNotEmpty()
-  @Field()
+  @Field({ nullable: true })
   cover: string
 
   @IsNotEmpty()

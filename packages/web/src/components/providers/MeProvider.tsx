@@ -17,6 +17,7 @@ export const ME_FRAGMENT = gql`
     groupOrder
     avatar
     groupId
+    role
     group {
       ...UserGroupItem
     }

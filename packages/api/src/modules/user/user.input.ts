@@ -31,6 +31,9 @@ export class UpdateInput implements Partial<User> {
 
   @Field({ nullable: true })
   timeZone: string
+
+  @Field({ nullable: true })
+  role: string
 }
 
 @InputType()
