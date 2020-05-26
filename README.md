@@ -1,8 +1,7 @@
-[![Build Status](https://travis-ci.org/NoQuarterTeam/fullstack-boilerplate.svg?branch=master)](https://travis-ci.org/NoQuarterTeam/fullstack-boilerplate)
 
-# Fullstack Boilerplate
+# Reconnect
 
-## Typescript + React + Graphql
+## Typescript + React + Graphql 
 
 Comes with user authentication included
 
@@ -21,6 +20,7 @@ Comes with user authentication included
 - Styled Components + Theme
 - Dark mode
 - Lerna Monorepo
+- ChakraUI
 
 & many more tasty treats
 
