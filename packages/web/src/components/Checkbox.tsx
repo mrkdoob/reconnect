@@ -24,7 +24,7 @@ export const Checkbox = ({ label, ...props }: Props) => {
         <CCheckbox
           ref={register}
           mb={0}
-          variantColor="primary"
+          variantColor="blue"
           size="lg"
           {...props}
         />

@@ -116,7 +116,7 @@ export type CreateLevelInput = {
   levelNumber: Scalars["Float"]
   maxProgressDays: Scalars["Float"]
   title: Scalars["String"]
-  cover: Scalars["String"]
+  cover?: Maybe<Scalars["String"]>
   rewardText: Scalars["String"]
   rewardDescription: Scalars["String"]
   videoUrl?: Maybe<Scalars["String"]>
@@ -1013,6 +1013,15 @@ export type CreateCourseMutation = { __typename?: "Mutation" } & {
   createCourse: { __typename?: "Course" } & CourseItemFragment
 }
 
+export type UpdateCourseMutationVariables = {
+  id: Scalars["String"]
+  data: UpdateCourseInput
+}
+
+export type UpdateCourseMutation = { __typename?: "Mutation" } & {
+  updateCourse?: Maybe<{ __typename?: "Course" } & CourseItemFragment>
+}
+
 export type MentorItemFragment = { __typename?: "User" } & Pick<
   User,
   "id" | "fullName" | "avatar" | "bio"
@@ -1031,6 +1040,14 @@ export type CourseItemFragment = { __typename?: "Course" } & Pick<
   | "benefits"
   | "rewardType"
 > & { mentor?: Maybe<{ __typename?: "User" } & MentorItemFragment> }
+
+export type CreateLevelMutationVariables = {
+  data: CreateLevelInput
+}
+
+export type CreateLevelMutation = { __typename?: "Mutation" } & {
+  createLevel: { __typename?: "Level" } & CourseLevelFragment
+}
 
 export type CourseLevelFragment = { __typename?: "Level" } & Pick<
   Level,
@@ -1139,15 +1156,6 @@ export type GetSignedUrlMutation = { __typename?: "Mutation" } & Pick<
   Mutation,
   "getSignedS3Url"
 >
-
-export type UpdateCourseMutationVariables = {
-  id: Scalars["String"]
-  data: UpdateCourseInput
-}
-
-export type UpdateCourseMutation = { __typename?: "Mutation" } & {
-  updateCourse?: Maybe<{ __typename?: "Course" } & CourseItemFragment>
-}
 
 export type DestroyUserTaskMutationVariables = {
   taskId: Scalars["String"]
@@ -1863,6 +1871,101 @@ export type CreateCourseMutationOptions = ApolloReactCommon.BaseMutationOptions<
   CreateCourseMutation,
   CreateCourseMutationVariables
 >
+export const UpdateCourseDocument = gql`
+  mutation UpdateCourse($id: String!, $data: UpdateCourseInput!) {
+    updateCourse(id: $id, data: $data) {
+      ...CourseItem
+    }
+  }
+  ${CourseItemFragmentDoc}
+`
+
+/**
+ * __useUpdateCourseMutation__
+ *
+ * To run a mutation, you first call `useUpdateCourseMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateCourseMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateCourseMutation, { data, loading, error }] = useUpdateCourseMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useUpdateCourseMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    UpdateCourseMutation,
+    UpdateCourseMutationVariables
+  >,
+) {
+  return ApolloReactHooks.useMutation<
+    UpdateCourseMutation,
+    UpdateCourseMutationVariables
+  >(UpdateCourseDocument, baseOptions)
+}
+export type UpdateCourseMutationHookResult = ReturnType<
+  typeof useUpdateCourseMutation
+>
+export type UpdateCourseMutationResult = ApolloReactCommon.MutationResult<
+  UpdateCourseMutation
+>
+export type UpdateCourseMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  UpdateCourseMutation,
+  UpdateCourseMutationVariables
+>
+export const CreateLevelDocument = gql`
+  mutation CreateLevel($data: CreateLevelInput!) {
+    createLevel(data: $data) {
+      ...CourseLevel
+    }
+  }
+  ${CourseLevelFragmentDoc}
+`
+
+/**
+ * __useCreateLevelMutation__
+ *
+ * To run a mutation, you first call `useCreateLevelMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateLevelMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createLevelMutation, { data, loading, error }] = useCreateLevelMutation({
+ *   variables: {
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useCreateLevelMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    CreateLevelMutation,
+    CreateLevelMutationVariables
+  >,
+) {
+  return ApolloReactHooks.useMutation<
+    CreateLevelMutation,
+    CreateLevelMutationVariables
+  >(CreateLevelDocument, baseOptions)
+}
+export type CreateLevelMutationHookResult = ReturnType<
+  typeof useCreateLevelMutation
+>
+export type CreateLevelMutationResult = ApolloReactCommon.MutationResult<
+  CreateLevelMutation
+>
+export type CreateLevelMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  CreateLevelMutation,
+  CreateLevelMutationVariables
+>
 export const MyDayRewardDocument = gql`
   query MyDayReward {
     myDayReward {
@@ -2099,54 +2202,6 @@ export type GetSignedUrlMutationResult = ApolloReactCommon.MutationResult<
 export type GetSignedUrlMutationOptions = ApolloReactCommon.BaseMutationOptions<
   GetSignedUrlMutation,
   GetSignedUrlMutationVariables
->
-export const UpdateCourseDocument = gql`
-  mutation UpdateCourse($id: String!, $data: UpdateCourseInput!) {
-    updateCourse(id: $id, data: $data) {
-      ...CourseItem
-    }
-  }
-  ${CourseItemFragmentDoc}
-`
-
-/**
- * __useUpdateCourseMutation__
- *
- * To run a mutation, you first call `useUpdateCourseMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useUpdateCourseMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [updateCourseMutation, { data, loading, error }] = useUpdateCourseMutation({
- *   variables: {
- *      id: // value for 'id'
- *      data: // value for 'data'
- *   },
- * });
- */
-export function useUpdateCourseMutation(
-  baseOptions?: ApolloReactHooks.MutationHookOptions<
-    UpdateCourseMutation,
-    UpdateCourseMutationVariables
-  >,
-) {
-  return ApolloReactHooks.useMutation<
-    UpdateCourseMutation,
-    UpdateCourseMutationVariables
-  >(UpdateCourseDocument, baseOptions)
-}
-export type UpdateCourseMutationHookResult = ReturnType<
-  typeof useUpdateCourseMutation
->
-export type UpdateCourseMutationResult = ApolloReactCommon.MutationResult<
-  UpdateCourseMutation
->
-export type UpdateCourseMutationOptions = ApolloReactCommon.BaseMutationOptions<
-  UpdateCourseMutation,
-  UpdateCourseMutationVariables
 >
 export const DestroyUserTaskDocument = gql`
   mutation DestroyUserTask($taskId: String!) {

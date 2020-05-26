@@ -9,6 +9,8 @@ import { Badge } from "styled-icons/boxicons-regular/Badge"
 
 import { CourseLevelItem } from "./CourseLevelItem"
 import { ProgressLevelItem } from "./ProgressLevelItem"
+import { CourseLevelCreateModal } from "./CourseLevelCreateModal"
+import { useMe } from "./providers/MeProvider"
 
 interface Props {
   course: CourseFragment | MyCourseProgressFragment
@@ -16,6 +18,7 @@ interface Props {
 }
 
 export function CourseLevelList(props: Props) {
+  const me = useMe()
   let completedLevels = 0
 
   props.course?.levels &&
@@ -46,6 +49,9 @@ export function CourseLevelList(props: Props) {
         <Heading mb={6} fontWeight="normal" fontSize="2xl">
           Your path
         </Heading>
+        {me?.role === "admin" && (
+          <CourseLevelCreateModal courseId={props.course.id} />
+        )}
 
         {props.course?.levels &&
           props.course.levels.length > 0 &&
