@@ -76,8 +76,6 @@ export const CourseLevelTaskCreateModal = ({ levelId }: Props) => {
   }
 
   const handleCancel = async () => {
-    console.log("komt hier")
-
     const res = await destroyLevelTask({
       variables: {
         levelTaskId,

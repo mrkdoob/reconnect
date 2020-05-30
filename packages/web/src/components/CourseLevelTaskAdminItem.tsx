@@ -10,16 +10,21 @@ import {
   Collapse,
   Stack,
   Tag,
+  useToast,
 } from "@chakra-ui/core"
 import {
   LevelTaskItemFragment,
   LevelTaskOptionItemFragment,
+  useDestroyLevelTaskMutation,
+  GetLevelTasksDocument,
 } from "../lib/graphql"
 import { Modal } from "./Modal"
 import { Markup } from "interweave"
 import { CourseLevelTaskOptionEditForm } from "./CourseLevelTaskOptionEditForm"
 import { CourseLevelTaskCreateForm } from "./CourseLevelTaskCreateForm"
 import { CourseLevelTaskOptions } from "./CourseLevelTaskOptions"
+import { mutationHandler } from "../lib/mutationHandler"
+import { DeleteItem } from "./DeleteItem"
 
 interface Props {
   levelTask: LevelTaskItemFragment
@@ -29,12 +34,47 @@ export function CourseLevelTaskAdminItem({ levelTask }: Props) {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [showCreate, setShowCreate] = React.useState(false)
   const [showExistingOptions, setShowExistingOptions] = React.useState(false)
+  const toast = useToast()
+
+  const [destroyLevelTask] = useDestroyLevelTaskMutation({
+    refetchQueries: [
+      {
+        query: GetLevelTasksDocument,
+        variables: { levelId: levelTask.levelId },
+      },
+    ],
+  })
+
+  const handleDestroy = async () => {
+    const res = await destroyLevelTask({
+      variables: { levelTaskId: levelTask.id },
+    }).catch(e => {})
+    mutationHandler(res, {
+      onSuccess: () => {
+        toast({
+          status: "success",
+          description: "Successfully deleted!",
+        })
+        onClose()
+      },
+      onServerError: e => {
+        const description = e.includes("violates foreign key")
+          ? "Remove all options first"
+          : "Oops.. something went wrong"
+        toast({
+          status: "error",
+          description: description,
+          duration: 9000,
+        })
+      },
+    })
+  }
 
   return (
     <>
-      {levelTask.options && levelTask.options.length > 0 && (
+      {levelTask.options && levelTask.options.length > 0 ? (
         <>
-          <Text as="i" mt={6}>
+          <Text as="i" mt={4}>
             {levelTask.options[0].option?.description}
           </Text>
 
@@ -55,6 +95,11 @@ export function CourseLevelTaskAdminItem({ levelTask }: Props) {
               <Box mb={6} />
             </>
           )}
+        </>
+      ) : (
+        <>
+          <Text mt={4}>Task {levelTask.order}</Text>
+          <Text>No option for this task yet</Text>
         </>
       )}
       {levelTask.options && (
@@ -147,6 +192,7 @@ export function CourseLevelTaskAdminItem({ levelTask }: Props) {
                 ))}
             </>
           )}
+          <DeleteItem text="this task" handleDestroy={handleDestroy} />
         </Box>
       </Modal>
     </>
