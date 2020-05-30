@@ -13,9 +13,6 @@ import {
   OptionItemFragmentDoc,
   useGetOptionsQuery,
   OptionItemFragment,
-  useUpdateOptionMutation,
-  LevelTaskOptionItemFragmentDoc,
-  useUpdateLevelTaskOptionMutation,
   useCreateLevelTaskOptionMutation,
   GetLevelTasksDocument,
 } from "../lib/graphql"
@@ -31,18 +28,6 @@ export const GET_OPTIONS = gql`
     }
   }
   ${OptionItemFragmentDoc}
-`
-
-export const UPDATE_LEVELTASK_OPTION = gql`
-  mutation UpdateLevelTaskOption(
-    $levelTaskOptionId: String!
-    $data: UpdateLevelTaskOptionInput!
-  ) {
-    updateLevelTaskOption(levelTaskOptionId: $levelTaskOptionId, data: $data) {
-      ...LevelTaskOptionItem
-    }
-  }
-  ${LevelTaskOptionItemFragmentDoc}
 `
 
 interface Props {
@@ -120,7 +105,9 @@ export const CourseLevelTaskOptions: React.FC<Props> = props => {
                 row={option => (
                   <>
                     {option.label.split(",").map(label => (
-                      <Tag ml={4}>{label}</Tag>
+                      <Tag key={label} ml={4}>
+                        {label}
+                      </Tag>
                     ))}
                   </>
                 )}
@@ -148,7 +135,9 @@ export const CourseLevelTaskOptions: React.FC<Props> = props => {
                 row={option => (
                   <>
                     {option.label.split(",").map(label => (
-                      <Tag ml={4}>{label}</Tag>
+                      <Tag key={label} ml={4}>
+                        {label}
+                      </Tag>
                     ))}
                   </>
                 )}

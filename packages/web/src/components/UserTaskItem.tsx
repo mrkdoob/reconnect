@@ -25,6 +25,7 @@ export const USER_TASK_OPTION_ITEM = gql`
         description
         fullDescription
         videoUrl
+        createdByAdmin
       }
     }
     option {
@@ -33,6 +34,7 @@ export const USER_TASK_OPTION_ITEM = gql`
       description
       fullDescription
       videoUrl
+      createdByAdmin
     }
   }
 `

@@ -1177,17 +1177,6 @@ export type GetOptionsQuery = { __typename?: "Query" } & {
   getAllOptions: Array<{ __typename?: "Option" } & OptionItemFragment>
 }
 
-export type UpdateLevelTaskOptionMutationVariables = {
-  levelTaskOptionId: Scalars["String"]
-  data: UpdateLevelTaskOptionInput
-}
-
-export type UpdateLevelTaskOptionMutation = { __typename?: "Mutation" } & {
-  updateLevelTaskOption?: Maybe<
-    { __typename?: "LevelTaskOption" } & LevelTaskOptionItemFragment
-  >
-}
-
 export type MyDailyRewardFragment = { __typename?: "UserDayReward" } & Pick<
   UserDayReward,
   "id"
@@ -1380,7 +1369,12 @@ export type UserTaskOptionItemFragment = {
             option?: Maybe<
               { __typename?: "Option" } & Pick<
                 Option,
-                "id" | "label" | "description" | "fullDescription" | "videoUrl"
+                | "id"
+                | "label"
+                | "description"
+                | "fullDescription"
+                | "videoUrl"
+                | "createdByAdmin"
               >
             >
           }
@@ -1389,7 +1383,12 @@ export type UserTaskOptionItemFragment = {
     option?: Maybe<
       { __typename?: "Option" } & Pick<
         Option,
-        "id" | "label" | "description" | "fullDescription" | "videoUrl"
+        | "id"
+        | "label"
+        | "description"
+        | "fullDescription"
+        | "videoUrl"
+        | "createdByAdmin"
       >
     >
   }
@@ -1801,6 +1800,7 @@ export const UserTaskOptionItemFragmentDoc = gql`
         description
         fullDescription
         videoUrl
+        createdByAdmin
       }
     }
     option {
@@ -1809,6 +1809,7 @@ export const UserTaskOptionItemFragmentDoc = gql`
       description
       fullDescription
       videoUrl
+      createdByAdmin
     }
   }
 `
@@ -2637,57 +2638,6 @@ export type GetOptionsLazyQueryHookResult = ReturnType<
 export type GetOptionsQueryResult = ApolloReactCommon.QueryResult<
   GetOptionsQuery,
   GetOptionsQueryVariables
->
-export const UpdateLevelTaskOptionDocument = gql`
-  mutation UpdateLevelTaskOption(
-    $levelTaskOptionId: String!
-    $data: UpdateLevelTaskOptionInput!
-  ) {
-    updateLevelTaskOption(levelTaskOptionId: $levelTaskOptionId, data: $data) {
-      ...LevelTaskOptionItem
-    }
-  }
-  ${LevelTaskOptionItemFragmentDoc}
-`
-
-/**
- * __useUpdateLevelTaskOptionMutation__
- *
- * To run a mutation, you first call `useUpdateLevelTaskOptionMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useUpdateLevelTaskOptionMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [updateLevelTaskOptionMutation, { data, loading, error }] = useUpdateLevelTaskOptionMutation({
- *   variables: {
- *      levelTaskOptionId: // value for 'levelTaskOptionId'
- *      data: // value for 'data'
- *   },
- * });
- */
-export function useUpdateLevelTaskOptionMutation(
-  baseOptions?: ApolloReactHooks.MutationHookOptions<
-    UpdateLevelTaskOptionMutation,
-    UpdateLevelTaskOptionMutationVariables
-  >,
-) {
-  return ApolloReactHooks.useMutation<
-    UpdateLevelTaskOptionMutation,
-    UpdateLevelTaskOptionMutationVariables
-  >(UpdateLevelTaskOptionDocument, baseOptions)
-}
-export type UpdateLevelTaskOptionMutationHookResult = ReturnType<
-  typeof useUpdateLevelTaskOptionMutation
->
-export type UpdateLevelTaskOptionMutationResult = ApolloReactCommon.MutationResult<
-  UpdateLevelTaskOptionMutation
->
-export type UpdateLevelTaskOptionMutationOptions = ApolloReactCommon.BaseMutationOptions<
-  UpdateLevelTaskOptionMutation,
-  UpdateLevelTaskOptionMutationVariables
 >
 export const MyDayRewardDocument = gql`
   query MyDayReward {
