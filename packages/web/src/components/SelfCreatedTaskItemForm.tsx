@@ -3,7 +3,6 @@ import { Text, Button, Flex, useToast } from "@chakra-ui/core"
 import {
   useUpdateUserTaskMutation,
   UserTaskItemFragment,
-  UserTaskItemFragmentDoc,
   useDestroyUserTaskMutation,
   MyDashboardDocument,
 } from "../lib/graphql"
@@ -19,7 +18,6 @@ export const DESTROY_USERTASK = gql`
   mutation DestroyUserTask($taskId: String!) {
     destroyUserTask(taskId: $taskId)
   }
-  ${UserTaskItemFragmentDoc}
 `
 
 const UserTaskSchema = Yup.object().shape({

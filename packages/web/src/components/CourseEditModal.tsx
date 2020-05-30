@@ -26,7 +26,7 @@ export const CourseEditModal = ({ course }: Props) => {
       >
         Edit course
       </Button>
-      <Modal isOpen={isOpen} onClose={onClose}>
+      <Modal size="xl" isOpen={isOpen} onClose={onClose}>
         <CourseEditForm onClose={onClose} course={course} />
       </Modal>
     </>

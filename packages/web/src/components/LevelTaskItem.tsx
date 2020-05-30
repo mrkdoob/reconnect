@@ -18,6 +18,7 @@ import {
   LevelTaskOptionItemFragment,
   useUpdateUserTaskMutation,
   UserTaskItemFragment,
+  OptionItemFragmentDoc,
 } from "../lib/graphql"
 import gql from "graphql-tag.macro"
 import { Modal } from "./Modal"
@@ -29,13 +30,10 @@ export const LEVEL_TASK_OPTION_ITEM = gql`
     id
     order
     option {
-      id
-      label
-      description
-      fullDescription
-      videoUrl
+      ...OptionItem
     }
   }
+  ${OptionItemFragmentDoc}
 `
 
 export const LEVEL_TASK_ITEM = gql`
@@ -43,6 +41,7 @@ export const LEVEL_TASK_ITEM = gql`
     id
     order
     description
+    levelId
     options {
       ...LevelTaskOptionItem
     }

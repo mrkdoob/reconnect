@@ -17,8 +17,7 @@ export class CreateLevelInput implements Partial<Level> {
   @Field()
   title: string
 
-  @IsNotEmpty()
-  @Field()
+  @Field({ nullable: true })
   cover: string
 
   @Field()

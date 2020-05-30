@@ -4,6 +4,7 @@ import {
   useUpdateCourseMutation,
   UpdateCourseInput,
   CourseItemFragment,
+  useDestroyCourseMutation,
 } from "../lib/graphql"
 import Yup from "../lib/yup"
 import { useForm } from "../lib/hooks/useForm"
@@ -14,6 +15,15 @@ import { Textarea } from "./Textarea"
 import { Select } from "./Select"
 import { rewardTypes } from "../lib/rewards"
 import { navigate } from "@reach/router"
+import gql from "graphql-tag.macro"
+import { mutationHandler } from "../lib/mutationHandler"
+import { DeleteItem } from "./DeleteItem"
+
+export const DESTROY_COURSE = gql`
+  mutation DestroyCourse($id: String!) {
+    destroyCourse(id: $id)
+  }
+`
 
 const CourseSchema = Yup.object().shape<UpdateCourseInput>({
   category: Yup.string().required("Required"),
@@ -43,8 +53,25 @@ export const CourseEditForm: React.FC<Props> = props => {
   })
 
   const [updateCourse] = useUpdateCourseMutation()
+  const [destroyCourse] = useDestroyCourseMutation()
 
-  // const onSubmit = async (values: UpdateInput) => {
+  const handleDestroy = async () => {
+    const res = await destroyCourse({
+      variables: {
+        id: props.course.id,
+      },
+    })
+    mutationHandler(res, {
+      onSuccess: () => {
+        toast({
+          status: "success",
+          description: "Successfully deleted!",
+        })
+        props.onClose()
+        navigate("/courses")
+      },
+    })
+  }
 
   const handleSubmit = async (values: UpdateCourseInput) => {
     const res = await updateCourse({
@@ -79,6 +106,7 @@ export const CourseEditForm: React.FC<Props> = props => {
           isRequired={true}
         />
         <Select label="Reward" name="rewardType" options={rewardTypes} />
+        <DeleteItem handleDestroy={handleDestroy} text="this course" />
 
         <Flex justify="flex-end">
           <Button

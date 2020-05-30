@@ -2,7 +2,6 @@ import React from "react"
 import gql from "graphql-tag"
 import { Button, Stack, useToast, Flex } from "@chakra-ui/core"
 
-import Yup from "../lib/yup"
 import { useForm } from "../lib/hooks/useForm"
 import { Form } from "./Form"
 import { Input } from "./Input"
@@ -10,59 +9,89 @@ import { FormError } from "./FormError"
 import {
   CreateLevelInput,
   CourseLevelFragmentDoc,
-  useCreateLevelMutation,
   GetCourseDocument,
+  useUpdateLevelMutation,
+  CourseLevelFragment,
+  useDestroyLevelMutation,
 } from "../lib/graphql"
 import { Textarea } from "./Textarea"
 import { Checkbox } from "./Checkbox"
+import { LevelSchema } from "./CourseLevelCreateForm"
+import { mutationHandler } from "../lib/mutationHandler"
+import { DeleteItem } from "./DeleteItem"
 
-export const CREATE_LEVEL = gql`
-  mutation CreateLevel($data: CreateLevelInput!) {
-    createLevel(data: $data) {
+export const UPDATE_LEVEL = gql`
+  mutation UpdateLevel($levelId: String!, $data: UpdateLevelInput!) {
+    updateLevel(levelId: $levelId, data: $data) {
       ...CourseLevel
     }
   }
   ${CourseLevelFragmentDoc}
 `
 
-export const LevelSchema = Yup.object().shape<CreateLevelInput>({
-  levelNumber: Yup.number()
-    .required("Required")
-    .typeError("Must be a number"),
-  maxProgressDays: Yup.number()
-    .required("Required")
-    .typeError("Must be a number"),
-  title: Yup.string().required("Required"),
-  rewardText: Yup.string().required("Required"),
-  rewardDescription: Yup.string().required("Required"),
-  videoUrl: Yup.string(),
-  rewardUrl: Yup.string(),
-  courseId: Yup.string(),
-  isLast: Yup.boolean(),
-})
+export const DESTROY_LEVEL = gql`
+  mutation DestroyLevel($levelId: String!) {
+    destroyLevel(levelId: $levelId)
+  }
+`
+
 interface Props {
   onClose: () => void
-  courseId: string
+  level: CourseLevelFragment
 }
-export const CourseLevelCreateForm: React.FC<Props> = props => {
+export const CourseLevelEditForm: React.FC<Props> = props => {
   const toast = useToast()
 
   const form = useForm({
-    defaultValues: { courseId: props.courseId },
+    defaultValues: {
+      levelNumber: props.level.levelNumber,
+      maxProgressDays: props.level.maxProgressDays,
+      title: props.level.title,
+      rewardText: props.level.rewardText,
+      rewardDescription: props.level.rewardDescription,
+      videoUrl: props.level.videoUrl,
+      rewardUrl: props.level.rewardUrl,
+      courseId: props.level.courseId,
+      isLast: props.level.isLast,
+    },
     validationSchema: LevelSchema,
   })
 
-  const [createLevel] = useCreateLevelMutation({
+  const [updateLevel] = useUpdateLevelMutation({
     refetchQueries: [
-      { query: GetCourseDocument, variables: { slug: props.courseId } },
+      { query: GetCourseDocument, variables: { slug: props.level.courseId } },
     ],
   })
+
+  const [destroyLevel] = useDestroyLevelMutation({
+    refetchQueries: [
+      { query: GetCourseDocument, variables: { slug: props.level.courseId } },
+    ],
+  })
+
+  const handleDestroy = async () => {
+    const res = await destroyLevel({
+      variables: {
+        levelId: props.level.id,
+      },
+    })
+    mutationHandler(res, {
+      onSuccess: () => {
+        toast({
+          status: "success",
+          description: "Successfully deleted!",
+        })
+
+        props.onClose()
+      },
+    })
+  }
 
   const handleSubmit = async (values: CreateLevelInput) => {
     // TODO: Check if url is embed url
     // const YouTubeUrl = values.videoUrl?.includes("embed") ? values.videoUrl :
-    const res = await createLevel({
-      variables: { data: { ...values, courseId: props.courseId } },
+    const res = await updateLevel({
+      variables: { levelId: props.level.id, data: { ...values } },
     })
 
     return form.handler(res, {
@@ -84,39 +113,22 @@ export const CourseLevelCreateForm: React.FC<Props> = props => {
           name="maxProgressDays"
           label="Duration in days"
           isRequired={true}
-          placeholder="5"
         />
-        <Input
-          name="title"
-          label="Title"
-          isRequired={true}
-          placeholder="Introduction"
-        />
-        <Textarea
-          name="rewardText"
-          label="Lesson content"
-          isRequired={true}
-          placeholder="Practicing yoga and meditation helps to still the mind, let go of these stories and help release these emotional patterns that are holding us back. Yoga and meditation is not only for an individual’s wellbeing, it is also for social wellbeing. It is for the country’s wellbeing, and the world’s wellbeing.
-          "
-        />
+        <Input name="title" label="Title" isRequired={true} />
+        <Textarea name="rewardText" label="Lesson content" isRequired={true} />
         <Textarea
           name="rewardDescription"
           label="Reward text displayed when reaching this level"
           isRequired={true}
-          placeholder="Good job on reaching level 2!"
         />
-        <Input
-          name="videoUrl"
-          label="YouTube embed link"
-          placeholder="https://www.youtube.com/embed/y8sXeRNCh2k"
-        />
+        <Input name="videoUrl" label="YouTube embed link" />
         <Input
           name="rewardUrl"
           label="Link of picture or GIF to show @ level up"
-          placeholder="https://www.gify.comm/lela"
         />
         <Checkbox name="isLast" label="Is last level?" />
 
+        <DeleteItem handleDestroy={handleDestroy} text="this level" />
         <Flex justify="flex-end">
           <Button
             variantColor="blue"
@@ -132,7 +144,7 @@ export const CourseLevelCreateForm: React.FC<Props> = props => {
             variantColor="blue"
             isLoading={form.formState.isSubmitting}
           >
-            Create
+            Save
           </Button>
         </Flex>
         <FormError />

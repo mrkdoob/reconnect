@@ -17,4 +17,7 @@ export class UpdateOptionInput implements Partial<Option> {
 
   @Field({ nullable: true })
   videoUrl: string
+
+  @Field({ nullable: true })
+  createdByAdmin: boolean
 }

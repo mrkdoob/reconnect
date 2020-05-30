@@ -4,10 +4,11 @@ import { Modal } from "./Modal"
 import { CourseImageCreateForm } from "./CourseImageCreateForm"
 
 interface Props {
-  courseId: string
+  courseId?: string
+  levelId?: string
 }
 
-export const CourseImageModal = ({ courseId }: Props) => {
+export const CourseImageModal = ({ courseId, levelId }: Props) => {
   const { isOpen, onOpen, onClose } = useDisclosure()
 
   return (
@@ -23,8 +24,12 @@ export const CourseImageModal = ({ courseId }: Props) => {
         icon="edit"
         onClick={onOpen}
       />
-      <Modal isOpen={isOpen} onClose={onClose}>
-        <CourseImageCreateForm onClose={onClose} courseId={courseId} />
+      <Modal title="Upload image" isOpen={isOpen} onClose={onClose}>
+        <CourseImageCreateForm
+          onClose={onClose}
+          courseId={courseId}
+          levelId={levelId}
+        />
       </Modal>
     </>
   )

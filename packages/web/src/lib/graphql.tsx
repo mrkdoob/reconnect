@@ -127,13 +127,12 @@ export type CreateLevelInput = {
 
 export type CreateLevelTaskInput = {
   order: Scalars["Float"]
-  description: Scalars["String"]
   levelId: Scalars["String"]
 }
 
 export type CreateLevelTaskOptionInput = {
   order: Scalars["Float"]
-  levelId: Scalars["String"]
+  levelTaskId: Scalars["String"]
   optionId: Scalars["String"]
 }
 
@@ -150,7 +149,8 @@ export type CreateOptionInput = {
   label: Scalars["String"]
   description: Scalars["String"]
   fullDescription: Scalars["String"]
-  videoUrl: Scalars["String"]
+  videoUrl?: Maybe<Scalars["String"]>
+  createdByAdmin?: Maybe<Scalars["Boolean"]>
 }
 
 export type CreatePetInput = {
@@ -468,11 +468,11 @@ export type MutationCreateLevelTaskOptionArgs = {
 
 export type MutationUpdateLevelTaskOptionArgs = {
   data: UpdateLevelTaskOptionInput
-  levelTaskId: Scalars["String"]
+  levelTaskOptionId: Scalars["String"]
 }
 
 export type MutationDestroyLevelTaskOptionArgs = {
-  levelTaskId: Scalars["String"]
+  levelTaskOptionId: Scalars["String"]
 }
 
 export type MutationCreateMessageArgs = {
@@ -605,6 +605,7 @@ export type Option = {
   description: Scalars["String"]
   fullDescription?: Maybe<Scalars["String"]>
   videoUrl?: Maybe<Scalars["String"]>
+  createdByAdmin: Scalars["Boolean"]
 }
 
 export type Pet = {
@@ -854,6 +855,7 @@ export type UpdateOptionInput = {
   description?: Maybe<Scalars["String"]>
   fullDescription?: Maybe<Scalars["String"]>
   videoUrl?: Maybe<Scalars["String"]>
+  createdByAdmin?: Maybe<Scalars["Boolean"]>
 }
 
 export type UpdatePetInput = {
@@ -1013,6 +1015,15 @@ export type CreateCourseMutation = { __typename?: "Mutation" } & {
   createCourse: { __typename?: "Course" } & CourseItemFragment
 }
 
+export type DestroyCourseMutationVariables = {
+  id: Scalars["String"]
+}
+
+export type DestroyCourseMutation = { __typename?: "Mutation" } & Pick<
+  Mutation,
+  "destroyCourse"
+>
+
 export type UpdateCourseMutationVariables = {
   id: Scalars["String"]
   data: UpdateCourseInput
@@ -1049,10 +1060,133 @@ export type CreateLevelMutation = { __typename?: "Mutation" } & {
   createLevel: { __typename?: "Level" } & CourseLevelFragment
 }
 
+export type UpdateLevelMutationVariables = {
+  levelId: Scalars["String"]
+  data: UpdateLevelInput
+}
+
+export type UpdateLevelMutation = { __typename?: "Mutation" } & {
+  updateLevel?: Maybe<{ __typename?: "Level" } & CourseLevelFragment>
+}
+
+export type DestroyLevelMutationVariables = {
+  levelId: Scalars["String"]
+}
+
+export type DestroyLevelMutation = { __typename?: "Mutation" } & Pick<
+  Mutation,
+  "destroyLevel"
+>
+
 export type CourseLevelFragment = { __typename?: "Level" } & Pick<
   Level,
-  "id" | "title" | "cover" | "levelNumber" | "maxProgressDays" | "isLast"
+  | "id"
+  | "title"
+  | "cover"
+  | "levelNumber"
+  | "maxProgressDays"
+  | "isLast"
+  | "rewardText"
+  | "rewardDescription"
+  | "videoUrl"
+  | "rewardUrl"
+  | "courseId"
 >
+
+export type CreateLevelTaskOptionMutationVariables = {
+  data: CreateLevelTaskOptionInput
+}
+
+export type CreateLevelTaskOptionMutation = { __typename?: "Mutation" } & {
+  createLevelTaskOption: {
+    __typename?: "LevelTaskOption"
+  } & LevelTaskOptionItemFragment
+}
+
+export type CreateOptionMutationVariables = {
+  data: CreateOptionInput
+}
+
+export type CreateOptionMutation = { __typename?: "Mutation" } & {
+  createOption: { __typename?: "Option" } & Pick<
+    Option,
+    "id" | "label" | "description" | "fullDescription" | "videoUrl"
+  >
+}
+
+export type GetLevelTasksQueryVariables = {
+  levelId: Scalars["String"]
+}
+
+export type GetLevelTasksQuery = { __typename?: "Query" } & {
+  getLevel: { __typename?: "Level" } & Pick<Level, "id"> & {
+      levelTasks?: Maybe<
+        Array<{ __typename?: "LevelTask" } & LevelTaskItemFragment>
+      >
+    }
+}
+
+export type CreateLevelTaskMutationVariables = {
+  data: CreateLevelTaskInput
+}
+
+export type CreateLevelTaskMutation = { __typename?: "Mutation" } & {
+  createLevelTask: { __typename?: "LevelTask" } & LevelTaskItemFragment
+}
+
+export type OptionItemFragment = { __typename?: "Option" } & Pick<
+  Option,
+  | "id"
+  | "label"
+  | "description"
+  | "fullDescription"
+  | "videoUrl"
+  | "createdByAdmin"
+>
+
+export type DestroyOptionMutationVariables = {
+  optionId: Scalars["String"]
+}
+
+export type DestroyOptionMutation = { __typename?: "Mutation" } & Pick<
+  Mutation,
+  "destroyOption"
+>
+
+export type DestroyLevelTaskOptionMutationVariables = {
+  levelTaskOptionId: Scalars["String"]
+}
+
+export type DestroyLevelTaskOptionMutation = { __typename?: "Mutation" } & Pick<
+  Mutation,
+  "destroyLevelTaskOption"
+>
+
+export type UpdateOptionMutationVariables = {
+  optionId: Scalars["String"]
+  data: UpdateOptionInput
+}
+
+export type UpdateOptionMutation = { __typename?: "Mutation" } & {
+  updateOption?: Maybe<{ __typename?: "Option" } & OptionItemFragment>
+}
+
+export type GetOptionsQueryVariables = {}
+
+export type GetOptionsQuery = { __typename?: "Query" } & {
+  getAllOptions: Array<{ __typename?: "Option" } & OptionItemFragment>
+}
+
+export type UpdateLevelTaskOptionMutationVariables = {
+  levelTaskOptionId: Scalars["String"]
+  data: UpdateLevelTaskOptionInput
+}
+
+export type UpdateLevelTaskOptionMutation = { __typename?: "Mutation" } & {
+  updateLevelTaskOption?: Maybe<
+    { __typename?: "LevelTaskOption" } & LevelTaskOptionItemFragment
+  >
+}
 
 export type MyDailyRewardFragment = { __typename?: "UserDayReward" } & Pick<
   UserDayReward,
@@ -1131,17 +1265,12 @@ export type EndMyCourseMutation = { __typename?: "Mutation" } & {
 export type LevelTaskOptionItemFragment = {
   __typename?: "LevelTaskOption"
 } & Pick<LevelTaskOption, "id" | "order"> & {
-    option?: Maybe<
-      { __typename?: "Option" } & Pick<
-        Option,
-        "id" | "label" | "description" | "fullDescription" | "videoUrl"
-      >
-    >
+    option?: Maybe<{ __typename?: "Option" } & OptionItemFragment>
   }
 
 export type LevelTaskItemFragment = { __typename?: "LevelTask" } & Pick<
   LevelTask,
-  "id" | "order" | "description"
+  "id" | "order" | "description" | "levelId"
 > & {
     options?: Maybe<
       Array<{ __typename?: "LevelTaskOption" } & LevelTaskOptionItemFragment>
@@ -1503,24 +1632,32 @@ export const GroupItemFragmentDoc = gql`
     }
   }
 `
+export const OptionItemFragmentDoc = gql`
+  fragment OptionItem on Option {
+    id
+    label
+    description
+    fullDescription
+    videoUrl
+    createdByAdmin
+  }
+`
 export const LevelTaskOptionItemFragmentDoc = gql`
   fragment LevelTaskOptionItem on LevelTaskOption {
     id
     order
     option {
-      id
-      label
-      description
-      fullDescription
-      videoUrl
+      ...OptionItem
     }
   }
+  ${OptionItemFragmentDoc}
 `
 export const LevelTaskItemFragmentDoc = gql`
   fragment LevelTaskItem on LevelTask {
     id
     order
     description
+    levelId
     options {
       ...LevelTaskOptionItem
     }
@@ -1608,6 +1745,11 @@ export const CourseLevelFragmentDoc = gql`
     levelNumber
     maxProgressDays
     isLast
+    rewardText
+    rewardDescription
+    videoUrl
+    rewardUrl
+    courseId
   }
 `
 export const MentorItemFragmentDoc = gql`
@@ -1871,6 +2013,50 @@ export type CreateCourseMutationOptions = ApolloReactCommon.BaseMutationOptions<
   CreateCourseMutation,
   CreateCourseMutationVariables
 >
+export const DestroyCourseDocument = gql`
+  mutation DestroyCourse($id: String!) {
+    destroyCourse(id: $id)
+  }
+`
+
+/**
+ * __useDestroyCourseMutation__
+ *
+ * To run a mutation, you first call `useDestroyCourseMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDestroyCourseMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [destroyCourseMutation, { data, loading, error }] = useDestroyCourseMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useDestroyCourseMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    DestroyCourseMutation,
+    DestroyCourseMutationVariables
+  >,
+) {
+  return ApolloReactHooks.useMutation<
+    DestroyCourseMutation,
+    DestroyCourseMutationVariables
+  >(DestroyCourseDocument, baseOptions)
+}
+export type DestroyCourseMutationHookResult = ReturnType<
+  typeof useDestroyCourseMutation
+>
+export type DestroyCourseMutationResult = ApolloReactCommon.MutationResult<
+  DestroyCourseMutation
+>
+export type DestroyCourseMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  DestroyCourseMutation,
+  DestroyCourseMutationVariables
+>
 export const UpdateCourseDocument = gql`
   mutation UpdateCourse($id: String!, $data: UpdateCourseInput!) {
     updateCourse(id: $id, data: $data) {
@@ -1965,6 +2151,543 @@ export type CreateLevelMutationResult = ApolloReactCommon.MutationResult<
 export type CreateLevelMutationOptions = ApolloReactCommon.BaseMutationOptions<
   CreateLevelMutation,
   CreateLevelMutationVariables
+>
+export const UpdateLevelDocument = gql`
+  mutation UpdateLevel($levelId: String!, $data: UpdateLevelInput!) {
+    updateLevel(levelId: $levelId, data: $data) {
+      ...CourseLevel
+    }
+  }
+  ${CourseLevelFragmentDoc}
+`
+
+/**
+ * __useUpdateLevelMutation__
+ *
+ * To run a mutation, you first call `useUpdateLevelMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateLevelMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateLevelMutation, { data, loading, error }] = useUpdateLevelMutation({
+ *   variables: {
+ *      levelId: // value for 'levelId'
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useUpdateLevelMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    UpdateLevelMutation,
+    UpdateLevelMutationVariables
+  >,
+) {
+  return ApolloReactHooks.useMutation<
+    UpdateLevelMutation,
+    UpdateLevelMutationVariables
+  >(UpdateLevelDocument, baseOptions)
+}
+export type UpdateLevelMutationHookResult = ReturnType<
+  typeof useUpdateLevelMutation
+>
+export type UpdateLevelMutationResult = ApolloReactCommon.MutationResult<
+  UpdateLevelMutation
+>
+export type UpdateLevelMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  UpdateLevelMutation,
+  UpdateLevelMutationVariables
+>
+export const DestroyLevelDocument = gql`
+  mutation DestroyLevel($levelId: String!) {
+    destroyLevel(levelId: $levelId)
+  }
+`
+
+/**
+ * __useDestroyLevelMutation__
+ *
+ * To run a mutation, you first call `useDestroyLevelMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDestroyLevelMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [destroyLevelMutation, { data, loading, error }] = useDestroyLevelMutation({
+ *   variables: {
+ *      levelId: // value for 'levelId'
+ *   },
+ * });
+ */
+export function useDestroyLevelMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    DestroyLevelMutation,
+    DestroyLevelMutationVariables
+  >,
+) {
+  return ApolloReactHooks.useMutation<
+    DestroyLevelMutation,
+    DestroyLevelMutationVariables
+  >(DestroyLevelDocument, baseOptions)
+}
+export type DestroyLevelMutationHookResult = ReturnType<
+  typeof useDestroyLevelMutation
+>
+export type DestroyLevelMutationResult = ApolloReactCommon.MutationResult<
+  DestroyLevelMutation
+>
+export type DestroyLevelMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  DestroyLevelMutation,
+  DestroyLevelMutationVariables
+>
+export const CreateLevelTaskOptionDocument = gql`
+  mutation CreateLevelTaskOption($data: CreateLevelTaskOptionInput!) {
+    createLevelTaskOption(data: $data) {
+      ...LevelTaskOptionItem
+    }
+  }
+  ${LevelTaskOptionItemFragmentDoc}
+`
+
+/**
+ * __useCreateLevelTaskOptionMutation__
+ *
+ * To run a mutation, you first call `useCreateLevelTaskOptionMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateLevelTaskOptionMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createLevelTaskOptionMutation, { data, loading, error }] = useCreateLevelTaskOptionMutation({
+ *   variables: {
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useCreateLevelTaskOptionMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    CreateLevelTaskOptionMutation,
+    CreateLevelTaskOptionMutationVariables
+  >,
+) {
+  return ApolloReactHooks.useMutation<
+    CreateLevelTaskOptionMutation,
+    CreateLevelTaskOptionMutationVariables
+  >(CreateLevelTaskOptionDocument, baseOptions)
+}
+export type CreateLevelTaskOptionMutationHookResult = ReturnType<
+  typeof useCreateLevelTaskOptionMutation
+>
+export type CreateLevelTaskOptionMutationResult = ApolloReactCommon.MutationResult<
+  CreateLevelTaskOptionMutation
+>
+export type CreateLevelTaskOptionMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  CreateLevelTaskOptionMutation,
+  CreateLevelTaskOptionMutationVariables
+>
+export const CreateOptionDocument = gql`
+  mutation CreateOption($data: CreateOptionInput!) {
+    createOption(data: $data) {
+      id
+      label
+      description
+      fullDescription
+      videoUrl
+    }
+  }
+`
+
+/**
+ * __useCreateOptionMutation__
+ *
+ * To run a mutation, you first call `useCreateOptionMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateOptionMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createOptionMutation, { data, loading, error }] = useCreateOptionMutation({
+ *   variables: {
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useCreateOptionMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    CreateOptionMutation,
+    CreateOptionMutationVariables
+  >,
+) {
+  return ApolloReactHooks.useMutation<
+    CreateOptionMutation,
+    CreateOptionMutationVariables
+  >(CreateOptionDocument, baseOptions)
+}
+export type CreateOptionMutationHookResult = ReturnType<
+  typeof useCreateOptionMutation
+>
+export type CreateOptionMutationResult = ApolloReactCommon.MutationResult<
+  CreateOptionMutation
+>
+export type CreateOptionMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  CreateOptionMutation,
+  CreateOptionMutationVariables
+>
+export const GetLevelTasksDocument = gql`
+  query GetLevelTasks($levelId: String!) {
+    getLevel(levelId: $levelId) {
+      id
+      levelTasks {
+        ...LevelTaskItem
+      }
+    }
+  }
+  ${LevelTaskItemFragmentDoc}
+`
+
+/**
+ * __useGetLevelTasksQuery__
+ *
+ * To run a query within a React component, call `useGetLevelTasksQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetLevelTasksQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetLevelTasksQuery({
+ *   variables: {
+ *      levelId: // value for 'levelId'
+ *   },
+ * });
+ */
+export function useGetLevelTasksQuery(
+  baseOptions?: ApolloReactHooks.QueryHookOptions<
+    GetLevelTasksQuery,
+    GetLevelTasksQueryVariables
+  >,
+) {
+  return ApolloReactHooks.useQuery<
+    GetLevelTasksQuery,
+    GetLevelTasksQueryVariables
+  >(GetLevelTasksDocument, baseOptions)
+}
+export function useGetLevelTasksLazyQuery(
+  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+    GetLevelTasksQuery,
+    GetLevelTasksQueryVariables
+  >,
+) {
+  return ApolloReactHooks.useLazyQuery<
+    GetLevelTasksQuery,
+    GetLevelTasksQueryVariables
+  >(GetLevelTasksDocument, baseOptions)
+}
+export type GetLevelTasksQueryHookResult = ReturnType<
+  typeof useGetLevelTasksQuery
+>
+export type GetLevelTasksLazyQueryHookResult = ReturnType<
+  typeof useGetLevelTasksLazyQuery
+>
+export type GetLevelTasksQueryResult = ApolloReactCommon.QueryResult<
+  GetLevelTasksQuery,
+  GetLevelTasksQueryVariables
+>
+export const CreateLevelTaskDocument = gql`
+  mutation CreateLevelTask($data: CreateLevelTaskInput!) {
+    createLevelTask(data: $data) {
+      ...LevelTaskItem
+    }
+  }
+  ${LevelTaskItemFragmentDoc}
+`
+
+/**
+ * __useCreateLevelTaskMutation__
+ *
+ * To run a mutation, you first call `useCreateLevelTaskMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateLevelTaskMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createLevelTaskMutation, { data, loading, error }] = useCreateLevelTaskMutation({
+ *   variables: {
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useCreateLevelTaskMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    CreateLevelTaskMutation,
+    CreateLevelTaskMutationVariables
+  >,
+) {
+  return ApolloReactHooks.useMutation<
+    CreateLevelTaskMutation,
+    CreateLevelTaskMutationVariables
+  >(CreateLevelTaskDocument, baseOptions)
+}
+export type CreateLevelTaskMutationHookResult = ReturnType<
+  typeof useCreateLevelTaskMutation
+>
+export type CreateLevelTaskMutationResult = ApolloReactCommon.MutationResult<
+  CreateLevelTaskMutation
+>
+export type CreateLevelTaskMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  CreateLevelTaskMutation,
+  CreateLevelTaskMutationVariables
+>
+export const DestroyOptionDocument = gql`
+  mutation DestroyOption($optionId: String!) {
+    destroyOption(optionId: $optionId)
+  }
+`
+
+/**
+ * __useDestroyOptionMutation__
+ *
+ * To run a mutation, you first call `useDestroyOptionMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDestroyOptionMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [destroyOptionMutation, { data, loading, error }] = useDestroyOptionMutation({
+ *   variables: {
+ *      optionId: // value for 'optionId'
+ *   },
+ * });
+ */
+export function useDestroyOptionMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    DestroyOptionMutation,
+    DestroyOptionMutationVariables
+  >,
+) {
+  return ApolloReactHooks.useMutation<
+    DestroyOptionMutation,
+    DestroyOptionMutationVariables
+  >(DestroyOptionDocument, baseOptions)
+}
+export type DestroyOptionMutationHookResult = ReturnType<
+  typeof useDestroyOptionMutation
+>
+export type DestroyOptionMutationResult = ApolloReactCommon.MutationResult<
+  DestroyOptionMutation
+>
+export type DestroyOptionMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  DestroyOptionMutation,
+  DestroyOptionMutationVariables
+>
+export const DestroyLevelTaskOptionDocument = gql`
+  mutation DestroyLevelTaskOption($levelTaskOptionId: String!) {
+    destroyLevelTaskOption(levelTaskOptionId: $levelTaskOptionId)
+  }
+`
+
+/**
+ * __useDestroyLevelTaskOptionMutation__
+ *
+ * To run a mutation, you first call `useDestroyLevelTaskOptionMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDestroyLevelTaskOptionMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [destroyLevelTaskOptionMutation, { data, loading, error }] = useDestroyLevelTaskOptionMutation({
+ *   variables: {
+ *      levelTaskOptionId: // value for 'levelTaskOptionId'
+ *   },
+ * });
+ */
+export function useDestroyLevelTaskOptionMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    DestroyLevelTaskOptionMutation,
+    DestroyLevelTaskOptionMutationVariables
+  >,
+) {
+  return ApolloReactHooks.useMutation<
+    DestroyLevelTaskOptionMutation,
+    DestroyLevelTaskOptionMutationVariables
+  >(DestroyLevelTaskOptionDocument, baseOptions)
+}
+export type DestroyLevelTaskOptionMutationHookResult = ReturnType<
+  typeof useDestroyLevelTaskOptionMutation
+>
+export type DestroyLevelTaskOptionMutationResult = ApolloReactCommon.MutationResult<
+  DestroyLevelTaskOptionMutation
+>
+export type DestroyLevelTaskOptionMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  DestroyLevelTaskOptionMutation,
+  DestroyLevelTaskOptionMutationVariables
+>
+export const UpdateOptionDocument = gql`
+  mutation UpdateOption($optionId: String!, $data: UpdateOptionInput!) {
+    updateOption(optionId: $optionId, data: $data) {
+      ...OptionItem
+    }
+  }
+  ${OptionItemFragmentDoc}
+`
+
+/**
+ * __useUpdateOptionMutation__
+ *
+ * To run a mutation, you first call `useUpdateOptionMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateOptionMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateOptionMutation, { data, loading, error }] = useUpdateOptionMutation({
+ *   variables: {
+ *      optionId: // value for 'optionId'
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useUpdateOptionMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    UpdateOptionMutation,
+    UpdateOptionMutationVariables
+  >,
+) {
+  return ApolloReactHooks.useMutation<
+    UpdateOptionMutation,
+    UpdateOptionMutationVariables
+  >(UpdateOptionDocument, baseOptions)
+}
+export type UpdateOptionMutationHookResult = ReturnType<
+  typeof useUpdateOptionMutation
+>
+export type UpdateOptionMutationResult = ApolloReactCommon.MutationResult<
+  UpdateOptionMutation
+>
+export type UpdateOptionMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  UpdateOptionMutation,
+  UpdateOptionMutationVariables
+>
+export const GetOptionsDocument = gql`
+  query GetOptions {
+    getAllOptions {
+      ...OptionItem
+    }
+  }
+  ${OptionItemFragmentDoc}
+`
+
+/**
+ * __useGetOptionsQuery__
+ *
+ * To run a query within a React component, call `useGetOptionsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetOptionsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetOptionsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetOptionsQuery(
+  baseOptions?: ApolloReactHooks.QueryHookOptions<
+    GetOptionsQuery,
+    GetOptionsQueryVariables
+  >,
+) {
+  return ApolloReactHooks.useQuery<GetOptionsQuery, GetOptionsQueryVariables>(
+    GetOptionsDocument,
+    baseOptions,
+  )
+}
+export function useGetOptionsLazyQuery(
+  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+    GetOptionsQuery,
+    GetOptionsQueryVariables
+  >,
+) {
+  return ApolloReactHooks.useLazyQuery<
+    GetOptionsQuery,
+    GetOptionsQueryVariables
+  >(GetOptionsDocument, baseOptions)
+}
+export type GetOptionsQueryHookResult = ReturnType<typeof useGetOptionsQuery>
+export type GetOptionsLazyQueryHookResult = ReturnType<
+  typeof useGetOptionsLazyQuery
+>
+export type GetOptionsQueryResult = ApolloReactCommon.QueryResult<
+  GetOptionsQuery,
+  GetOptionsQueryVariables
+>
+export const UpdateLevelTaskOptionDocument = gql`
+  mutation UpdateLevelTaskOption(
+    $levelTaskOptionId: String!
+    $data: UpdateLevelTaskOptionInput!
+  ) {
+    updateLevelTaskOption(levelTaskOptionId: $levelTaskOptionId, data: $data) {
+      ...LevelTaskOptionItem
+    }
+  }
+  ${LevelTaskOptionItemFragmentDoc}
+`
+
+/**
+ * __useUpdateLevelTaskOptionMutation__
+ *
+ * To run a mutation, you first call `useUpdateLevelTaskOptionMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateLevelTaskOptionMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateLevelTaskOptionMutation, { data, loading, error }] = useUpdateLevelTaskOptionMutation({
+ *   variables: {
+ *      levelTaskOptionId: // value for 'levelTaskOptionId'
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useUpdateLevelTaskOptionMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    UpdateLevelTaskOptionMutation,
+    UpdateLevelTaskOptionMutationVariables
+  >,
+) {
+  return ApolloReactHooks.useMutation<
+    UpdateLevelTaskOptionMutation,
+    UpdateLevelTaskOptionMutationVariables
+  >(UpdateLevelTaskOptionDocument, baseOptions)
+}
+export type UpdateLevelTaskOptionMutationHookResult = ReturnType<
+  typeof useUpdateLevelTaskOptionMutation
+>
+export type UpdateLevelTaskOptionMutationResult = ApolloReactCommon.MutationResult<
+  UpdateLevelTaskOptionMutation
+>
+export type UpdateLevelTaskOptionMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  UpdateLevelTaskOptionMutation,
+  UpdateLevelTaskOptionMutationVariables
 >
 export const MyDayRewardDocument = gql`
   query MyDayReward {

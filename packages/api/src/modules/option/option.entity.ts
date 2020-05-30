@@ -1,7 +1,7 @@
 import { Entity, OneToMany } from "typeorm"
 import { ObjectType } from "type-graphql"
 import { BaseEntity } from "../shared/base.entity"
-import { StringField } from "../shared/fields"
+import { StringField, BooleanField } from "../shared/fields"
 import { LevelTaskOption } from "../levelTaskOption/levelTaskOption.entity"
 
 @ObjectType()
@@ -18,6 +18,9 @@ export class Option extends BaseEntity<Option> {
 
   @StringField({ nullable: true })
   videoUrl: string
+
+  @BooleanField({ default: false })
+  createdByAdmin: boolean
 
   // RELATIONS
   @OneToMany(

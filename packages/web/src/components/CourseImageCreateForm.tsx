@@ -7,6 +7,7 @@ import {
   CourseItemFragmentDoc,
   GetCourseDocument,
   useUpdateCourseMutation,
+  useUpdateLevelMutation,
 } from "../lib/graphql"
 import { formatFileName } from "../lib/helpers"
 import { useToast } from "../lib/hooks/useToast"
@@ -23,7 +24,8 @@ export const UPDATE_COURSE = gql`
 
 interface Props {
   onClose?: () => void
-  courseId: string
+  courseId?: string
+  levelId?: string
 }
 
 // TODO: Create generic component to use amzn upload for NewCover and NewAvatar
@@ -32,9 +34,17 @@ export const CourseImageCreateForm: React.FC<Props> = props => {
   const [images, setImages] = React.useState<File[]>([])
   const [loading, setLoading, setStopLoading] = useOpen()
   const [getSigned] = useGetSignedUrlMutation()
+
+  // TODO: Move one level down and give mutation in function as prop?
   const [updateCourse] = useUpdateCourseMutation({
     refetchQueries: [{ query: GetCourseDocument }],
   })
+
+  // TODO: Move one level down and give mutation in function as prop?
+  const [updateLevel] = useUpdateLevelMutation({
+    refetchQueries: [{ query: GetCourseDocument }],
+  })
+
   const toast = useToast()
 
   const onDrop = React.useCallback((newImages: File[]) => {
@@ -85,16 +95,30 @@ export const CourseImageCreateForm: React.FC<Props> = props => {
 
       const amzUrl = "https://reconnectapp-dev.s3.eu-central-1.amazonaws.com/"
 
-      await updateCourse({
-        variables: {
-          id: props.courseId,
-          data: {
-            cover: amzUrl + imageData.key,
+      if (props.courseId)
+        await updateCourse({
+          variables: {
+            id: props.courseId,
+            data: {
+              cover: amzUrl + imageData.key,
+            },
           },
-        },
-      }).then(() => {
-        props.onClose && props.onClose()
-      })
+        }).then(() => {
+          props.onClose && props.onClose()
+        })
+
+      if (props.levelId)
+        await updateLevel({
+          variables: {
+            levelId: props.levelId,
+            data: {
+              cover: amzUrl + imageData.key,
+            },
+          },
+        }).then(() => {
+          props.onClose && props.onClose()
+        })
+
       setStopLoading()
     } catch (error) {
       setStopLoading()

@@ -13,15 +13,15 @@ export class LevelTaskOptionService {
   }
 
   async update(
-    levelId: string,
+    levelTaskOptionId: string,
     data: Partial<LevelTaskOption>,
   ): Promise<LevelTaskOption> {
-    const level = await this.levelRepository.findById(levelId)
+    const level = await this.levelRepository.findById(levelTaskOptionId)
     return level.update(data)
   }
 
-  async destroy(levelId: string): Promise<boolean> {
-    const level = await this.levelRepository.findById(levelId)
+  async destroy(levelTaskOptionId: string): Promise<boolean> {
+    const level = await this.levelRepository.findById(levelTaskOptionId)
     return level.destroy()
   }
 }

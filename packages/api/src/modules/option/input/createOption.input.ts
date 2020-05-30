@@ -15,6 +15,9 @@ export class CreateOptionInput implements Partial<Option> {
   @Field()
   fullDescription: string
 
-  @Field()
+  @Field({ nullable: true })
   videoUrl: string
+
+  @Field({ nullable: true })
+  createdByAdmin: boolean
 }

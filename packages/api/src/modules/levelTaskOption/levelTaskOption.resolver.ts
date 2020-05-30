@@ -5,6 +5,7 @@ import {
   Arg,
   FieldResolver,
   Root,
+  Authorized,
 } from "type-graphql"
 
 import { Inject } from "typedi"
@@ -51,21 +52,21 @@ export class LevelTaskOptionResolver {
     return this.levelTaskService.create(data)
   }
 
-  // TODO: @Authorized(["admin"])
+  @Authorized(["admin"])
   @Mutation(() => LevelTaskOption, { nullable: true })
   updateLevelTaskOption(
-    @Arg("levelTaskId") levelTaskId: string,
+    @Arg("levelTaskOptionId") levelTaskOptionId: string,
     @Arg("data") data: UpdateLevelTaskOptionInput,
   ): Promise<LevelTaskOption> {
-    return this.levelTaskService.update(levelTaskId, data)
+    return this.levelTaskService.update(levelTaskOptionId, data)
   }
 
   // TODO: @Authorized(["admin"])
   @Mutation(() => Boolean)
   destroyLevelTaskOption(
-    @Arg("levelTaskId") levelTaskId: string,
+    @Arg("levelTaskOptionId") levelTaskOptionId: string,
   ): Promise<boolean> {
-    return this.levelTaskService.destroy(levelTaskId)
+    return this.levelTaskService.destroy(levelTaskOptionId)
   }
 
   // FIELD RESOLVERS

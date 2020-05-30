@@ -38,7 +38,9 @@ export class CourseResolver {
 
   @Query(() => Course)
   courseBySlug(@Arg("slug") slug: string): Promise<Course> {
-    return this.courseRepository.findBy({ where: { slug } })
+    return this.courseRepository.findBy({ where: { slug } }).catch(() => {
+      return this.courseRepository.findById(slug)
+    })
   }
 
   // TODO: @Authorized()

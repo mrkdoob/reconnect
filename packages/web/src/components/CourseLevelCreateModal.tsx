@@ -21,7 +21,12 @@ export const CourseLevelCreateModal = ({ courseId }: Props) => {
       >
         Create level
       </Button>
-      <Modal size="xl" title="Create a level" isOpen={isOpen} onClose={onClose}>
+      <Modal
+        size="full"
+        title="Create a level"
+        isOpen={isOpen}
+        onClose={onClose}
+      >
         <CourseLevelCreateForm onClose={onClose} courseId={courseId} />
       </Modal>
     </>
