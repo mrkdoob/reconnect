@@ -6,11 +6,13 @@ import {
   useGetLevelTasksQuery,
   useCreateLevelTaskMutation,
   GetLevelTasksDocument,
+  useDestroyLevelTaskMutation,
 } from "../lib/graphql"
 import gql from "graphql-tag.macro"
 import { CourseLevelTaskCreateForm } from "./CourseLevelTaskCreateForm"
 import { mutationHandler } from "../lib/mutationHandler"
 import { CourseLevelTaskAdminItem } from "./CourseLevelTaskAdminItem"
+import { CourseLevelTaskOptions } from "./CourseLevelTaskOptions"
 
 interface Props {
   levelId: string
@@ -37,14 +39,25 @@ export const CREATE_LEVEL_TASK = gql`
   ${LevelTaskItemFragmentDoc}
 `
 
+export const DESTROY_LEVELTASK = gql`
+  mutation DestroyLevelTask($levelTaskId: String!) {
+    destroyLevelTask(levelTaskId: $levelTaskId)
+  }
+`
+
 export const CourseLevelTaskCreateModal = ({ levelId }: Props) => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [levelTaskId, setLevelTaskId] = React.useState("")
+  const [showExistingOptions, setShowExistingOptions] = React.useState(false)
 
   const { data } = useGetLevelTasksQuery({ variables: { levelId } })
   const [createLevelTask] = useCreateLevelTaskMutation({
     refetchQueries: [{ query: GetLevelTasksDocument, variables: { levelId } }],
   })
+  const [destroyLevelTask] = useDestroyLevelTaskMutation({
+    refetchQueries: [{ query: GetLevelTasksDocument, variables: { levelId } }],
+  })
+
   const levelTasks = data?.getLevel.levelTasks
 
   const createTaskHandler = async () => {
@@ -62,6 +75,22 @@ export const CourseLevelTaskCreateModal = ({ levelId }: Props) => {
     })
   }
 
+  const handleCancel = async () => {
+    console.log("komt hier")
+
+    const res = await destroyLevelTask({
+      variables: {
+        levelTaskId,
+      },
+    })
+
+    mutationHandler(res, {
+      onSuccess: () => {
+        onClose()
+      },
+    })
+  }
+
   return (
     <>
       <Button
@@ -75,16 +104,47 @@ export const CourseLevelTaskCreateModal = ({ levelId }: Props) => {
       </Button>
       {levelTaskId !== "" && (
         <Modal
-          size="xl"
+          size={showExistingOptions ? "full" : "xl"}
           title="Create a task"
           isOpen={isOpen}
-          onClose={onClose}
+          onClose={handleCancel}
         >
-          <CourseLevelTaskCreateForm
-            onClose={onClose}
-            levelId={levelId}
-            levelTaskId={levelTaskId}
-          />
+          {showExistingOptions ? (
+            <>
+              <Button
+                variant="link"
+                variantColor="blue"
+                mb={4}
+                onClick={() => setShowExistingOptions(false)}
+              >
+                Back
+              </Button>
+              <CourseLevelTaskOptions
+                order={1}
+                levelTaskId={levelTaskId}
+                onClose={() => setShowExistingOptions(false)}
+                levelId={levelId}
+              />
+            </>
+          ) : (
+            <>
+              <Button
+                variant="link"
+                variantColor="blue"
+                mb={4}
+                onClick={() => setShowExistingOptions(true)}
+              >
+                Select from existing options
+              </Button>
+              <CourseLevelTaskCreateForm
+                onClose={onClose}
+                onCancel={handleCancel}
+                levelId={levelId}
+                levelTaskId={levelTaskId}
+                order={1}
+              />
+            </>
+          )}
         </Modal>
       )}
       {levelTasks?.map(task => (

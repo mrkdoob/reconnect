@@ -45,6 +45,7 @@ export const OptionSchema = Yup.object().shape<CreateOptionInput>({
 })
 interface Props {
   onClose: () => void
+  onCancel?: () => void
   levelId?: string | null
   levelTaskId: string
   order?: number
@@ -120,7 +121,9 @@ export const CourseLevelTaskCreateForm: React.FC<Props> = props => {
             variantColor="blue"
             variant="link"
             loadingText="loading"
-            onClick={() => props.onClose()}
+            onClick={() => {
+              props.onCancel ? props.onCancel() : props.onClose()
+            }}
             mr={8}
           >
             Cancel

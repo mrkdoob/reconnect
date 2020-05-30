@@ -1134,6 +1134,15 @@ export type CreateLevelTaskMutation = { __typename?: "Mutation" } & {
   createLevelTask: { __typename?: "LevelTask" } & LevelTaskItemFragment
 }
 
+export type DestroyLevelTaskMutationVariables = {
+  levelTaskId: Scalars["String"]
+}
+
+export type DestroyLevelTaskMutation = { __typename?: "Mutation" } & Pick<
+  Mutation,
+  "destroyLevelTask"
+>
+
 export type OptionItemFragment = { __typename?: "Option" } & Pick<
   Option,
   | "id"
@@ -2448,6 +2457,50 @@ export type CreateLevelTaskMutationResult = ApolloReactCommon.MutationResult<
 export type CreateLevelTaskMutationOptions = ApolloReactCommon.BaseMutationOptions<
   CreateLevelTaskMutation,
   CreateLevelTaskMutationVariables
+>
+export const DestroyLevelTaskDocument = gql`
+  mutation DestroyLevelTask($levelTaskId: String!) {
+    destroyLevelTask(levelTaskId: $levelTaskId)
+  }
+`
+
+/**
+ * __useDestroyLevelTaskMutation__
+ *
+ * To run a mutation, you first call `useDestroyLevelTaskMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDestroyLevelTaskMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [destroyLevelTaskMutation, { data, loading, error }] = useDestroyLevelTaskMutation({
+ *   variables: {
+ *      levelTaskId: // value for 'levelTaskId'
+ *   },
+ * });
+ */
+export function useDestroyLevelTaskMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    DestroyLevelTaskMutation,
+    DestroyLevelTaskMutationVariables
+  >,
+) {
+  return ApolloReactHooks.useMutation<
+    DestroyLevelTaskMutation,
+    DestroyLevelTaskMutationVariables
+  >(DestroyLevelTaskDocument, baseOptions)
+}
+export type DestroyLevelTaskMutationHookResult = ReturnType<
+  typeof useDestroyLevelTaskMutation
+>
+export type DestroyLevelTaskMutationResult = ApolloReactCommon.MutationResult<
+  DestroyLevelTaskMutation
+>
+export type DestroyLevelTaskMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  DestroyLevelTaskMutation,
+  DestroyLevelTaskMutationVariables
 >
 export const DestroyOptionDocument = gql`
   mutation DestroyOption($optionId: String!) {
