@@ -19,7 +19,7 @@ export const COURSE_LEVEL = gql`
     levelNumber
     maxProgressDays
     isLast
-    # Below is only for admin
+    # TODO: Below is only for admin
     rewardText
     rewardDescription
     videoUrl
@@ -58,18 +58,20 @@ export function CourseLevelItem(props: Props) {
           {props.level.levelNumber !== 1 && <Box as={Lock} height={10} />}
         </StyledImageBox>
 
-        <Button
-          // variantColor="blue"
-          aria-label="Edit level"
-          color="text"
-          leftIcon="edit"
-          onClick={onOpen}
-          mb={4}
-          position="absolute"
-          right="0"
-        >
-          Edit
-        </Button>
+        {me?.role === "admin" && (
+          <Button
+            // variantColor="blue"
+            aria-label="Edit level"
+            color="text"
+            leftIcon="edit"
+            onClick={onOpen}
+            mb={4}
+            position="absolute"
+            right="0"
+          >
+            Edit
+          </Button>
+        )}
 
         <StyledContentFlex
           w={{ base: "Calc(100% - 7rem)", md: "Calc(450px - 8rem)" }}
@@ -86,11 +88,20 @@ export function CourseLevelItem(props: Props) {
         </StyledContentFlex>
       </StyledLevelFlex>
 
-      <Modal size="full" title="Edit level" isOpen={isOpen} onClose={onClose}>
-        <CourseLevelEditForm onClose={onClose} level={props.level} />
-      </Modal>
+      {me?.role === "admin" && (
+        <>
+          <Modal
+            size="full"
+            title="Edit level"
+            isOpen={isOpen}
+            onClose={onClose}
+          >
+            <CourseLevelEditForm onClose={onClose} level={props.level} />
+          </Modal>
 
-      <CourseLevelTaskCreateModal levelId={props.level.id} />
+          <CourseLevelTaskCreateModal levelId={props.level.id} />
+        </>
+      )}
     </>
   )
 }

@@ -1015,6 +1015,53 @@ export type CreateCourseMutation = { __typename?: "Mutation" } & {
   createCourse: { __typename?: "Course" } & CourseItemFragment
 }
 
+export type CreateCourseDayRewardMutationVariables = {
+  data: CreateCourseDayRewardInput
+}
+
+export type CreateCourseDayRewardMutation = { __typename?: "Mutation" } & {
+  createCourseDayReward: {
+    __typename?: "CourseDayReward"
+  } & CourseDayRewardFragment
+}
+
+export type UpdateCourseDayRewardMutationVariables = {
+  courseDayRewardId: Scalars["String"]
+  data: UpdateCourseDayRewardInput
+}
+
+export type UpdateCourseDayRewardMutation = { __typename?: "Mutation" } & {
+  updateCourseDayReward?: Maybe<
+    { __typename?: "CourseDayReward" } & CourseDayRewardFragment
+  >
+}
+
+export type CourseDayRewardFragment = { __typename?: "CourseDayReward" } & Pick<
+  CourseDayReward,
+  "id" | "order" | "description" | "pictureUrl" | "videoUrl" | "courseId"
+>
+
+export type DestroyRewardMutationVariables = {
+  courseDayRewardId: Scalars["String"]
+}
+
+export type DestroyRewardMutation = { __typename?: "Mutation" } & Pick<
+  Mutation,
+  "destroyCourseDayReward"
+>
+
+export type GetCourseRewardsQueryVariables = {
+  courseId: Scalars["String"]
+}
+
+export type GetCourseRewardsQuery = { __typename?: "Query" } & {
+  getCourse: { __typename?: "Course" } & Pick<Course, "id"> & {
+      courseDayRewards?: Maybe<
+        Array<{ __typename?: "CourseDayReward" } & CourseDayRewardFragment>
+      >
+    }
+}
+
 export type DestroyCourseMutationVariables = {
   id: Scalars["String"]
 }
@@ -1616,6 +1663,16 @@ export type UpdateSettingsMutation = { __typename?: "Mutation" } & {
   updateMe?: Maybe<{ __typename?: "User" } & MySettingsFragment>
 }
 
+export const CourseDayRewardFragmentDoc = gql`
+  fragment CourseDayReward on CourseDayReward {
+    id
+    order
+    description
+    pictureUrl
+    videoUrl
+    courseId
+  }
+`
 export const MyDailyRewardFragmentDoc = gql`
   fragment MyDailyReward on UserDayReward {
     id
@@ -2022,6 +2079,208 @@ export type CreateCourseMutationResult = ApolloReactCommon.MutationResult<
 export type CreateCourseMutationOptions = ApolloReactCommon.BaseMutationOptions<
   CreateCourseMutation,
   CreateCourseMutationVariables
+>
+export const CreateCourseDayRewardDocument = gql`
+  mutation CreateCourseDayReward($data: CreateCourseDayRewardInput!) {
+    createCourseDayReward(data: $data) {
+      ...CourseDayReward
+    }
+  }
+  ${CourseDayRewardFragmentDoc}
+`
+
+/**
+ * __useCreateCourseDayRewardMutation__
+ *
+ * To run a mutation, you first call `useCreateCourseDayRewardMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateCourseDayRewardMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createCourseDayRewardMutation, { data, loading, error }] = useCreateCourseDayRewardMutation({
+ *   variables: {
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useCreateCourseDayRewardMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    CreateCourseDayRewardMutation,
+    CreateCourseDayRewardMutationVariables
+  >,
+) {
+  return ApolloReactHooks.useMutation<
+    CreateCourseDayRewardMutation,
+    CreateCourseDayRewardMutationVariables
+  >(CreateCourseDayRewardDocument, baseOptions)
+}
+export type CreateCourseDayRewardMutationHookResult = ReturnType<
+  typeof useCreateCourseDayRewardMutation
+>
+export type CreateCourseDayRewardMutationResult = ApolloReactCommon.MutationResult<
+  CreateCourseDayRewardMutation
+>
+export type CreateCourseDayRewardMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  CreateCourseDayRewardMutation,
+  CreateCourseDayRewardMutationVariables
+>
+export const UpdateCourseDayRewardDocument = gql`
+  mutation UpdateCourseDayReward(
+    $courseDayRewardId: String!
+    $data: UpdateCourseDayRewardInput!
+  ) {
+    updateCourseDayReward(courseDayRewardId: $courseDayRewardId, data: $data) {
+      ...CourseDayReward
+    }
+  }
+  ${CourseDayRewardFragmentDoc}
+`
+
+/**
+ * __useUpdateCourseDayRewardMutation__
+ *
+ * To run a mutation, you first call `useUpdateCourseDayRewardMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateCourseDayRewardMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateCourseDayRewardMutation, { data, loading, error }] = useUpdateCourseDayRewardMutation({
+ *   variables: {
+ *      courseDayRewardId: // value for 'courseDayRewardId'
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useUpdateCourseDayRewardMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    UpdateCourseDayRewardMutation,
+    UpdateCourseDayRewardMutationVariables
+  >,
+) {
+  return ApolloReactHooks.useMutation<
+    UpdateCourseDayRewardMutation,
+    UpdateCourseDayRewardMutationVariables
+  >(UpdateCourseDayRewardDocument, baseOptions)
+}
+export type UpdateCourseDayRewardMutationHookResult = ReturnType<
+  typeof useUpdateCourseDayRewardMutation
+>
+export type UpdateCourseDayRewardMutationResult = ApolloReactCommon.MutationResult<
+  UpdateCourseDayRewardMutation
+>
+export type UpdateCourseDayRewardMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  UpdateCourseDayRewardMutation,
+  UpdateCourseDayRewardMutationVariables
+>
+export const DestroyRewardDocument = gql`
+  mutation DestroyReward($courseDayRewardId: String!) {
+    destroyCourseDayReward(courseDayRewardId: $courseDayRewardId)
+  }
+`
+
+/**
+ * __useDestroyRewardMutation__
+ *
+ * To run a mutation, you first call `useDestroyRewardMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDestroyRewardMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [destroyRewardMutation, { data, loading, error }] = useDestroyRewardMutation({
+ *   variables: {
+ *      courseDayRewardId: // value for 'courseDayRewardId'
+ *   },
+ * });
+ */
+export function useDestroyRewardMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    DestroyRewardMutation,
+    DestroyRewardMutationVariables
+  >,
+) {
+  return ApolloReactHooks.useMutation<
+    DestroyRewardMutation,
+    DestroyRewardMutationVariables
+  >(DestroyRewardDocument, baseOptions)
+}
+export type DestroyRewardMutationHookResult = ReturnType<
+  typeof useDestroyRewardMutation
+>
+export type DestroyRewardMutationResult = ApolloReactCommon.MutationResult<
+  DestroyRewardMutation
+>
+export type DestroyRewardMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  DestroyRewardMutation,
+  DestroyRewardMutationVariables
+>
+export const GetCourseRewardsDocument = gql`
+  query GetCourseRewards($courseId: String!) {
+    getCourse(courseId: $courseId) {
+      id
+      courseDayRewards {
+        ...CourseDayReward
+      }
+    }
+  }
+  ${CourseDayRewardFragmentDoc}
+`
+
+/**
+ * __useGetCourseRewardsQuery__
+ *
+ * To run a query within a React component, call `useGetCourseRewardsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetCourseRewardsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetCourseRewardsQuery({
+ *   variables: {
+ *      courseId: // value for 'courseId'
+ *   },
+ * });
+ */
+export function useGetCourseRewardsQuery(
+  baseOptions?: ApolloReactHooks.QueryHookOptions<
+    GetCourseRewardsQuery,
+    GetCourseRewardsQueryVariables
+  >,
+) {
+  return ApolloReactHooks.useQuery<
+    GetCourseRewardsQuery,
+    GetCourseRewardsQueryVariables
+  >(GetCourseRewardsDocument, baseOptions)
+}
+export function useGetCourseRewardsLazyQuery(
+  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+    GetCourseRewardsQuery,
+    GetCourseRewardsQueryVariables
+  >,
+) {
+  return ApolloReactHooks.useLazyQuery<
+    GetCourseRewardsQuery,
+    GetCourseRewardsQueryVariables
+  >(GetCourseRewardsDocument, baseOptions)
+}
+export type GetCourseRewardsQueryHookResult = ReturnType<
+  typeof useGetCourseRewardsQuery
+>
+export type GetCourseRewardsLazyQueryHookResult = ReturnType<
+  typeof useGetCourseRewardsLazyQuery
+>
+export type GetCourseRewardsQueryResult = ApolloReactCommon.QueryResult<
+  GetCourseRewardsQuery,
+  GetCourseRewardsQueryVariables
 >
 export const DestroyCourseDocument = gql`
   mutation DestroyCourse($id: String!) {
