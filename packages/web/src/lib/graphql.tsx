@@ -643,7 +643,7 @@ export type Query = {
   getAllLevelTaskOptions: Array<LevelTaskOption>
   getAllLevelTaskOptionsByLevelId: Array<LevelTaskOption>
   getMessage: Message
-  allMessages: Array<Message>
+  getCourseMessages: Array<Message>
   getOption: Option
   getAllOptions: Array<Option>
   getPet: Pet
@@ -709,6 +709,10 @@ export type QueryGetAllLevelTaskOptionsByLevelIdArgs = {
 
 export type QueryGetMessageArgs = {
   messageId: Scalars["String"]
+}
+
+export type QueryGetCourseMessagesArgs = {
+  courseId: Scalars["String"]
 }
 
 export type QueryGetOptionArgs = {
@@ -1005,6 +1009,51 @@ export type UserTask = {
   fullDescription?: Maybe<Scalars["String"]>
   levelTask?: Maybe<LevelTask>
   levelTaskOption?: Maybe<LevelTaskOption>
+}
+
+export type CreateMessageMutationVariables = {
+  data: CreateMessageInput
+}
+
+export type CreateMessageMutation = { __typename?: "Mutation" } & {
+  createMessage: { __typename?: "Message" } & MessageFragment
+}
+
+export type UpdateMessageMutationVariables = {
+  messageId: Scalars["String"]
+  data: UpdateMessageInput
+}
+
+export type UpdateMessageMutation = { __typename?: "Mutation" } & {
+  updateMessage?: Maybe<{ __typename?: "Message" } & MessageFragment>
+}
+
+export type MessageFragment = { __typename?: "Message" } & Pick<
+  Message,
+  | "id"
+  | "message"
+  | "order"
+  | "pictureUrl"
+  | "videoUrl"
+  | "fullHeightPic"
+  | "courseId"
+>
+
+export type DestroyMessageMutationVariables = {
+  messageId: Scalars["String"]
+}
+
+export type DestroyMessageMutation = { __typename?: "Mutation" } & Pick<
+  Mutation,
+  "destroyMessage"
+>
+
+export type GetAdminCourseMessagesQueryVariables = {
+  courseId: Scalars["String"]
+}
+
+export type GetAdminCourseMessagesQuery = { __typename?: "Query" } & {
+  getCourseMessages: Array<{ __typename?: "Message" } & MessageFragment>
 }
 
 export type CreateCourseMutationVariables = {
@@ -1663,6 +1712,17 @@ export type UpdateSettingsMutation = { __typename?: "Mutation" } & {
   updateMe?: Maybe<{ __typename?: "User" } & MySettingsFragment>
 }
 
+export const MessageFragmentDoc = gql`
+  fragment Message on Message {
+    id
+    message
+    order
+    pictureUrl
+    videoUrl
+    fullHeightPic
+    courseId
+  }
+`
 export const CourseDayRewardFragmentDoc = gql`
   fragment CourseDayReward on CourseDayReward {
     id
@@ -2033,6 +2093,202 @@ export const MySettingsFragmentDoc = gql`
     }
   }
 `
+export const CreateMessageDocument = gql`
+  mutation CreateMessage($data: CreateMessageInput!) {
+    createMessage(data: $data) {
+      ...Message
+    }
+  }
+  ${MessageFragmentDoc}
+`
+
+/**
+ * __useCreateMessageMutation__
+ *
+ * To run a mutation, you first call `useCreateMessageMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateMessageMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createMessageMutation, { data, loading, error }] = useCreateMessageMutation({
+ *   variables: {
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useCreateMessageMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    CreateMessageMutation,
+    CreateMessageMutationVariables
+  >,
+) {
+  return ApolloReactHooks.useMutation<
+    CreateMessageMutation,
+    CreateMessageMutationVariables
+  >(CreateMessageDocument, baseOptions)
+}
+export type CreateMessageMutationHookResult = ReturnType<
+  typeof useCreateMessageMutation
+>
+export type CreateMessageMutationResult = ApolloReactCommon.MutationResult<
+  CreateMessageMutation
+>
+export type CreateMessageMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  CreateMessageMutation,
+  CreateMessageMutationVariables
+>
+export const UpdateMessageDocument = gql`
+  mutation UpdateMessage($messageId: String!, $data: UpdateMessageInput!) {
+    updateMessage(messageId: $messageId, data: $data) {
+      ...Message
+    }
+  }
+  ${MessageFragmentDoc}
+`
+
+/**
+ * __useUpdateMessageMutation__
+ *
+ * To run a mutation, you first call `useUpdateMessageMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateMessageMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateMessageMutation, { data, loading, error }] = useUpdateMessageMutation({
+ *   variables: {
+ *      messageId: // value for 'messageId'
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useUpdateMessageMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    UpdateMessageMutation,
+    UpdateMessageMutationVariables
+  >,
+) {
+  return ApolloReactHooks.useMutation<
+    UpdateMessageMutation,
+    UpdateMessageMutationVariables
+  >(UpdateMessageDocument, baseOptions)
+}
+export type UpdateMessageMutationHookResult = ReturnType<
+  typeof useUpdateMessageMutation
+>
+export type UpdateMessageMutationResult = ApolloReactCommon.MutationResult<
+  UpdateMessageMutation
+>
+export type UpdateMessageMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  UpdateMessageMutation,
+  UpdateMessageMutationVariables
+>
+export const DestroyMessageDocument = gql`
+  mutation DestroyMessage($messageId: String!) {
+    destroyMessage(messageId: $messageId)
+  }
+`
+
+/**
+ * __useDestroyMessageMutation__
+ *
+ * To run a mutation, you first call `useDestroyMessageMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDestroyMessageMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [destroyMessageMutation, { data, loading, error }] = useDestroyMessageMutation({
+ *   variables: {
+ *      messageId: // value for 'messageId'
+ *   },
+ * });
+ */
+export function useDestroyMessageMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    DestroyMessageMutation,
+    DestroyMessageMutationVariables
+  >,
+) {
+  return ApolloReactHooks.useMutation<
+    DestroyMessageMutation,
+    DestroyMessageMutationVariables
+  >(DestroyMessageDocument, baseOptions)
+}
+export type DestroyMessageMutationHookResult = ReturnType<
+  typeof useDestroyMessageMutation
+>
+export type DestroyMessageMutationResult = ApolloReactCommon.MutationResult<
+  DestroyMessageMutation
+>
+export type DestroyMessageMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  DestroyMessageMutation,
+  DestroyMessageMutationVariables
+>
+export const GetAdminCourseMessagesDocument = gql`
+  query GetAdminCourseMessages($courseId: String!) {
+    getCourseMessages(courseId: $courseId) {
+      ...Message
+    }
+  }
+  ${MessageFragmentDoc}
+`
+
+/**
+ * __useGetAdminCourseMessagesQuery__
+ *
+ * To run a query within a React component, call `useGetAdminCourseMessagesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetAdminCourseMessagesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetAdminCourseMessagesQuery({
+ *   variables: {
+ *      courseId: // value for 'courseId'
+ *   },
+ * });
+ */
+export function useGetAdminCourseMessagesQuery(
+  baseOptions?: ApolloReactHooks.QueryHookOptions<
+    GetAdminCourseMessagesQuery,
+    GetAdminCourseMessagesQueryVariables
+  >,
+) {
+  return ApolloReactHooks.useQuery<
+    GetAdminCourseMessagesQuery,
+    GetAdminCourseMessagesQueryVariables
+  >(GetAdminCourseMessagesDocument, baseOptions)
+}
+export function useGetAdminCourseMessagesLazyQuery(
+  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+    GetAdminCourseMessagesQuery,
+    GetAdminCourseMessagesQueryVariables
+  >,
+) {
+  return ApolloReactHooks.useLazyQuery<
+    GetAdminCourseMessagesQuery,
+    GetAdminCourseMessagesQueryVariables
+  >(GetAdminCourseMessagesDocument, baseOptions)
+}
+export type GetAdminCourseMessagesQueryHookResult = ReturnType<
+  typeof useGetAdminCourseMessagesQuery
+>
+export type GetAdminCourseMessagesLazyQueryHookResult = ReturnType<
+  typeof useGetAdminCourseMessagesLazyQuery
+>
+export type GetAdminCourseMessagesQueryResult = ApolloReactCommon.QueryResult<
+  GetAdminCourseMessagesQuery,
+  GetAdminCourseMessagesQueryVariables
+>
 export const CreateCourseDocument = gql`
   mutation CreateCourse($data: CreateCourseInput!) {
     createCourse(data: $data) {

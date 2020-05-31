@@ -11,41 +11,38 @@ import { Badge } from "styled-icons/boxicons-regular/Badge"
 
 import gql from "graphql-tag.macro"
 import {
-  CourseDayRewardFragmentDoc,
-  useGetCourseRewardsQuery,
-  CourseDayRewardFragment,
+  MessageFragmentDoc,
+  useGetAdminCourseMessagesQuery,
+  MessageFragment,
 } from "../lib/graphql"
 import { Center } from "./Center"
 import { Modal } from "./Modal"
-import { CourseDailyRewardItem } from "./CourseDailyRewardItem"
 import { Table, Column } from "./Table"
-import { CourseDailyRewardCreateForm } from "./CourseDailyRewardCreateForm"
+import { AdminCourseMessageCreateForm } from "./AdminCourseMessageCreateForm"
+import { AdminCourseMessageItem } from "./AdminCourseMessageItem"
 
-export const GET_COURSE_REWARDS = gql`
-  query GetCourseRewards($courseId: String!) {
-    getCourse(courseId: $courseId) {
-      id
-      courseDayRewards {
-        ...CourseDayReward
-      }
+export const GET_ADMIN_COURSE_MESSAGES = gql`
+  query GetAdminCourseMessages($courseId: String!) {
+    getCourseMessages(courseId: $courseId) {
+      ...Message
     }
   }
-  ${CourseDayRewardFragmentDoc}
+  ${MessageFragmentDoc}
 `
 
 interface Props {
   courseId: string
 }
 
-type I = CourseDayRewardFragment
+type I = MessageFragment
 
-export function CourseDailyRewardList(props: Props) {
+export function AdminCourseMessageList(props: Props) {
   const { isOpen, onOpen, onClose } = useDisclosure()
 
-  const { data, loading } = useGetCourseRewardsQuery({
+  const { data, loading } = useGetAdminCourseMessagesQuery({
     variables: { courseId: props.courseId },
   })
-  const rewards = data?.getCourse.courseDayRewards
+  const messages = data?.getCourseMessages
 
   return (
     <>
@@ -71,39 +68,36 @@ export function CourseDailyRewardList(props: Props) {
             </Flex>
 
             <Heading mb={4} fontWeight="normal" fontSize="2xl">
-              Daily rewards
+              Course messages
             </Heading>
 
-            {rewards && (
+            {messages && (
               <Box w="100%">
                 <Table
                   loading={loading}
-                  noData="No rewards have been created yet"
-                  data={rewards}
+                  noData="No messages have been created yet"
+                  data={messages}
                 >
                   <Column<I>
-                    row={reward => <CourseDailyRewardItem reward={reward} />}
+                    row={message => (
+                      <AdminCourseMessageItem message={message} />
+                    )}
                   />
                 </Table>
               </Box>
             )}
             {/* TODO: Add Reward item */}
             <Button variantColor="blue" onClick={onOpen} mb={8} leftIcon="add">
-              Create new reward
+              Create new message
             </Button>
           </Flex>
         </Flex>
       )}
-      <Modal
-        size="xl"
-        isOpen={isOpen}
-        onClose={onClose}
-        title="Create Daily Reward"
-      >
-        <CourseDailyRewardCreateForm
+      <Modal size="xl" isOpen={isOpen} onClose={onClose} title="Create message">
+        <AdminCourseMessageCreateForm
           onClose={onClose}
           courseId={props.courseId}
-          order={rewards ? rewards.length + 1 : 1}
+          order={messages ? messages.length + 1 : 1}
         />
       </Modal>
     </>

@@ -16,8 +16,14 @@ export class MessageRepository {
     }
   }
 
-  findAll(): Promise<Message[]> {
-    return Message.find()
+  findAllByCourseId(courseId: string): Promise<Message[]> {
+    try {
+      return Message.find({
+        where: { courseId },
+      })
+    } catch {
+      throw new UserInputError("No message found")
+    }
   }
 
   findByOrderCourse(order: number, courseId: string): Promise<Message> {

@@ -20,6 +20,7 @@ import { useMe } from "../components/providers/MeProvider"
 import { CourseImageModal } from "../components/CourseImageModal"
 import { CourseEditModal } from "../components/CourseEditModal"
 import { CourseDailyRewardList } from "../components/CourseDailyRewardList"
+import { AdminCourseMessageList } from "../components/AdminCourseMessageList"
 
 export const COURSE = gql`
   fragment Course on Course {
@@ -160,7 +161,10 @@ export const Course: React.FC<Props> = props => {
           <CourseLevelList course={course} />
           {/* Level day rewards */}
           {me?.role === "admin" && (
-            <CourseDailyRewardList courseId={course.id} />
+            <>
+              <CourseDailyRewardList courseId={course.id} />
+              <AdminCourseMessageList courseId={course.id} />
+            </>
           )}
         </>
       ) : (

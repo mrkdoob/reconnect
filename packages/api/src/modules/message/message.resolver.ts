@@ -25,10 +25,9 @@ export class MessageResolver {
     return this.messageRepository.findById(messageId)
   }
 
-  //TODO: Remove
   @Query(() => [Message])
-  allMessages(): Promise<Message[]> {
-    return this.messageRepository.findAll()
+  getCourseMessages(@Arg("courseId") courseId: string): Promise<Message[]> {
+    return this.messageRepository.findAllByCourseId(courseId)
   }
 
   // @Authorized()  TODO: Authorized
