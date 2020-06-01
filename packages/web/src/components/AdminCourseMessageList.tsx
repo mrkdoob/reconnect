@@ -70,7 +70,11 @@ export function AdminCourseMessageList(props: Props) {
             <Heading mb={4} fontWeight="normal" fontSize="2xl">
               Course messages
             </Heading>
-
+            <Flex w="100%" justify="flex-end">
+              <Button variantColor="blue" onClick={onOpen} leftIcon="add">
+                Add
+              </Button>
+            </Flex>
             {messages && (
               <Box w="100%">
                 <Table
@@ -86,10 +90,6 @@ export function AdminCourseMessageList(props: Props) {
                 </Table>
               </Box>
             )}
-            {/* TODO: Add Reward item */}
-            <Button variantColor="blue" onClick={onOpen} mb={8} leftIcon="add">
-              Create new message
-            </Button>
           </Flex>
         </Flex>
       )}
