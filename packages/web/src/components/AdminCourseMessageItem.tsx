@@ -75,23 +75,22 @@ export function AdminCourseMessageItem(props: Props) {
   return (
     <>
       <Flex w="100%" justify="space-between" align="center">
-        <Flex direction="column" align="center">
-          <Flex position="relative" justify="align">
+        <Flex align="center" w="90%">
+          <Flex position="relative" justify="align" w="125px" mr={4}>
             <Image
               src={props.message.pictureUrl || ""}
               rounded="lg"
-              size="75px"
+              size="125px"
               objectFit="cover"
             />
-            )}
             <MessageImageModal message={props.message} />
+          </Flex>
+          <Flex fontSize="xs" align="center" w="calc(100% - 125px - 2rem)">
+            <Markup content={props.message?.message} />
           </Flex>
         </Flex>
 
-        <Flex fontSize="xs" align="center">
-          <Markup content={props.message?.message} />
-        </Flex>
-        <Stack spacing={4} isInline>
+        <Stack spacing={4} isInline w="10%">
           <IconButton aria-label="Edit reward" icon="edit" onClick={onOpen} />
           <Confirmation onSubmit={handleDestroy}>
             <IconButton

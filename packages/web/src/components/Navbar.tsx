@@ -20,8 +20,6 @@ import { Menu } from "styled-icons/boxicons-regular/Menu"
 import { Close } from "styled-icons/material/Close"
 import { useMe } from "./providers/MeProvider"
 import { User } from "styled-icons/boxicons-regular/User"
-import { Home } from "styled-icons/boxicons-regular/Home"
-import { Book } from "styled-icons/boxicons-regular/Book"
 import { colors } from "../lib/colors"
 
 export const Navbar: React.FC = () => {
@@ -58,7 +56,7 @@ export const Navbar: React.FC = () => {
         </Flex>
 
         {/* Md+ */}
-        <Flex align="center" justify="space-between" w={me ? "10rem" : "15rem"}>
+        <Flex align="center" justify="space-between" w="15rem">
           {!me ? (
             <>
               <NavLink to="/courses">
@@ -77,12 +75,21 @@ export const Navbar: React.FC = () => {
             </>
           ) : (
             <>
-              <NavLink to="/">
-                <Box cursor="pointer" as={Home} h={8} color="gray.300" />
-              </NavLink>
-              {me.groupId && (
-                <NavLink to="/mylevelreward">
-                  <Box as={Book} h={8} color="gray.300" />
+              <Text>
+                <NavLink to="/">Home</NavLink>
+              </Text>
+              {me.groupId ? (
+                <Text>
+                  <NavLink to="/mylevelreward">Lesson</NavLink>
+                </Text>
+              ) : (
+                <NavLink to="/courses">
+                  <Text>Courses</Text>
+                </NavLink>
+              )}
+              {me.role === "admin" && (
+                <NavLink to="/admin-courses">
+                  <Text>Admin</Text>
                 </NavLink>
               )}
             </>

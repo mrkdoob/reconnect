@@ -16,6 +16,8 @@ import { Login } from "../pages/Login"
 import { CurrentLevelReward } from "../pages/CurrentLevelReward"
 import { ResetPassword } from "../pages/ResetPassword"
 import { Portfolio } from "../pages/Portfolio"
+import { AdminCourse } from "../pages/AdminCourse"
+import { AdminCourses } from "../pages/AdminCourses"
 
 export function Application() {
   return (
@@ -27,7 +29,9 @@ export function Application() {
           <Router>
             <Dashboard path="/" />
             <Courses path="/courses" />
+            <AdminCourses path="/admin-courses" />
             <Course path="/courses/:slug" />
+            <AdminCourse path="/admin-courses/:slug" />
             <Groups path="/:slug/groups" />
             <LevelReward path="/levelreward/:levelId" />
             <CurrentLevelReward path="/mylevelreward" />

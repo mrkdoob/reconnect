@@ -34,11 +34,18 @@ export const COURSE_ITEM = gql`
 
 interface Props {
   course: CourseItemFragment
+  directToAdmin?: boolean
 }
 
 export function CourseItem(props: Props) {
   return (
-    <Link to={`/courses/${props.course.slug}`}>
+    <Link
+      to={
+        props.directToAdmin
+          ? `/admin-courses/${props.course.slug}`
+          : `/courses/${props.course.slug}`
+      }
+    >
       <StyledCourseItem borderRadius="lg">
         <Box w="100%" h={{ base: 120, lg: 150 }} bg="gray.100" rounded="lg">
           <StyledCover rounded="lg" src={props.course.cover || ""} />

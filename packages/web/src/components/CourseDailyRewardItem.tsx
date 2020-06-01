@@ -75,20 +75,21 @@ export function CourseDailyRewardItem(props: Props) {
   return (
     <>
       <Flex w="100%" justify="space-between" align="center" p={2}>
-        <Flex fontSize="xs" align="center">
-          <Box position="relative" mr={8}>
+        <Flex fontSize="xs" align="center" w="90%">
+          <Box position="relative" mr={8} w="125px">
             <Image
               src={props.reward.pictureUrl || ""}
               rounded="lg"
-              w="125px"
-              h="125px"
               objectFit="cover"
+              size="125px"
             />
             <RewardImageModal reward={props.reward} />
           </Box>
-          <Markup content={props.reward?.description} />
+          <Box w="calc(100% - 125px - 2rem)" wordBreak="break-all">
+            <Markup content={props.reward?.description} />
+          </Box>
         </Flex>
-        <Stack spacing={4} isInline>
+        <Stack spacing={4} isInline w="10%">
           <IconButton aria-label="Edit reward" icon="edit" onClick={onOpen} />
           <Confirmation onSubmit={handleDestroy}>
             <IconButton

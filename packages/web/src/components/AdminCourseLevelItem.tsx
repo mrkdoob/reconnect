@@ -1,33 +1,21 @@
 import React from "react"
-import { Flex, Box, Text } from "@chakra-ui/core"
+import { Flex, Box, Text, Button, useDisclosure } from "@chakra-ui/core"
 import { CourseLevelFragment } from "../lib/graphql"
 import { styled } from "./providers/ThemeProvider"
-import gql from "graphql-tag.macro"
 import { Lock } from "styled-icons/boxicons-solid/Lock"
 import { colors } from "../lib/colors"
-
-export const COURSE_LEVEL = gql`
-  fragment CourseLevel on Level {
-    id
-    title
-    cover
-    levelNumber
-    maxProgressDays
-    isLast
-    # TODO: Below is only for admin
-    rewardText
-    rewardDescription
-    videoUrl
-    rewardUrl
-    courseId
-  }
-`
+import { CourseImageModal } from "./CourseImageModal"
+import { Modal } from "./Modal"
+import { CourseLevelEditForm } from "./CourseLevelEditForm"
+import { CourseLevelTaskCreateModal } from "./CourseLevelTaskCreateModal"
 
 interface Props {
   level: CourseLevelFragment
 }
 
-export function CourseLevelItem(props: Props) {
+export function AdminCourseLevelItem(props: Props) {
+  const { isOpen, onOpen, onClose } = useDisclosure()
+
   return (
     <>
       <StyledLevelFlex
@@ -44,8 +32,22 @@ export function CourseLevelItem(props: Props) {
           justify="center"
           position="relative"
         >
+          <CourseImageModal levelId={props.level.id} />
           {props.level.levelNumber !== 1 && <Box as={Lock} height={10} />}
         </StyledImageBox>
+
+        <Button
+          // variantColor="blue"
+          aria-label="Edit level"
+          color="text"
+          leftIcon="edit"
+          onClick={onOpen}
+          mb={4}
+          position="absolute"
+          right="0"
+        >
+          Edit
+        </Button>
 
         <StyledContentFlex
           w={{ base: "Calc(100% - 7rem)", md: "Calc(450px - 8rem)" }}
@@ -61,6 +63,12 @@ export function CourseLevelItem(props: Props) {
           </StyledUppercasedText>
         </StyledContentFlex>
       </StyledLevelFlex>
+
+      <Modal size="full" title="Edit level" isOpen={isOpen} onClose={onClose}>
+        <CourseLevelEditForm onClose={onClose} level={props.level} />
+      </Modal>
+
+      <CourseLevelTaskCreateModal levelId={props.level.id} />
     </>
   )
 }

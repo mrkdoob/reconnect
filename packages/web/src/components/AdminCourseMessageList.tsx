@@ -60,7 +60,7 @@ export function AdminCourseMessageList(props: Props) {
           <Flex
             direction="column"
             align="center"
-            w={["100%", "70%"]}
+            w="100%"
             pt={{ base: 6, md: 12 }}
           >
             <Flex align="center">
