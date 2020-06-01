@@ -27,6 +27,7 @@ import { CourseEditModal } from "../components/CourseEditModal"
 import { CourseDailyRewardList } from "../components/CourseDailyRewardList"
 import { AdminCourseMessageList } from "../components/AdminCourseMessageList"
 import { AdminCourseLevelList } from "../components/AdminCourseLevelList"
+import { AdminCourseMentorModalForm } from "../components/AdminCourseMentorModalForm"
 
 interface Props extends RouteComponentProps<{ slug: string }> {}
 
@@ -122,6 +123,7 @@ export const AdminCourse: React.FC<Props> = props => {
                   {course.mentor && (
                     <>
                       <Border my={{ base: 12, md: 20 }} mt={8} />
+                      <AdminCourseMentorModalForm mentor={course.mentor} />
                       <Flex
                         px={4}
                         fontSize="lg"

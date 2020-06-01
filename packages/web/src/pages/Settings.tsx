@@ -41,6 +41,7 @@ export const MYSETTINGS_FRAGMENT = gql`
     email
     avatar
     groupId
+    bio
     userGroupMessage {
       id
       showOption

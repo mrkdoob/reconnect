@@ -1688,7 +1688,7 @@ export type ResetPasswordMutation = { __typename?: "Mutation" } & Pick<
 
 export type MySettingsFragment = { __typename?: "User" } & Pick<
   User,
-  "id" | "firstName" | "lastName" | "email" | "avatar" | "groupId"
+  "id" | "firstName" | "lastName" | "email" | "avatar" | "groupId" | "bio"
 > & {
     userGroupMessage?: Maybe<
       { __typename?: "UserGroupMessage" } & Pick<
@@ -2087,6 +2087,7 @@ export const MySettingsFragmentDoc = gql`
     email
     avatar
     groupId
+    bio
     userGroupMessage {
       id
       showOption
@@ -3642,6 +3643,34 @@ export type MeQueryResult = ApolloReactCommon.QueryResult<
   MeQuery,
   MeQueryVariables
 >
+
+/**
+ * __useGetAllCoursesQuery__
+ *
+ * To run a query within a React component, call `useGetAllCoursesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetAllCoursesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetAllCoursesQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetAllCoursesQuery(
+  baseOptions?: ApolloReactHooks.QueryHookOptions<
+    GetAllCoursesQuery,
+    GetAllCoursesQueryVariables
+  >,
+) {
+  return ApolloReactHooks.useQuery<
+    GetAllCoursesQuery,
+    GetAllCoursesQueryVariables
+  >(GetAllCoursesDocument, baseOptions)
+}
+
 export const GetCourseDocument = gql`
   query GetCourse($slug: String!) {
     courseBySlug(slug: $slug) {
@@ -3721,17 +3750,7 @@ export const GetAllCoursesDocument = gql`
  *   },
  * });
  */
-export function useGetAllCoursesQuery(
-  baseOptions?: ApolloReactHooks.QueryHookOptions<
-    GetAllCoursesQuery,
-    GetAllCoursesQueryVariables
-  >,
-) {
-  return ApolloReactHooks.useQuery<
-    GetAllCoursesQuery,
-    GetAllCoursesQueryVariables
-  >(GetAllCoursesDocument, baseOptions)
-}
+
 export function useGetAllCoursesLazyQuery(
   baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
     GetAllCoursesQuery,
