@@ -15,6 +15,7 @@ import {
 } from "../lib/graphql"
 import { Textarea } from "./Textarea"
 import { Checkbox } from "./Checkbox"
+import { EditorInput } from "./EditorInput"
 
 export const CREATE_LEVEL = gql`
   mutation CreateLevel($data: CreateLevelInput!) {
@@ -92,12 +93,10 @@ export const CourseLevelCreateForm: React.FC<Props> = props => {
           isRequired={true}
           placeholder="Introduction"
         />
-        <Textarea
+        <EditorInput
           name="rewardText"
           label="Lesson content"
           isRequired={true}
-          placeholder="Practicing yoga and meditation helps to still the mind, let go of these stories and help release these emotional patterns that are holding us back. Yoga and meditation is not only for an individual’s wellbeing, it is also for social wellbeing. It is for the country’s wellbeing, and the world’s wellbeing.
-          "
         />
         <Textarea
           name="rewardDescription"

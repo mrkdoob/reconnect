@@ -14,8 +14,8 @@ import {
   UpdateMessageInput,
   GetAdminCourseMessagesDocument,
 } from "../lib/graphql"
-import { Textarea } from "./Textarea"
 import { Checkbox } from "./Checkbox"
+import { EditorInput } from "./EditorInput"
 
 export const UPDATE_MESSAGE = gql`
   mutation UpdateMessage($messageId: String!, $data: UpdateMessageInput!) {
@@ -86,12 +86,7 @@ export const AdminCourseMessageEditForm: React.FC<Props> = props => {
     <Form onSubmit={handleSubmit} {...form}>
       <Stack spacing={4} shouldWrapChildren>
         <Input name="order" label="Order" />
-        <Textarea
-          name="message"
-          label="Message"
-          isRequired={true}
-          placeholder="Isha is providing meals and PPE."
-        />
+        <EditorInput name="message" label="Message" />
         <Input name="videoUrl" label="YouTube embed url" />
         <Input name="pictureUrl" label="External picture url" />
         <Checkbox name="fullHeightPic" label="Show picture with more height?" />

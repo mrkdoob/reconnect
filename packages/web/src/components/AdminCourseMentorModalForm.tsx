@@ -10,8 +10,8 @@ import {
   UpdateInput,
   MentorItemFragment,
 } from "../lib/graphql"
-import { Textarea } from "./Textarea"
 import { Modal } from "./Modal"
+import { EditorInput } from "./EditorInput"
 
 interface ModalProps {
   mentor: MentorItemFragment
@@ -78,13 +78,7 @@ const AdminCourseMentorForm: React.FC<Props> = props => {
   return (
     <Form onSubmit={handleSubmit} {...form}>
       <Stack spacing={4} shouldWrapChildren>
-        <Textarea
-          name="bio"
-          label="Bio"
-          isRequired={true}
-          size="lg"
-          placeholder="Every week I hop on a conference call to teach, answer questions, and give feedback to members of Octalysis Prime. If you want to take your Gamification practice to the next level, then come join us."
-        />
+        <EditorInput name="bio" label="Bio" />
 
         <Flex justify="flex-end">
           <Button

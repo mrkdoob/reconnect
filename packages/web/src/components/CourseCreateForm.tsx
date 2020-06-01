@@ -15,6 +15,7 @@ import {
 import { Textarea } from "./Textarea"
 import { Select } from "./Select"
 import { rewardTypes } from "../lib/rewards"
+import { EditorInput } from "./EditorInput"
 
 export const CREATE_COURSE = gql`
   mutation CreateCourse($data: CreateCourseInput!) {
@@ -100,16 +101,7 @@ export const CourseCreateForm: React.FC<Props> = props => {
           isRequired={true}
           placeholder="Learn to implement the healthy habit of waking up earlier and experience an increase of well-being."
         />
-        <Textarea
-          name="fullDescription"
-          label="Full description"
-          isRequired={true}
-          placeholder="Samyama is an intensive program. Participants spend 8 days in complete silence with
-          long hours of meditation. It provides the possibility for
-          individuals to free themselves from the bonds of karma and
-          purify the system, opening them up to subtler realms of
-          experience."
-        />
+        <EditorInput name="fullDescription" label="Full description" />
         <Select label="Reward" name="rewardType" options={rewardTypes} />
 
         <Flex justify="flex-end">

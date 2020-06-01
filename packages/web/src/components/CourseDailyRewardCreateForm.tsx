@@ -13,7 +13,7 @@ import {
   GetCourseRewardsDocument,
   CreateCourseDayRewardInput,
 } from "../lib/graphql"
-import { Textarea } from "./Textarea"
+import { EditorInput } from "./EditorInput"
 
 export const CREATE_COURSE_DAYREWARD = gql`
   mutation CreateCourseDayReward($data: CreateCourseDayRewardInput!) {
@@ -73,12 +73,7 @@ export const CourseDailyRewardCreateForm: React.FC<Props> = props => {
   return (
     <Form onSubmit={handleSubmit} {...form}>
       <Stack spacing={4} shouldWrapChildren>
-        <Textarea
-          name="description"
-          label="Description"
-          isRequired={true}
-          placeholder="The best thing you can do for your family, your children, society, and the world around you is to enhance yourself."
-        />
+        <EditorInput name="description" label="Description" />
         <Input name="videoUrl" label="YouTube embed url" />
         <Input name="pictureUrl" label="External picture url" />
 

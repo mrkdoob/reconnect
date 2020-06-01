@@ -14,7 +14,7 @@ import {
   useUpdateCourseDayRewardMutation,
   CourseDayRewardFragment,
 } from "../lib/graphql"
-import { Textarea } from "./Textarea"
+import { EditorInput } from "./EditorInput"
 
 export const UPDATE_COURSE_DAYREWARD = gql`
   mutation UpdateCourseDayReward(
@@ -83,12 +83,7 @@ export const CourseDailyRewardEditForm: React.FC<Props> = props => {
     <Form onSubmit={handleSubmit} {...form}>
       <Stack spacing={4} shouldWrapChildren>
         <Input name="order" label="Order" />
-        <Textarea
-          name="description"
-          label="Description"
-          isRequired={true}
-          placeholder="The best thing you can do for your family, your children, society, and the world around you is to enhance yourself."
-        />
+        <EditorInput name="description" label="Description" />
         <Input name="videoUrl" label="YouTube embed url" />
         <Input name="pictureUrl" label="External picture url" />
 

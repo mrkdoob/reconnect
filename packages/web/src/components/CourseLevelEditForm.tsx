@@ -19,6 +19,7 @@ import { Checkbox } from "./Checkbox"
 import { LevelSchema } from "./CourseLevelCreateForm"
 import { mutationHandler } from "../lib/mutationHandler"
 import { DeleteItem } from "./DeleteItem"
+import { EditorInput } from "./EditorInput"
 
 export const UPDATE_LEVEL = gql`
   mutation UpdateLevel($levelId: String!, $data: UpdateLevelInput!) {
@@ -115,7 +116,11 @@ export const CourseLevelEditForm: React.FC<Props> = props => {
           isRequired={true}
         />
         <Input name="title" label="Title" isRequired={true} />
-        <Textarea name="rewardText" label="Lesson content" isRequired={true} />
+        <EditorInput
+          name="rewardText"
+          label="Lesson content"
+          isRequired={true}
+        />
         <Textarea
           name="rewardDescription"
           label="Reward text displayed when reaching this level"

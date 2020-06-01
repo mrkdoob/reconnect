@@ -13,8 +13,8 @@ import {
   useCreateMessageMutation,
   GetAdminCourseMessagesDocument,
 } from "../lib/graphql"
-import { Textarea } from "./Textarea"
 import { Checkbox } from "./Checkbox"
+import { EditorInput } from "./EditorInput"
 
 export const CREATE_MESSAGE = gql`
   mutation CreateMessage($data: CreateMessageInput!) {
@@ -74,12 +74,7 @@ export const AdminCourseMessageCreateForm: React.FC<Props> = props => {
   return (
     <Form onSubmit={handleSubmit} {...form}>
       <Stack spacing={4} shouldWrapChildren>
-        <Textarea
-          name="message"
-          label="Message"
-          isRequired={true}
-          placeholder="Isha is providing meals and PPE."
-        />
+        <EditorInput name="message" label="Message" />
         <Input name="videoUrl" label="YouTube embed url" />
         <Input name="pictureUrl" label="External picture url" />
         <Checkbox name="fullHeightPic" label="Show picture with more height?" />

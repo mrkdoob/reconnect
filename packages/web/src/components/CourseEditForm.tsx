@@ -18,6 +18,7 @@ import { navigate } from "@reach/router"
 import gql from "graphql-tag.macro"
 import { mutationHandler } from "../lib/mutationHandler"
 import { DeleteItem } from "./DeleteItem"
+import { EditorInput } from "./EditorInput"
 
 export const DESTROY_COURSE = gql`
   mutation DestroyCourse($id: String!) {
@@ -100,11 +101,7 @@ export const CourseEditForm: React.FC<Props> = props => {
         <Input name="description" label="Short description" isRequired={true} />
         <Input name="category" label="Category" isRequired={true} />
         <Textarea name="benefits" label="Benefits" isRequired={true} />
-        <Textarea
-          name="fullDescription"
-          label="Full description"
-          isRequired={true}
-        />
+        <EditorInput name="fullDescription" label="Full description" />
         <Select label="Reward" name="rewardType" options={rewardTypes} />
         <DeleteItem handleDestroy={handleDestroy} text="this course" />
 
