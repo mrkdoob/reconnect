@@ -16,6 +16,7 @@ import { S3_URL } from "../../lib/config"
 import { UserPet } from "../userPet/userPet.entity"
 import { UserLevel } from "../userLevel/userLevel.entity"
 import { Course } from "../course/course.entity"
+import { UserBooster } from "../userBooster/userBooster.entity"
 
 @ObjectType()
 @Entity()
@@ -88,6 +89,18 @@ export class User extends BaseEntity<User> {
     userPet => userPet.user,
   )
   userPets: UserPet[]
+
+  @OneToMany(
+    () => UserBooster,
+    userBooster => userBooster.sponsor,
+  )
+  userBoostSponsor: UserBooster[]
+
+  @OneToOne(
+    () => UserBooster,
+    userBooster => userBooster.user,
+  )
+  userBooster: UserBooster
 
   @OneToOne(
     () => UserLevel,

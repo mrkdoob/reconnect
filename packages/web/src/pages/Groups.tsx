@@ -20,13 +20,13 @@ import {
   Heading,
   useToast,
   Button,
-  Image,
 } from "@chakra-ui/core"
 import { GroupItem } from "../components/GroupItem"
 import { styled } from "../components/providers/ThemeProvider"
 import { Badge } from "styled-icons/boxicons-regular/Badge"
 import { useMe } from "../components/providers/MeProvider"
 import { Confirmation } from "../components/Confirmation"
+import { GroupsSponsorModal } from "../components/GroupsSponsorModal"
 
 export const GET_COURSE_GROUPS = gql`
   query GetCourseGroups($slug: String!) {
@@ -71,7 +71,6 @@ export const Groups: React.FC<Props> = props => {
   const toast = useToast()
 
   const handleGroupSelect = (groupId: string) => {
-    // TODO: Set up userLevel
     if (!courseId || !groupId) return
     startCourse({
       variables: { courseId, groupId },
@@ -114,10 +113,6 @@ export const Groups: React.FC<Props> = props => {
       })
   }
 
-  // if (me?.group) {
-  //   return <Redirect noThrow={true} to="/" />
-  // }
-
   return (
     <Page loading={loading}>
       <Flex
@@ -144,31 +139,9 @@ export const Groups: React.FC<Props> = props => {
         ) : (
           <>
             {groups.length === 1 && course?.mentor ? (
-              <Flex textAlign="center" align="center" direction="column">
-                {course.mentor.avatar && (
-                  <Image
-                    src={course.mentor?.avatar}
-                    size={24}
-                    rounded="full"
-                    mb={8}
-                  />
-                )}
-                <Text fontWeight="semibold" mb={4}>
-                  {course.mentor.firstName} will guide you through the program
-                  and assist if you are having difficulties.
-                </Text>
-                <Text fontWeight="semibold" mb={8}>
-                  He or she would like to know if you are able to commit to the
-                  program?
-                </Text>
-
-                <Button
-                  variantColor="blue"
-                  onClick={() => handleGroupSelect(groups[0].id)}
-                >
-                  I commit
-                </Button>
-              </Flex>
+              <GroupsSponsorModal
+                handleSelect={() => handleGroupSelect(groups[0].id)}
+              />
             ) : (
               <>
                 <Flex align="center">

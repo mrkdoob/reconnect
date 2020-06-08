@@ -3,11 +3,14 @@ import { GroupRepository } from "./group.repository"
 import { Group } from "./group.entity"
 import { UserCourseRepository } from "../userCourse/userCourse.repository"
 import { UserRepository } from "../user/user.repository"
+import { UserBoosterRepository } from "../userBooster/userBooster.repository"
 
 @Service()
 export class GroupService {
   @Inject(() => GroupRepository)
   groupRepository: GroupRepository
+  @Inject(() => UserBoosterRepository)
+  userBoosterRepository: UserBoosterRepository
   @Inject(() => UserRepository)
   userRepository: UserRepository
   @Inject(() => UserCourseRepository)
@@ -39,24 +42,26 @@ export class GroupService {
     }
   }
 
-  async completeMember(groupId: string | null): Promise<Group | undefined> {
+  async completeMember(
+    groupId: string | null,
+    userId: string,
+  ): Promise<Group | undefined> {
     if (!groupId) return
     const group = await this.groupRepository.findById(groupId)
-    const newFinishedCount = group.groupMembersFinished + 1
-    let newCoins = group.groupCoins + group.coinRewardAmount
+    const booster = await this.userBoosterRepository.findByUserId(userId)
 
-    let newRewardCount = 0
-    if (newCoins % group.coinsForReward === 0) {
-      newRewardCount = group.rewardCount + 1
-      newCoins = 0
-    } else {
-      newRewardCount = group.rewardCount
-    }
+    const newFinishedCount = group.groupMembersFinished + 1
+    const coinReward = booster
+      ? group.coinRewardAmount * booster.coinMultiplier
+      : group.coinRewardAmount
+
+    const newCoins = (group.groupCoins + coinReward) % group.coinRewardAmount
+    const rewardAmount = Math.floor(newCoins / group.coinsForReward)
 
     const data: Partial<Group> = {
       groupMembersFinished: newFinishedCount,
-      rewardCount: newRewardCount,
-      groupCoins: newCoins,
+      rewardCount: group.rewardCount + rewardAmount,
+      groupCoins: newCoins - rewardAmount * group.coinsForReward,
     }
 
     return group.update(data)
