@@ -20,6 +20,8 @@ import {
   LevelItemFragmentDoc,
   UserGroupMessageFragmentDoc,
   UserPetItemFragmentDoc,
+  UserDayRewardItemFragmentDoc,
+  UserBoosterItemFragmentDoc,
 } from "../lib/graphql"
 import { UserTaskList } from "../components/UserTaskList"
 import { UserGroupList } from "../components/UserGroupList"
@@ -27,6 +29,7 @@ import { UserMessageModal } from "../components/UserMessageModal"
 import { DailyRewardModal } from "../components/DailyRewardModal"
 import { LevelRewardModal } from "../components/LevelRewardModal"
 import { UserPetItem } from "../components/UserPetItem"
+import { mutationHandler } from "../lib/mutationHandler"
 
 export const USER_LEVEL = gql`
   fragment UserLevelItem on UserLevel {
@@ -60,12 +63,20 @@ export const MY_DASHBOARD_FRAGMENT = gql`
     userPet {
       ...UserPetItem
     }
+    userDayReward {
+      ...UserDayRewardItem
+    }
+    userBooster {
+      ...UserBoosterItem
+    }
   }
   ${UserLevelItemFragmentDoc}
   ${UserTaskItemFragmentDoc}
   ${UserGroupItemFragmentDoc}
   ${UserGroupMessageFragmentDoc}
   ${UserPetItemFragmentDoc}
+  ${UserDayRewardItemFragmentDoc}
+  ${UserBoosterItemFragmentDoc}
 `
 
 export const MY_DASHBOARD = gql`
@@ -104,11 +115,6 @@ export const Dashboard: React.FC<RouteComponentProps> = () => {
     },
   })
 
-  const daysLeft =
-    me?.userLevel?.level?.maxProgressDays && me?.userLevel?.progressDay
-      ? me?.userLevel?.level?.maxProgressDays - me?.userLevel?.progressDay
-      : 0
-
   const progressPercent = me?.userLevel?.level
     ? (me.userLevel.progressDay / me.userLevel.level.maxProgressDays) * 100
     : 0
@@ -119,7 +125,8 @@ export const Dashboard: React.FC<RouteComponentProps> = () => {
       ? setLevelCompleted(true)
       : setDayCompleted(true)
 
-    completeMe().catch(e => console.log(e))
+    const res = await completeMe()
+    mutationHandler(res)
   }
 
   if (!loading && !me?.group)
@@ -239,12 +246,11 @@ export const Dashboard: React.FC<RouteComponentProps> = () => {
           userPet={me.userPet}
         />
       )}
-      {me?.group?.coinRewardAmount && (
+      {me && (
         <DailyRewardModal
+          me={me}
           dayCompleted={dayCompleted}
           onClose={() => setDayCompleted(false)}
-          coinRewardAmount={me.group.coinRewardAmount}
-          daysLeft={daysLeft}
         />
       )}
       <LevelRewardModal

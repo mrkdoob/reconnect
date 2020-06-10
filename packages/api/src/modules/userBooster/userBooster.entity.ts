@@ -8,35 +8,33 @@ import {
   StringField,
 } from "../shared/fields"
 import { User } from "../user/user.entity"
-import {
-  DEFAULT_SPONSOR_AMOUNT,
-  DEFAULT_COIN_MULTIPLIER,
-  DEFAULT_BOOST_DAYS,
-} from "../../lib/globalVars"
 
 @ObjectType()
 @Entity()
 export class UserBooster extends BaseEntity<UserBooster> {
-  @IntField({ default: DEFAULT_SPONSOR_AMOUNT })
+  @IntField({ default: 0 })
   sponsorAmount: number
 
-  @IntField({ default: DEFAULT_COIN_MULTIPLIER })
-  coinMultiplier: number
+  @IntField({ default: 0 })
+  coinReward: number
 
-  @IntField({ default: DEFAULT_BOOST_DAYS })
+  @IntField({ default: 0 })
   boostDays: number
 
   @IntField({ default: 0 })
-  rewardsEarned: number
+  treesEarned: number
+
+  @IntField({ default: 0 })
+  mealsEarned: number
 
   @IntField({ default: 0 })
   coinsEarned: number
 
   @BooleanField({ default: false })
-  isActive: boolean
+  sponsorAccepted: boolean
 
   @StringField({ nullable: true }) // Invite a friend email. If email then no sponsorId
-  sponsorEmail: boolean
+  sponsorEmail: string
 
   @UuidField({ nullable: true })
   userId: string

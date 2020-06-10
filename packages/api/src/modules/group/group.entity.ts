@@ -20,9 +20,6 @@ export class Group extends BaseEntity<Group> {
   @IntField({ default: 0 })
   groupMembersFinished: number
 
-  @IntField({ default: 10 })
-  coinRewardAmount: number
-
   @IntField({ default: 50 })
   coinsForReward: number
 

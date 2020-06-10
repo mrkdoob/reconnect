@@ -1,30 +1,21 @@
 import { Service, Inject } from "typedi"
 import { UserBoosterRepository } from "./userBooster.repository"
 import { UserBooster } from "./userBooster.entity"
-import { LevelRepository } from "../level/level.repository"
-import { UserTaskService } from "../userTask/userTask.service"
-import { CourseRepository } from "../course/course.repository"
-import { UserLevelService } from "../userLevel/userLevel.service"
-import { PetRepository } from "../pet/pet.repository"
-import { UserMailer } from "../user/user.mailer"
 import { UserRepository } from "../user/user.repository"
+import { UserCourseRepository } from "../userCourse/userCourse.repository"
+import { CourseRepository } from "../course/course.repository"
+import { UserMailer } from "../user/user.mailer"
 
 @Service()
 export class UserBoosterService {
   @Inject(() => UserBoosterRepository)
   userBoosterRepository: UserBoosterRepository
-  @Inject(() => PetRepository)
-  petRepository: PetRepository
-  @Inject(() => CourseRepository)
-  courseRepository: CourseRepository
-  @Inject(() => LevelRepository)
-  levelRepository: LevelRepository
   @Inject(() => UserRepository)
   userRepository: UserRepository
-  @Inject(() => UserTaskService)
-  userTaskService: UserTaskService
-  @Inject(() => UserLevelService)
-  userLevelService: UserLevelService
+  @Inject(() => UserCourseRepository)
+  userCourseRepository: UserCourseRepository
+  @Inject(() => CourseRepository)
+  courseRepository: CourseRepository
   @Inject(() => UserMailer)
   userMailer: UserMailer
 
@@ -41,18 +32,62 @@ export class UserBoosterService {
     return userBooster.update(data)
   }
 
+  async updateByUserId(
+    userId: string,
+    data: Partial<UserBooster>,
+  ): Promise<UserBooster> {
+    const userBooster = await this.userBoosterRepository.findByUserId(userId)
+    return userBooster.update(data)
+  }
+
+  async useBoosterByUserId(
+    userId: string,
+    rewardsEarned: number,
+  ): Promise<UserBooster> {
+    const userBooster = await this.userBoosterRepository.findByUserId(userId)
+    const userCourse = await this.userCourseRepository.findByUserId(userId)
+    const course = await this.courseRepository.findById(userCourse.courseId)
+    const treesEarned =
+      userBooster.treesEarned +
+      (course.rewardType === "tree" ? rewardsEarned : 0)
+    const mealsEarned =
+      userBooster.mealsEarned +
+      (course.rewardType === "meal" ? rewardsEarned : 0)
+
+    let boostDays = userBooster.boostDays
+    let coinReward = userBooster.coinReward
+    let sponsorAmount = userBooster.sponsorAmount
+
+    if (userBooster.boostDays === 0) {
+      coinReward = 1
+      sponsorAmount = 0
+      userBooster.sponsorEmail &&
+        this.userMailer.sendSponsorCompleteEmail(userBooster.id)
+    } else {
+      boostDays = userBooster.boostDays - 1
+    }
+
+    const data = {
+      coinsEarned: coinReward + userBooster.coinsEarned,
+      boostDays,
+      coinReward,
+      treesEarned,
+      mealsEarned,
+      sponsorAmount,
+    }
+    return userBooster.update(data)
+  }
+
   async destroy(userBoosterId: string): Promise<boolean> {
     const userBooster = await this.userBoosterRepository.findById(userBoosterId)
     return userBooster.destroy()
   }
 
-  async setInactiveByUserId(
-    userId: string,
-    hasFailed: boolean,
-  ): Promise<UserBooster | boolean> {
-    const userBooster = await this.userBoosterRepository.findByUserId(userId)
-    return hasFailed
-      ? userBooster.destroy()
-      : userBooster.update({ isActive: false })
+  // TODO: Remove after bootstrap
+  async giveAllBoosters() {
+    const users = await this.userRepository.findAllActive()
+    users?.map(user => {
+      this.create({ userId: user.id })
+    })
   }
 }

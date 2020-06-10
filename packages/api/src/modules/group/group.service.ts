@@ -4,6 +4,7 @@ import { Group } from "./group.entity"
 import { UserCourseRepository } from "../userCourse/userCourse.repository"
 import { UserRepository } from "../user/user.repository"
 import { UserBoosterRepository } from "../userBooster/userBooster.repository"
+import { UserBoosterService } from "../userBooster/userBooster.service"
 
 @Service()
 export class GroupService {
@@ -11,6 +12,8 @@ export class GroupService {
   groupRepository: GroupRepository
   @Inject(() => UserBoosterRepository)
   userBoosterRepository: UserBoosterRepository
+  @Inject(() => UserBoosterService)
+  userBoosterService: UserBoosterService
   @Inject(() => UserRepository)
   userRepository: UserRepository
   @Inject(() => UserCourseRepository)
@@ -50,20 +53,15 @@ export class GroupService {
     const group = await this.groupRepository.findById(groupId)
     const booster = await this.userBoosterRepository.findByUserId(userId)
 
-    const newFinishedCount = group.groupMembersFinished + 1
-    const coinReward = booster
-      ? group.coinRewardAmount * booster.coinMultiplier
-      : group.coinRewardAmount
+    const rewardAmount = Math.floor(booster.coinReward / group.coinsForReward)
 
-    const newCoins = (group.groupCoins + coinReward) % group.coinRewardAmount
-    const rewardAmount = Math.floor(newCoins / group.coinsForReward)
+    await this.userBoosterService.useBoosterByUserId(userId, rewardAmount)
 
     const data: Partial<Group> = {
-      groupMembersFinished: newFinishedCount,
+      groupMembersFinished: group.groupMembersFinished + 1,
       rewardCount: group.rewardCount + rewardAmount,
-      groupCoins: newCoins - rewardAmount * group.coinsForReward,
+      groupCoins: group.groupCoins + booster.coinReward,
     }
-
     return group.update(data)
   }
 

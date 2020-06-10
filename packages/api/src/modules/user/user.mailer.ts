@@ -1,11 +1,15 @@
-import { Service } from "typedi"
+import { Service, Inject } from "typedi"
 import { FULL_WEB_URL } from "../../lib/config"
 import { User } from "./user.entity"
 import { Mailer } from "../../lib/mailer"
+import { UserBooster } from "../userBooster/userBooster.entity"
+import { UserBoosterRepository } from "../userBooster/userBooster.repository"
 
 @Service()
 export class UserMailer {
   constructor(private readonly mailer: Mailer) {}
+  @Inject(() => UserBoosterRepository)
+  userBoosterRepository: UserBoosterRepository
 
   sendWelcomeEmail(user: User) {
     if (!user.email) return
@@ -66,6 +70,40 @@ export class UserMailer {
         subject: `Need help?`,
         html: `<p>Hi ${user.firstName}, </p></br> <p>I have noticed that you have fallen behind.</p>
         <p>If you need any help or tips, please let me know. I believe you can do it!</p>`,
+      },
+    })
+  }
+
+  // TODO: Make dynamic
+  sendSponsorInviteEmail(user: User, booster: UserBooster) {
+    if (!booster.sponsorEmail) return
+    this.mailer.send({
+      to: booster.sponsorEmail,
+      data: {
+        subject: `Sponsor ${user.firstName}`,
+        html: `<p>Hi!</p></br> <p>${user.firstName} would like you to sponsor him/her during his challenge on the Become platform.</p>
+        <p>It would be great if you can donate ${booster.sponsorAmount} euro to the Isha foundation when ${user.firstName} has completed his challenge.</p>
+        <p>Please <a href="https://www.becomebetter.life/sponsor/${booster.id}">click here</a> if you would like to sponsor.</p>
+        </br><p>With joy,</p>
+        <p>The Become team</p>`,
+      },
+    })
+  }
+
+  async sendSponsorCompleteEmail(boosterId: string) {
+    const booster = await this.userBoosterRepository.findById(boosterId, {
+      relations: ["user"],
+    })
+    if (!booster.sponsorEmail) return
+    this.mailer.send({
+      to: booster.sponsorEmail,
+      data: {
+        subject: `${booster.user.firstName} has completed his challenge!`,
+        html: `<p>Hi!</p></br> <p>${booster.user.firstName}has completed his/her challenge on the Become platform.</p>
+        <p>It would be great if you can donate ${booster.sponsorAmount} euro to the <a href="https://www.ishaoutreach.org/en/action-rural-rejuvenation/project/corona-relief">Isha Outreach</a></p>.
+        <p><a href="https://www.ishaoutreach.org/en/action-rural-rejuvenation/project/corona-relief">https://www.ishaoutreach.org/en/action-rural-rejuvenation/project/corona-relief</a></p>
+        </br><p>With joy,</p>
+        <p>The Become team</p>`,
       },
     })
   }

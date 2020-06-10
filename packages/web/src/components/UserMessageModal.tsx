@@ -107,7 +107,7 @@ export const UserMessageModal: React.FC<Props> = props => {
           ? ""
           : props.userGroupMessage?.message?.order === 1
           ? "Welcome"
-          : "Good job!"
+          : "Welcome back!"
       }
     >
       {props.userHasFailed ? (
@@ -174,15 +174,6 @@ export const UserMessageModal: React.FC<Props> = props => {
                   {props.userGroupMessage?.groupMessage?.rewardCount !== 1 &&
                     "s"}{" "}
                   yesterday. Thank you!
-                </Text>
-              )}{" "}
-              {props.userGroupMessage?.groupMessage?.leftCoinsCount !== 0 && (
-                <Text mb={4}>
-                  There are{" "}
-                  {props.userGroupMessage?.groupMessage?.leftCoinsCount} coins
-                  left from yesterday. These will give you a head start today to{" "}
-                  {props.rewardType === "tree" ? "plant" : "donate"} the next{" "}
-                  {props.rewardType}.
                 </Text>
               )}
             </>

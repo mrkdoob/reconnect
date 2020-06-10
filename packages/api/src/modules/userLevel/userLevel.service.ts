@@ -60,9 +60,7 @@ export class UserLevelService {
     })
 
     if (userLevel.progressDay + 1 === userLevel.level.maxProgressDays) {
-      const userPet = await this.userPetService.levelUpPetByUserId(userId)
-      console.log("userPet.petId" + userPet.petId)
-
+      await this.userPetService.levelUpPetByUserId(userId)
       const nextUserLevel = await this.updateToNextLevel(userLevel)
       return nextUserLevel
     } else {

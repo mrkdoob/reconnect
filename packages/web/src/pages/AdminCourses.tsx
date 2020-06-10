@@ -2,8 +2,7 @@ import React from "react"
 import { RouteComponentProps, Redirect } from "@reach/router"
 
 import { Page } from "../components/Page"
-import gql from "graphql-tag.macro"
-import { CourseItemFragmentDoc, useGetAllCoursesQuery } from "../lib/graphql"
+import { useGetAllCoursesQuery } from "../lib/graphql"
 import {
   SimpleGrid,
   Flex,
@@ -16,15 +15,6 @@ import { CourseItem } from "../components/CourseItem"
 import { useMe } from "../components/providers/MeProvider"
 import { Modal } from "../components/Modal"
 import { CourseCreateForm } from "../components/CourseCreateForm"
-
-export const GET_SPACES = gql`
-  query GetAllCourses {
-    getAllCourses {
-      ...CourseItem
-    }
-  }
-  ${CourseItemFragmentDoc}
-`
 
 export const AdminCourses: React.FC<RouteComponentProps> = () => {
   const { data, loading } = useGetAllCoursesQuery({

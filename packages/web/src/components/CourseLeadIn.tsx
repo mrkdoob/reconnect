@@ -27,7 +27,7 @@ export function CourseLeadIn(props: Props) {
           </Flex>
           <Box w="80%">
             <BoxHeader>Duration</BoxHeader>
-            <BoxSubHeader>{props.course?.duration}</BoxSubHeader>
+            <BoxSubHeader>{props.course?.duration} days</BoxSubHeader>
             <Text fontSize="sm">Practice a few minutes a day</Text>
           </Box>
         </Flex>

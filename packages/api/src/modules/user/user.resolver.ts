@@ -43,6 +43,8 @@ import { UserCourseService } from "../userCourse/userCourse.service"
 import { UserMailer } from "./user.mailer"
 import { UserPet } from "../userPet/userPet.entity"
 import { UserPetService } from "../userPet/userPet.service"
+import { UserBoosterService } from "../userBooster/userBooster.service"
+import { UserBooster } from "../userBooster/userBooster.entity"
 
 @Resolver(() => User)
 export class UserResolver {
@@ -60,6 +62,8 @@ export class UserResolver {
   userCourseService: UserCourseService
   @Inject(() => UserPetService)
   userPetService: UserPetService
+  @Inject(() => UserBoosterService)
+  userBoosterService: UserBoosterService
   @Inject(() => UserRepository)
   userRepository: UserRepository
   @Inject(() => UserWorker)
@@ -90,6 +94,14 @@ export class UserResolver {
 
     repeatDaily &&
       this.userWorker.addJob({ name: "repeatDaily", data: {} }, { delay })
+
+    return true
+  }
+
+  @Query(() => Boolean)
+  async giveAllBoosters() {
+    const delay = 1
+    this.userWorker.addJob({ name: "resetGroupUserTasks", data: {} }, { delay })
 
     return true
   }
@@ -129,6 +141,7 @@ export class UserResolver {
   async register(@Arg("data") data: RegisterInput): Promise<AuthResponse> {
     const user = await this.userService.create(data)
     const token = this.userService.createAuthToken(user)
+    await this.userBoosterService.create({ userId: user.id })
     return { user, token }
   }
 
@@ -169,12 +182,15 @@ export class UserResolver {
   @Mutation(() => User, { nullable: true })
   async completeMe(@CurrentUser() currentUser: User): Promise<User> {
     let group
-    // userLevelService returns boolean true if last level
+
     const userLevel = await this.userLevelService.incrementDayProgress(
       currentUser.id,
     )
     if (!userLevel.level.isLast) {
-      group = await this.groupService.completeMember(currentUser.groupId) // Don't update group score if last level
+      group = await this.groupService.completeMember(
+        currentUser.groupId,
+        currentUser.id,
+      ) // Don't update group score if last level
     }
     const data: CompleteMeInput = {
       groupOrder: group?.groupMembersFinished || 0,
@@ -244,6 +260,15 @@ export class UserResolver {
     return userCourseLoader.load(user.id)
   }
 
+  @FieldResolver(() => UserCourse, { nullable: true })
+  activeUserCourse(
+    @Root() user: User,
+    @Loaders() { activeUserCourseLoader }: Loaders,
+  ) {
+    // if (!userCourseLoader.load(user.id)) return null
+    return activeUserCourseLoader.load(user.id)
+  }
+
   @FieldResolver(() => UserLevel, { nullable: true })
   userLevel(
     @Root() user: User,
@@ -277,5 +302,10 @@ export class UserResolver {
   @FieldResolver(() => UserPet, { nullable: true })
   userPet(@Root() user: User, @Loaders() { activeUserPetLoader }: Loaders) {
     return activeUserPetLoader.load(user.id)
+  }
+
+  @FieldResolver(() => UserBooster, { nullable: true })
+  userBooster(@Root() user: User, @Loaders() { userBoosterLoader }: Loaders) {
+    return userBoosterLoader.load(user.id)
   }
 }

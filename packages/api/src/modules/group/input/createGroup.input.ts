@@ -22,10 +22,6 @@ export class CreateGroupInput implements Partial<Group> {
 
   @IsNotEmpty()
   @Field()
-  coinRewardAmount: number
-
-  @IsNotEmpty()
-  @Field()
   endDate: Date
 
   @IsNotEmpty()

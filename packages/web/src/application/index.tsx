@@ -18,6 +18,7 @@ import { ResetPassword } from "../pages/ResetPassword"
 import { Portfolio } from "../pages/Portfolio"
 import { AdminCourse } from "../pages/AdminCourse"
 import { AdminCourses } from "../pages/AdminCourses"
+import { Sponsor } from "../pages/Sponsor"
 
 export function Application() {
   return (
@@ -33,6 +34,7 @@ export function Application() {
             <Course path="/courses/:slug" />
             <AdminCourse path="/admin-courses/:slug" />
             <Groups path="/:slug/groups" />
+            <Sponsor path="/sponsor/:id" />
             <LevelReward path="/levelreward/:levelId" />
             <CurrentLevelReward path="/mylevelreward" />
             <Settings path="/settings" />

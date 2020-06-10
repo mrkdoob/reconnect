@@ -15,13 +15,13 @@ import {
   Collapse,
 } from "@chakra-ui/core"
 
-import { MyDailyRewardFragmentDoc, useMyDayRewardQuery } from "../lib/graphql"
 import { Markup } from "interweave"
 import { Border } from "./Border"
 import { Coin } from "../lib/imageLinks"
+import { MyDashboardFragment } from "../lib/graphql"
 
-export const MY_DAILY_REWARD = gql`
-  fragment MyDailyReward on UserDayReward {
+export const USER_DAY_REWARD_ITEM = gql`
+  fragment UserDayRewardItem on UserDayReward {
     id
     courseDayReward {
       id
@@ -32,41 +32,20 @@ export const MY_DAILY_REWARD = gql`
   }
 `
 
-export const GET_MY_DAYREWARD = gql`
-  query MyDayReward {
-    myDayReward {
-      ...MyDailyReward
-    }
-  }
-  ${MyDailyRewardFragmentDoc}
-`
-
-// export const UPDATE_TO_NEXT_USER_DAY_REWARD = gql`
-//   mutation UpdateToNextUserDayReward($userDayRewardId: String!) {
-//     updateToNextUserDayReward(userDayRewardId: $userDayRewardId) {
-//       id
-//       courseDayRewardId
-//     }
-//   }
-// `
-
 interface Props {
-  dayCompleted: boolean
   onClose: () => void
-  coinRewardAmount: number
-  daysLeft: number
+  me: MyDashboardFragment
+  dayCompleted: boolean
 }
 
-export const DailyRewardModal = ({
-  dayCompleted,
-  onClose,
-  coinRewardAmount,
-  daysLeft,
-}: Props) => {
+export const DailyRewardModal = ({ onClose, me, dayCompleted }: Props) => {
   const [show, setShow] = React.useState(false)
+  const reward = me.userDayReward?.courseDayReward
 
-  const { data } = useMyDayRewardQuery()
-  const reward = data?.myDayReward
+  const daysLeft =
+    me?.userLevel?.level?.maxProgressDays && me?.userLevel?.progressDay
+      ? me?.userLevel?.level?.maxProgressDays - me?.userLevel?.progressDay
+      : 0
 
   const handleClose = async () => {
     onClose()
@@ -93,7 +72,9 @@ export const DailyRewardModal = ({
                 <Flex direction="column">
                   {/* TODO: Dynamic coins amount and days amount */}
                   <Flex mb={4} align="center" justify="center">
-                    <Text>You have earned {coinRewardAmount} coins </Text>
+                    <Text>
+                      You have earned {me.userBooster?.coinReward} coins{" "}
+                    </Text>
                     <Image src={Coin} size={6} mx={2} />
                     <Text>and have {daysLeft} days left to level up.</Text>
                   </Flex>
@@ -109,10 +90,10 @@ export const DailyRewardModal = ({
                     Open
                   </Button>
                   <Collapse my={4} isOpen={show} fontSize="xl">
-                    {reward?.courseDayReward?.pictureUrl && (
+                    {reward?.pictureUrl && (
                       <Flex justify="center">
                         <Image
-                          src={reward?.courseDayReward?.pictureUrl}
+                          src={reward.pictureUrl}
                           alt="Message picture"
                           w="500px"
                           h="275px"
@@ -122,7 +103,7 @@ export const DailyRewardModal = ({
                         />
                       </Flex>
                     )}
-                    <Markup content={reward?.courseDayReward?.description} />
+                    <Markup content={reward?.description} />
                   </Collapse>
                   <Border mt={4} />
                   <Button

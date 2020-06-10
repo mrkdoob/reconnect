@@ -20,6 +20,7 @@ export class UserCourseRepository {
     try {
       return UserCourse.findOneOrFail({
         where: { userId },
+        // relations: ["course"],
       })
     } catch {
       throw new UserInputError("No user course found")

@@ -1,4 +1,12 @@
-import { Resolver, Query, Mutation, Arg } from "type-graphql"
+import {
+  Resolver,
+  Query,
+  Mutation,
+  Arg,
+  Authorized,
+  FieldResolver,
+  Root,
+} from "type-graphql"
 
 import { Inject } from "typedi"
 
@@ -8,6 +16,10 @@ import { UserBooster } from "./userBooster.entity"
 import { CreateUserBoosterInput } from "./input/createUserBooster.input"
 import { UpdateUserBoosterInput } from "./input/updateUserBooster.input"
 import { UserTaskService } from "../userTask/userTask.service"
+import { CurrentUser } from "../shared/context/currentUser"
+import { User } from "../user/user.entity"
+import { UserMailer } from "../user/user.mailer"
+import { Loaders } from "../shared/context/loaders"
 
 @Resolver(() => UserBooster)
 export class UserBoosterResolver {
@@ -17,6 +29,8 @@ export class UserBoosterResolver {
   userTaskService: UserTaskService
   @Inject(() => UserBoosterRepository)
   userBoosterRepository: UserBoosterRepository
+  @Inject(() => UserMailer)
+  userMailer: UserMailer
 
   @Query(() => UserBooster)
   getUserBooster(
@@ -25,15 +39,22 @@ export class UserBoosterResolver {
     return this.userBoosterRepository.findById(userBoosterId)
   }
 
-  // @Authorized()
+  @Authorized()
   @Mutation(() => UserBooster)
-  createUserBooster(
+  async createUserBooster(
     @Arg("data") data: CreateUserBoosterInput,
+    @CurrentUser() currentUser: User,
   ): Promise<UserBooster> {
-    return this.userBoosterService.create(data)
+    const booster = await this.userBoosterService.create({
+      ...data,
+      userId: currentUser.id,
+    })
+    if (data.sponsorEmail)
+      this.userMailer.sendSponsorInviteEmail(currentUser, booster)
+    return booster
   }
 
-  // @Authorized()
+  @Authorized()
   @Mutation(() => UserBooster, { nullable: true })
   updateUserBooster(
     @Arg("userBoosterId") userBoosterId: string,
@@ -42,7 +63,16 @@ export class UserBoosterResolver {
     return this.userBoosterService.update(userBoosterId, data)
   }
 
-  // @Authorized(["admin"])
+  @Authorized()
+  @Mutation(() => UserBooster, { nullable: true })
+  updateCurrentUserBooster(
+    @CurrentUser() currentUser: User,
+    @Arg("data") data: UpdateUserBoosterInput,
+  ): Promise<UserBooster> {
+    return this.userBoosterService.updateByUserId(currentUser.id, data)
+  }
+
+  @Authorized(["admin"])
   @Mutation(() => Boolean)
   destroyUserBooster(
     @Arg("userBoosterId") userBoosterId: string,
@@ -51,13 +81,13 @@ export class UserBoosterResolver {
   }
 
   // FIELD RESOLVERS
-  // @FieldResolver(() => Pet, { nullable: true })
-  // pet(
-  //   @Root() userBooster: UserBooster,
-  //   @Loaders() { petLoader }: Loaders,
-  // ): Promise<Pet | null> {
-  //   if (userBooster.petId == null) {
-  //     return Promise.resolve(null)
-  //   } else return petLoader.load(userBooster.petId)
-  // }
+  @FieldResolver(() => User, { nullable: true })
+  user(
+    @Root() userBooster: UserBooster,
+    @Loaders() { userLoader }: Loaders,
+  ): Promise<User | null> {
+    if (userBooster.userId == null) {
+      return Promise.resolve(null)
+    } else return userLoader.load(userBooster.userId)
+  }
 }

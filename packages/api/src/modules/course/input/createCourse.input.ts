@@ -23,7 +23,7 @@ export class CreateCourseInput implements Partial<Course> {
 
   @IsNotEmpty()
   @Field({ nullable: true })
-  duration: string
+  duration: number
 
   @IsNotEmpty()
   @Field({ nullable: true })

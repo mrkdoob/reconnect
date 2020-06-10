@@ -32,6 +32,7 @@ export const GET_COURSE_GROUPS = gql`
   query GetCourseGroups($slug: String!) {
     courseBySlug(slug: $slug) {
       id
+      duration
       groups {
         ...GroupItem
       }
@@ -138,9 +139,10 @@ export const Groups: React.FC<Props> = props => {
           </>
         ) : (
           <>
-            {groups.length === 1 && course?.mentor ? (
+            {groups.length === 1 && course?.mentor && course.duration ? (
               <GroupsSponsorModal
                 handleSelect={() => handleGroupSelect(groups[0].id)}
+                duration={course.duration}
               />
             ) : (
               <>

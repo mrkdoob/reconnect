@@ -7,6 +7,23 @@ import { UserLevel } from "../userLevel/userLevel.entity"
 import { UserTask } from "../userTask/userTask.entity"
 import { UserGroupMessage } from "../userGroupMessage/userGroupMessage.entity"
 import { UserDayReward } from "../userDayReward/userDayReward.entity"
+import { User } from "./user.entity"
+import { UserBooster } from "../userBooster/userBooster.entity"
+
+// USER
+export const userLoader = () =>
+  new DataLoader(async (keys: ReadonlyArray<string>) => {
+    const userIds = [...keys]
+    const users = await User.getRepository().findByIds(userIds, {
+      cache: true,
+    })
+    const map: { [key: string]: User } = {}
+    users.forEach(user => {
+      if (!user.hasId) return null
+      map[user.id] = user
+    })
+    return userIds.map(id => map[id]) || {}
+  })
 
 // USER TASKS
 export const userTasksLoader = () =>
@@ -31,7 +48,7 @@ export const userTasksLoader = () =>
     return userIds.map(userId => map[userId] || [])
   })
 
-// USER PROGRESS
+// USER COURSE
 export const userCourseLoader = () =>
   new DataLoader(async (keys: ReadonlyArray<string>) => {
     const userIds = [...keys]
@@ -49,6 +66,43 @@ export const userCourseLoader = () =>
       }
     })
     return userIds.map(userId => map[userId] || [])
+  })
+
+// ACTIVE USER COURSE
+export const activeUserCourseLoader = () =>
+  new DataLoader(async (keys: ReadonlyArray<string>) => {
+    const userIds = [...keys]
+    const userCourses = await UserCourse.getRepository().find({
+      where: {
+        userId: In(userIds),
+        isActive: true,
+      },
+      cache: true,
+    })
+    const map: { [key: string]: UserCourse } = {}
+    userCourses.forEach(userCourse => {
+      if (!userCourse.userId) return null
+      map[userCourse.userId] = userCourse
+    })
+    return userIds.map(id => map[id]) || {}
+  })
+
+// USER BOOSTER
+export const userBoosterLoader = () =>
+  new DataLoader(async (keys: ReadonlyArray<string>) => {
+    const userIds = [...keys]
+    const userBoosters = await UserBooster.getRepository().find({
+      where: {
+        userId: In(userIds),
+      },
+      cache: true,
+    })
+    const map: { [key: string]: UserBooster } = {}
+    userBoosters.forEach(booster => {
+      if (!booster.userId) return null
+      map[booster.userId] = booster
+    })
+    return userIds.map(id => map[id]) || {}
   })
 
 // USER GROUP

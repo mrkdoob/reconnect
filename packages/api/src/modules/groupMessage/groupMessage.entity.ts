@@ -17,7 +17,7 @@ export class GroupMessage extends BaseEntity<GroupMessage> {
   @UuidField()
   groupId: string
 
-  @UuidField({ nullable: true }) // Right now its use is pending on non-stop continuous programs
+  @UuidField({ nullable: true })
   messageId: string
 
   // RELATIONS

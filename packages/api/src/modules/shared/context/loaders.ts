@@ -8,6 +8,9 @@ import {
   userLevelLoader,
   userGroupMessageLoader,
   userDayRewardLoader,
+  userLoader,
+  activeUserCourseLoader,
+  userBoosterLoader,
 } from "../../user/user.loader"
 import {
   levelsLoader,
@@ -28,10 +31,13 @@ import { petLoader } from "../../pet/pet.loader"
 import { activeUserPetLoader } from "../../userPet/userPet.loader"
 
 export interface Loaders {
+  userLoader: ReturnType<typeof userLoader>
   groupMembersLoader: ReturnType<typeof groupMembersLoader>
   userTasksLoader: ReturnType<typeof userTasksLoader>
   userGroupsLoader: ReturnType<typeof userGroupsLoader>
   userCourseLoader: ReturnType<typeof userCourseLoader>
+  activeUserCourseLoader: ReturnType<typeof activeUserCourseLoader>
+  userBoosterLoader: ReturnType<typeof userBoosterLoader>
   userLevelLoader: ReturnType<typeof userLevelLoader>
   userDayRewardLoader: ReturnType<typeof userDayRewardLoader>
   activeUserPetLoader: ReturnType<typeof activeUserPetLoader>

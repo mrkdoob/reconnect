@@ -10,7 +10,7 @@ export class CreateUserBoosterInput implements Partial<UserBooster> {
 
   @IsNotEmpty()
   @Field({ nullable: true })
-  coinMultiplier: number
+  coinReward: number
 
   @IsNotEmpty()
   @Field({ nullable: true })
@@ -26,7 +26,7 @@ export class CreateUserBoosterInput implements Partial<UserBooster> {
 
   @IsNotEmpty()
   @Field({ nullable: true })
-  sponsorEmail: boolean
+  sponsorEmail: string
 
   @IsNotEmpty()
   @Field({ nullable: true })

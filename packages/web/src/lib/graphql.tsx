@@ -45,7 +45,7 @@ export type Course = {
   category: Scalars["String"]
   description: Scalars["String"]
   fullDescription?: Maybe<Scalars["String"]>
-  duration?: Maybe<Scalars["String"]>
+  duration?: Maybe<Scalars["Int"]>
   benefits?: Maybe<Scalars["String"]>
   cover?: Maybe<Scalars["String"]>
   rewardType?: Maybe<Scalars["String"]>
@@ -82,7 +82,7 @@ export type CreateCourseInput = {
   category: Scalars["String"]
   description: Scalars["String"]
   fullDescription: Scalars["String"]
-  duration?: Maybe<Scalars["String"]>
+  duration?: Maybe<Scalars["Float"]>
   benefits?: Maybe<Scalars["String"]>
   cover?: Maybe<Scalars["String"]>
   endText?: Maybe<Scalars["String"]>
@@ -101,7 +101,6 @@ export type CreateGroupInput = {
   rewardCount: Scalars["Float"]
   startDate?: Maybe<Scalars["DateTime"]>
   coinsForReward: Scalars["Float"]
-  coinRewardAmount: Scalars["Float"]
   endDate: Scalars["DateTime"]
   courseId: Scalars["String"]
   rewardType: Scalars["String"]
@@ -161,6 +160,17 @@ export type CreatePetInput = {
   avatarUrl: Scalars["String"]
 }
 
+export type CreateUserBoosterInput = {
+  sponsorAmount?: Maybe<Scalars["Float"]>
+  coinReward?: Maybe<Scalars["Float"]>
+  rewardsEarned?: Maybe<Scalars["Float"]>
+  coinsEarned?: Maybe<Scalars["Float"]>
+  isActive?: Maybe<Scalars["Boolean"]>
+  sponsorEmail?: Maybe<Scalars["String"]>
+  userId?: Maybe<Scalars["String"]>
+  sponsorId?: Maybe<Scalars["String"]>
+}
+
 export type CreateUserCourseInput = {
   courseId: Scalars["String"]
   isActive: Scalars["Boolean"]
@@ -205,7 +215,6 @@ export type Group = {
   rewardCount: Scalars["Int"]
   oldRewardCount: Scalars["Int"]
   groupMembersFinished: Scalars["Int"]
-  coinRewardAmount: Scalars["Int"]
   coinsForReward: Scalars["Int"]
   groupCoins: Scalars["Int"]
   rewardType: Scalars["String"]
@@ -331,6 +340,10 @@ export type Mutation = {
   destroyPet?: Maybe<Scalars["Boolean"]>
   getSignedS3Url?: Maybe<Scalars["String"]>
   getBulkSignedS3Url?: Maybe<Array<BulkSignedResponse>>
+  createUserBooster: UserBooster
+  updateUserBooster?: Maybe<UserBooster>
+  updateCurrentUserBooster?: Maybe<UserBooster>
+  destroyUserBooster: Scalars["Boolean"]
   createUserCourse: UserCourse
   updateUserCourse?: Maybe<UserCourse>
   destroyUserCourse: Scalars["Boolean"]
@@ -522,6 +535,23 @@ export type MutationGetBulkSignedS3UrlArgs = {
   data: S3BulkSignedUrlInput
 }
 
+export type MutationCreateUserBoosterArgs = {
+  data: CreateUserBoosterInput
+}
+
+export type MutationUpdateUserBoosterArgs = {
+  data: UpdateUserBoosterInput
+  userBoosterId: Scalars["String"]
+}
+
+export type MutationUpdateCurrentUserBoosterArgs = {
+  data: UpdateUserBoosterInput
+}
+
+export type MutationDestroyUserBoosterArgs = {
+  userBoosterId: Scalars["String"]
+}
+
 export type MutationCreateUserCourseArgs = {
   data: CreateUserCourseInput
 }
@@ -630,6 +660,7 @@ export type Query = {
   group: Group
   groups: Array<Group>
   dailyReset: Scalars["Boolean"]
+  giveAllBoosters: Scalars["Boolean"]
   getUser?: Maybe<User>
   me?: Maybe<User>
   getGroupMessage: GroupMessage
@@ -647,6 +678,7 @@ export type Query = {
   getOption: Option
   getAllOptions: Array<Option>
   getPet: Pet
+  getUserBooster: UserBooster
   getUserCourse: UserCourse
   myDayReward?: Maybe<UserDayReward>
   getUserGroupMessage: UserGroupMessage
@@ -723,6 +755,10 @@ export type QueryGetPetArgs = {
   petId: Scalars["String"]
 }
 
+export type QueryGetUserBoosterArgs = {
+  userBoosterId: Scalars["String"]
+}
+
 export type QueryGetUserCourseArgs = {
   userProgressId: Scalars["String"]
 }
@@ -782,7 +818,7 @@ export type UpdateCourseInput = {
   category?: Maybe<Scalars["String"]>
   description?: Maybe<Scalars["String"]>
   fullDescription?: Maybe<Scalars["String"]>
-  duration?: Maybe<Scalars["String"]>
+  duration?: Maybe<Scalars["Float"]>
   benefits?: Maybe<Scalars["String"]>
   cover?: Maybe<Scalars["String"]>
   endText?: Maybe<Scalars["String"]>
@@ -797,8 +833,7 @@ export type UpdateGroupInput = {
   courseId?: Maybe<Scalars["String"]>
   groupsSize?: Maybe<Scalars["Float"]>
   groupMembersFinished?: Maybe<Scalars["Float"]>
-  qiForReward?: Maybe<Scalars["Float"]>
-  qiRewardAmount?: Maybe<Scalars["Float"]>
+  coinsForReward?: Maybe<Scalars["Float"]>
   groupCoins?: Maybe<Scalars["Float"]>
   rewardType?: Maybe<Scalars["String"]>
 }
@@ -870,6 +905,19 @@ export type UpdatePetInput = {
   avatarUrl?: Maybe<Scalars["String"]>
 }
 
+export type UpdateUserBoosterInput = {
+  sponsorAmount?: Maybe<Scalars["Float"]>
+  coinReward?: Maybe<Scalars["Float"]>
+  treesEarned?: Maybe<Scalars["Float"]>
+  mealsEarned?: Maybe<Scalars["Float"]>
+  coinsEarned?: Maybe<Scalars["Float"]>
+  boostDays?: Maybe<Scalars["Float"]>
+  sponsorEmail?: Maybe<Scalars["String"]>
+  sponsorAccepted?: Maybe<Scalars["Boolean"]>
+  userId?: Maybe<Scalars["String"]>
+  sponsorId?: Maybe<Scalars["String"]>
+}
+
 export type UpdateUserCourseInput = {
   courseId?: Maybe<Scalars["String"]>
   isActive?: Maybe<Scalars["Boolean"]>
@@ -926,11 +974,31 @@ export type User = {
   url: Scalars["String"]
   tasks?: Maybe<Array<UserTask>>
   userCourse?: Maybe<Array<UserCourse>>
+  activeUserCourse?: Maybe<UserCourse>
   userLevel?: Maybe<UserLevel>
   group?: Maybe<Group>
   userGroupMessage?: Maybe<UserGroupMessage>
   userDayReward?: Maybe<UserDayReward>
   userPet?: Maybe<UserPet>
+  userBooster?: Maybe<UserBooster>
+}
+
+export type UserBooster = {
+  __typename?: "UserBooster"
+  id: Scalars["ID"]
+  createdAt: Scalars["DateTime"]
+  updatedAt: Scalars["DateTime"]
+  sponsorAmount: Scalars["Int"]
+  coinReward: Scalars["Int"]
+  boostDays: Scalars["Int"]
+  treesEarned: Scalars["Int"]
+  mealsEarned: Scalars["Int"]
+  coinsEarned: Scalars["Int"]
+  sponsorAccepted: Scalars["Boolean"]
+  sponsorEmail?: Maybe<Scalars["String"]>
+  userId?: Maybe<Scalars["String"]>
+  sponsorId?: Maybe<Scalars["String"]>
+  user?: Maybe<User>
 }
 
 export type UserCourse = {
@@ -1282,7 +1350,7 @@ export type GetOptionsQuery = { __typename?: "Query" } & {
   getAllOptions: Array<{ __typename?: "Option" } & OptionItemFragment>
 }
 
-export type MyDailyRewardFragment = { __typename?: "UserDayReward" } & Pick<
+export type UserDayRewardItemFragment = { __typename?: "UserDayReward" } & Pick<
   UserDayReward,
   "id"
 > & {
@@ -1293,12 +1361,6 @@ export type MyDailyRewardFragment = { __typename?: "UserDayReward" } & Pick<
       >
     >
   }
-
-export type MyDayRewardQueryVariables = {}
-
-export type MyDayRewardQuery = { __typename?: "Query" } & {
-  myDayReward?: Maybe<{ __typename?: "UserDayReward" } & MyDailyRewardFragment>
-}
 
 export type ForgotPasswordMutationVariables = {
   email: Scalars["String"]
@@ -1317,6 +1379,29 @@ export type GroupItemFragment = { __typename?: "Group" } & Pick<
       Array<{ __typename?: "User" } & Pick<User, "id" | "fullName">>
     >
   }
+
+export type UserBoosterItemFragment = { __typename?: "UserBooster" } & Pick<
+  UserBooster,
+  | "id"
+  | "sponsorAmount"
+  | "coinReward"
+  | "treesEarned"
+  | "mealsEarned"
+  | "coinsEarned"
+  | "sponsorEmail"
+  | "sponsorId"
+  | "sponsorAccepted"
+>
+
+export type UpdateMyBoosterMutationVariables = {
+  data: UpdateUserBoosterInput
+}
+
+export type UpdateMyBoosterMutation = { __typename?: "Mutation" } & {
+  updateCurrentUserBooster?: Maybe<
+    { __typename?: "UserBooster" } & UserBoosterItemFragment
+  >
+}
 
 export type LevelRewardFragment = { __typename?: "Level" } & Pick<
   Level,
@@ -1398,7 +1483,6 @@ export type UserGroupItemFragment = { __typename?: "Group" } & Pick<
   | "groupMembersFinished"
   | "groupSize"
   | "coinsForReward"
-  | "coinRewardAmount"
   | "groupCoins"
   | "rewardType"
 > & {
@@ -1584,6 +1668,12 @@ export type MyDashboardFragment = { __typename?: "User" } & Pick<
       { __typename?: "UserGroupMessage" } & UserGroupMessageFragment
     >
     userPet?: Maybe<{ __typename?: "UserPet" } & UserPetItemFragment>
+    userDayReward?: Maybe<
+      { __typename?: "UserDayReward" } & UserDayRewardItemFragment
+    >
+    userBooster?: Maybe<
+      { __typename?: "UserBooster" } & UserBoosterItemFragment
+    >
   }
 
 export type MyDashboardQueryVariables = {}
@@ -1603,7 +1693,7 @@ export type GetCourseGroupsQueryVariables = {
 }
 
 export type GetCourseGroupsQuery = { __typename?: "Query" } & {
-  courseBySlug: { __typename?: "Course" } & Pick<Course, "id"> & {
+  courseBySlug: { __typename?: "Course" } & Pick<Course, "id" | "duration"> & {
       groups?: Maybe<Array<{ __typename?: "Group" } & GroupItemFragment>>
       mentor?: Maybe<
         { __typename?: "User" } & Pick<User, "firstName"> & MentorItemFragment
@@ -1712,6 +1802,49 @@ export type UpdateSettingsMutation = { __typename?: "Mutation" } & {
   updateMe?: Maybe<{ __typename?: "User" } & MySettingsFragment>
 }
 
+export type UserBoosterSponsorItemFragment = {
+  __typename?: "UserBooster"
+} & Pick<UserBooster, "id" | "sponsorAmount"> & {
+    user?: Maybe<
+      { __typename?: "User" } & Pick<
+        User,
+        "id" | "fullName" | "firstName" | "avatar"
+      > & {
+          activeUserCourse?: Maybe<
+            { __typename?: "UserCourse" } & Pick<UserCourse, "id"> & {
+                course?: Maybe<
+                  { __typename?: "Course" } & Pick<
+                    Course,
+                    "id" | "slug" | "name"
+                  >
+                >
+              }
+          >
+        }
+    >
+  }
+
+export type UpdateBoosterMutationVariables = {
+  userBoosterId: Scalars["String"]
+  data: UpdateUserBoosterInput
+}
+
+export type UpdateBoosterMutation = { __typename?: "Mutation" } & {
+  updateUserBooster?: Maybe<
+    { __typename?: "UserBooster" } & UserBoosterItemFragment
+  >
+}
+
+export type GetBoosterQueryVariables = {
+  userBoosterId: Scalars["String"]
+}
+
+export type GetBoosterQuery = { __typename?: "Query" } & {
+  getUserBooster: {
+    __typename?: "UserBooster"
+  } & UserBoosterSponsorItemFragment
+}
+
 export const MessageFragmentDoc = gql`
   fragment Message on Message {
     id
@@ -1731,17 +1864,6 @@ export const CourseDayRewardFragmentDoc = gql`
     pictureUrl
     videoUrl
     courseId
-  }
-`
-export const MyDailyRewardFragmentDoc = gql`
-  fragment MyDailyReward on UserDayReward {
-    id
-    courseDayReward {
-      id
-      description
-      pictureUrl
-      videoUrl
-    }
   }
 `
 export const GroupItemFragmentDoc = gql`
@@ -1835,7 +1957,6 @@ export const UserGroupItemFragmentDoc = gql`
     groupMembersFinished
     groupSize
     coinsForReward
-    coinRewardAmount
     groupCoins
     rewardType
     users {
@@ -2015,6 +2136,30 @@ export const UserPetItemFragmentDoc = gql`
   }
   ${PetItemFragmentDoc}
 `
+export const UserDayRewardItemFragmentDoc = gql`
+  fragment UserDayRewardItem on UserDayReward {
+    id
+    courseDayReward {
+      id
+      description
+      pictureUrl
+      videoUrl
+    }
+  }
+`
+export const UserBoosterItemFragmentDoc = gql`
+  fragment UserBoosterItem on UserBooster {
+    id
+    sponsorAmount
+    coinReward
+    treesEarned
+    mealsEarned
+    coinsEarned
+    sponsorEmail
+    sponsorId
+    sponsorAccepted
+  }
+`
 export const MyDashboardFragmentDoc = gql`
   fragment MyDashboard on User {
     id
@@ -2035,12 +2180,20 @@ export const MyDashboardFragmentDoc = gql`
     userPet {
       ...UserPetItem
     }
+    userDayReward {
+      ...UserDayRewardItem
+    }
+    userBooster {
+      ...UserBoosterItem
+    }
   }
   ${UserTaskItemFragmentDoc}
   ${UserGroupItemFragmentDoc}
   ${UserLevelItemFragmentDoc}
   ${UserGroupMessageFragmentDoc}
   ${UserPetItemFragmentDoc}
+  ${UserDayRewardItemFragmentDoc}
+  ${UserBoosterItemFragmentDoc}
 `
 export const MyLevelProgressFragmentDoc = gql`
   fragment MyLevelProgress on UserLevel {
@@ -2091,6 +2244,26 @@ export const MySettingsFragmentDoc = gql`
     userGroupMessage {
       id
       showOption
+    }
+  }
+`
+export const UserBoosterSponsorItemFragmentDoc = gql`
+  fragment UserBoosterSponsorItem on UserBooster {
+    id
+    sponsorAmount
+    user {
+      id
+      fullName
+      firstName
+      avatar
+      activeUserCourse {
+        id
+        course {
+          id
+          slug
+          name
+        }
+      }
     }
   }
 `
@@ -3208,60 +3381,6 @@ export type GetOptionsQueryResult = ApolloReactCommon.QueryResult<
   GetOptionsQuery,
   GetOptionsQueryVariables
 >
-export const MyDayRewardDocument = gql`
-  query MyDayReward {
-    myDayReward {
-      ...MyDailyReward
-    }
-  }
-  ${MyDailyRewardFragmentDoc}
-`
-
-/**
- * __useMyDayRewardQuery__
- *
- * To run a query within a React component, call `useMyDayRewardQuery` and pass it any options that fit your needs.
- * When your component renders, `useMyDayRewardQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useMyDayRewardQuery({
- *   variables: {
- *   },
- * });
- */
-export function useMyDayRewardQuery(
-  baseOptions?: ApolloReactHooks.QueryHookOptions<
-    MyDayRewardQuery,
-    MyDayRewardQueryVariables
-  >,
-) {
-  return ApolloReactHooks.useQuery<MyDayRewardQuery, MyDayRewardQueryVariables>(
-    MyDayRewardDocument,
-    baseOptions,
-  )
-}
-export function useMyDayRewardLazyQuery(
-  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
-    MyDayRewardQuery,
-    MyDayRewardQueryVariables
-  >,
-) {
-  return ApolloReactHooks.useLazyQuery<
-    MyDayRewardQuery,
-    MyDayRewardQueryVariables
-  >(MyDayRewardDocument, baseOptions)
-}
-export type MyDayRewardQueryHookResult = ReturnType<typeof useMyDayRewardQuery>
-export type MyDayRewardLazyQueryHookResult = ReturnType<
-  typeof useMyDayRewardLazyQuery
->
-export type MyDayRewardQueryResult = ApolloReactCommon.QueryResult<
-  MyDayRewardQuery,
-  MyDayRewardQueryVariables
->
 export const ForgotPasswordDocument = gql`
   mutation ForgotPassword($email: String!) {
     forgotPassword(email: $email)
@@ -3305,6 +3424,53 @@ export type ForgotPasswordMutationResult = ApolloReactCommon.MutationResult<
 export type ForgotPasswordMutationOptions = ApolloReactCommon.BaseMutationOptions<
   ForgotPasswordMutation,
   ForgotPasswordMutationVariables
+>
+export const UpdateMyBoosterDocument = gql`
+  mutation UpdateMyBooster($data: UpdateUserBoosterInput!) {
+    updateCurrentUserBooster(data: $data) {
+      ...UserBoosterItem
+    }
+  }
+  ${UserBoosterItemFragmentDoc}
+`
+
+/**
+ * __useUpdateMyBoosterMutation__
+ *
+ * To run a mutation, you first call `useUpdateMyBoosterMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateMyBoosterMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateMyBoosterMutation, { data, loading, error }] = useUpdateMyBoosterMutation({
+ *   variables: {
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useUpdateMyBoosterMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    UpdateMyBoosterMutation,
+    UpdateMyBoosterMutationVariables
+  >,
+) {
+  return ApolloReactHooks.useMutation<
+    UpdateMyBoosterMutation,
+    UpdateMyBoosterMutationVariables
+  >(UpdateMyBoosterDocument, baseOptions)
+}
+export type UpdateMyBoosterMutationHookResult = ReturnType<
+  typeof useUpdateMyBoosterMutation
+>
+export type UpdateMyBoosterMutationResult = ApolloReactCommon.MutationResult<
+  UpdateMyBoosterMutation
+>
+export type UpdateMyBoosterMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  UpdateMyBoosterMutation,
+  UpdateMyBoosterMutationVariables
 >
 export const CreateCustomUserTaskDocument = gql`
   mutation CreateCustomUserTask($data: CreateCustomUserTaskInput!) {
@@ -3643,34 +3809,6 @@ export type MeQueryResult = ApolloReactCommon.QueryResult<
   MeQuery,
   MeQueryVariables
 >
-
-/**
- * __useGetAllCoursesQuery__
- *
- * To run a query within a React component, call `useGetAllCoursesQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetAllCoursesQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetAllCoursesQuery({
- *   variables: {
- *   },
- * });
- */
-export function useGetAllCoursesQuery(
-  baseOptions?: ApolloReactHooks.QueryHookOptions<
-    GetAllCoursesQuery,
-    GetAllCoursesQueryVariables
-  >,
-) {
-  return ApolloReactHooks.useQuery<
-    GetAllCoursesQuery,
-    GetAllCoursesQueryVariables
-  >(GetAllCoursesDocument, baseOptions)
-}
-
 export const GetCourseDocument = gql`
   query GetCourse($slug: String!) {
     courseBySlug(slug: $slug) {
@@ -3750,7 +3888,17 @@ export const GetAllCoursesDocument = gql`
  *   },
  * });
  */
-
+export function useGetAllCoursesQuery(
+  baseOptions?: ApolloReactHooks.QueryHookOptions<
+    GetAllCoursesQuery,
+    GetAllCoursesQueryVariables
+  >,
+) {
+  return ApolloReactHooks.useQuery<
+    GetAllCoursesQuery,
+    GetAllCoursesQueryVariables
+  >(GetAllCoursesDocument, baseOptions)
+}
 export function useGetAllCoursesLazyQuery(
   baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
     GetAllCoursesQuery,
@@ -3942,6 +4090,7 @@ export const GetCourseGroupsDocument = gql`
   query GetCourseGroups($slug: String!) {
     courseBySlug(slug: $slug) {
       id
+      duration
       groups {
         ...GroupItem
       }
@@ -4402,4 +4551,110 @@ export type UpdateSettingsMutationResult = ApolloReactCommon.MutationResult<
 export type UpdateSettingsMutationOptions = ApolloReactCommon.BaseMutationOptions<
   UpdateSettingsMutation,
   UpdateSettingsMutationVariables
+>
+export const UpdateBoosterDocument = gql`
+  mutation UpdateBooster(
+    $userBoosterId: String!
+    $data: UpdateUserBoosterInput!
+  ) {
+    updateUserBooster(userBoosterId: $userBoosterId, data: $data) {
+      ...UserBoosterItem
+    }
+  }
+  ${UserBoosterItemFragmentDoc}
+`
+
+/**
+ * __useUpdateBoosterMutation__
+ *
+ * To run a mutation, you first call `useUpdateBoosterMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateBoosterMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateBoosterMutation, { data, loading, error }] = useUpdateBoosterMutation({
+ *   variables: {
+ *      userBoosterId: // value for 'userBoosterId'
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useUpdateBoosterMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    UpdateBoosterMutation,
+    UpdateBoosterMutationVariables
+  >,
+) {
+  return ApolloReactHooks.useMutation<
+    UpdateBoosterMutation,
+    UpdateBoosterMutationVariables
+  >(UpdateBoosterDocument, baseOptions)
+}
+export type UpdateBoosterMutationHookResult = ReturnType<
+  typeof useUpdateBoosterMutation
+>
+export type UpdateBoosterMutationResult = ApolloReactCommon.MutationResult<
+  UpdateBoosterMutation
+>
+export type UpdateBoosterMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  UpdateBoosterMutation,
+  UpdateBoosterMutationVariables
+>
+export const GetBoosterDocument = gql`
+  query GetBooster($userBoosterId: String!) {
+    getUserBooster(userBoosterId: $userBoosterId) {
+      ...UserBoosterSponsorItem
+    }
+  }
+  ${UserBoosterSponsorItemFragmentDoc}
+`
+
+/**
+ * __useGetBoosterQuery__
+ *
+ * To run a query within a React component, call `useGetBoosterQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetBoosterQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetBoosterQuery({
+ *   variables: {
+ *      userBoosterId: // value for 'userBoosterId'
+ *   },
+ * });
+ */
+export function useGetBoosterQuery(
+  baseOptions?: ApolloReactHooks.QueryHookOptions<
+    GetBoosterQuery,
+    GetBoosterQueryVariables
+  >,
+) {
+  return ApolloReactHooks.useQuery<GetBoosterQuery, GetBoosterQueryVariables>(
+    GetBoosterDocument,
+    baseOptions,
+  )
+}
+export function useGetBoosterLazyQuery(
+  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+    GetBoosterQuery,
+    GetBoosterQueryVariables
+  >,
+) {
+  return ApolloReactHooks.useLazyQuery<
+    GetBoosterQuery,
+    GetBoosterQueryVariables
+  >(GetBoosterDocument, baseOptions)
+}
+export type GetBoosterQueryHookResult = ReturnType<typeof useGetBoosterQuery>
+export type GetBoosterLazyQueryHookResult = ReturnType<
+  typeof useGetBoosterLazyQuery
+>
+export type GetBoosterQueryResult = ApolloReactCommon.QueryResult<
+  GetBoosterQuery,
+  GetBoosterQueryVariables
 >

@@ -28,7 +28,9 @@ export class UserCourse extends BaseEntity<UserCourse> {
   )
   user: User
 
-  //TODO: Course relationship
-  @OneToOne(() => Course)
+  @OneToOne(
+    () => Course,
+    course => course.userCourse,
+  )
   course: Course
 }

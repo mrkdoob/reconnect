@@ -10,11 +10,15 @@ export class UpdateUserBoosterInput implements Partial<UserBooster> {
 
   @IsNotEmpty()
   @Field({ nullable: true })
-  coinMultiplier: number
+  coinReward: number
 
   @IsNotEmpty()
   @Field({ nullable: true })
-  rewardsEarned: number
+  treesEarned: number
+
+  @IsNotEmpty()
+  @Field({ nullable: true })
+  mealsEarned: number
 
   @IsNotEmpty()
   @Field({ nullable: true })
@@ -22,11 +26,15 @@ export class UpdateUserBoosterInput implements Partial<UserBooster> {
 
   @IsNotEmpty()
   @Field({ nullable: true })
-  isActive: boolean
+  boostDays: number
 
   @IsNotEmpty()
   @Field({ nullable: true })
-  sponsorEmail: boolean
+  sponsorEmail: string
+
+  @IsNotEmpty()
+  @Field({ nullable: true })
+  sponsorAccepted: boolean
 
   @IsNotEmpty()
   @Field({ nullable: true })

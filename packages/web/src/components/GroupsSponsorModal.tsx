@@ -5,29 +5,102 @@ import {
   Stack,
   Flex,
   Text,
-  Heading,
   Input,
   FormLabel,
+  useToast,
 } from "@chakra-ui/core"
 import { Modal } from "./Modal"
+import gql from "graphql-tag.macro"
+import {
+  UserBoosterItemFragmentDoc,
+  useUpdateMyBoosterMutation,
+} from "../lib/graphql"
+import { mutationHandler } from "../lib/mutationHandler"
+
+export const USER_BOOSTER_ITEM = gql`
+  fragment UserBoosterItem on UserBooster {
+    id
+    sponsorAmount
+    coinReward
+    treesEarned
+    mealsEarned
+    coinsEarned
+    sponsorEmail
+    sponsorId
+    sponsorAccepted
+  }
+`
+
+export const UPDATE_MY_BOOSTER = gql`
+  mutation UpdateMyBooster($data: UpdateUserBoosterInput!) {
+    updateCurrentUserBooster(data: $data) {
+      ...UserBoosterItem
+    }
+  }
+  ${UserBoosterItemFragmentDoc}
+`
 
 interface Props {
   handleSelect: () => void
+  duration: number
 }
 
-export const GroupsSponsorModal = ({ handleSelect }: Props) => {
+export const GroupsSponsorModal = ({ handleSelect, duration }: Props) => {
+  const toast = useToast()
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [confirmCommunity, setConfirmCommunity] = useState(false)
   const [confirmInvite, setConfirmInvite] = useState(false)
 
+  const [mail, setMail] = React.useState("")
+  const handleChange = (event: any) => setMail(event.target.value)
+  const coinReward = duration * 2 // TODO: Currently based on 1 euro sponsor
+  const sponsorAmount = 1 // TODO: Make dynamic option
+
+  const [update] = useUpdateMyBoosterMutation()
+
   const handleConfirmCommunity = async () => {
-    setConfirmCommunity(true)
-    // Update user booster
+    const res = await update({
+      variables: {
+        data: {
+          coinReward,
+          sponsorAmount,
+          boostDays: duration,
+        },
+      },
+    })
+    mutationHandler(res, {
+      onSuccess: () => {
+        handleSelect()
+        onClose()
+        toast({
+          status: "success",
+          description: "Thank you!",
+        })
+      },
+    })
   }
 
   const handleConfirmInvite = async () => {
     setConfirmInvite(true)
-    // Update user booster
+    const res = await update({
+      variables: {
+        data: {
+          sponsorEmail: mail,
+          coinReward,
+          sponsorAmount,
+          boostDays: duration,
+        },
+      },
+    })
+    mutationHandler(res, {
+      onSuccess: () => {
+        toast({
+          status: "success",
+          description: "Email sent!",
+        })
+        onClose()
+      },
+    })
   }
 
   const handleClose = async () => {
@@ -70,7 +143,11 @@ export const GroupsSponsorModal = ({ handleSelect }: Props) => {
               <Text my={4}>
                 Please sponsor another member by donating 1 euro to Isha
               </Text>
-              <Button my={4} variantColor="green" onClick={handleSelect}>
+              <Button
+                my={4}
+                variantColor="green"
+                onClick={handleConfirmCommunity}
+              >
                 I have donated
               </Button>
             </>
@@ -95,7 +172,7 @@ export const GroupsSponsorModal = ({ handleSelect }: Props) => {
               <Button
                 my={4}
                 variantColor="green"
-                onClick={handleConfirmCommunity}
+                onClick={() => setConfirmCommunity(true)}
               >
                 Ask community
               </Button>
@@ -105,7 +182,7 @@ export const GroupsSponsorModal = ({ handleSelect }: Props) => {
               </Text>
               <Flex align="center" mb={4}>
                 <FormLabel>Email</FormLabel>
-                <Input variant="filled" />
+                <Input onChange={handleChange} variant="filled" />
               </Flex>
               <Button mb={4} variantColor="blue" onClick={handleConfirmInvite}>
                 Sent mail

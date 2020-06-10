@@ -20,14 +20,10 @@ export class UserBoosterRepository {
     return UserBooster.find({ where })
   }
 
-  findByUserId(
-    userId: string,
-    options?: FindOneOptions<UserBooster>,
-  ): Promise<UserBooster> {
+  findByUserId(userId: string): Promise<UserBooster> {
     try {
       return UserBooster.findOneOrFail({
         where: { userId },
-        ...options,
       })
     } catch {
       throw new UserInputError("No UserBooster found")
