@@ -1611,6 +1611,9 @@ export type MeFragment = { __typename?: "User" } & Pick<
 > & {
     group?: Maybe<{ __typename?: "Group" } & UserGroupItemFragment>
     userLevel?: Maybe<{ __typename?: "UserLevel" } & Pick<UserLevel, "levelId">>
+    userBooster?: Maybe<
+      { __typename?: "UserBooster" } & UserBoosterItemFragment
+    >
   }
 
 export type MeQueryVariables = {}
@@ -1965,6 +1968,19 @@ export const UserGroupItemFragmentDoc = gql`
   }
   ${GroupUserTaskItemFragmentDoc}
 `
+export const UserBoosterItemFragmentDoc = gql`
+  fragment UserBoosterItem on UserBooster {
+    id
+    sponsorAmount
+    coinReward
+    treesEarned
+    mealsEarned
+    coinsEarned
+    sponsorEmail
+    sponsorId
+    sponsorAccepted
+  }
+`
 export const MeFragmentDoc = gql`
   fragment Me on User {
     id
@@ -1980,8 +1996,12 @@ export const MeFragmentDoc = gql`
     userLevel {
       levelId
     }
+    userBooster {
+      ...UserBoosterItem
+    }
   }
   ${UserGroupItemFragmentDoc}
+  ${UserBoosterItemFragmentDoc}
 `
 export const CourseLevelFragmentDoc = gql`
   fragment CourseLevel on Level {
@@ -2145,19 +2165,6 @@ export const UserDayRewardItemFragmentDoc = gql`
       pictureUrl
       videoUrl
     }
-  }
-`
-export const UserBoosterItemFragmentDoc = gql`
-  fragment UserBoosterItem on UserBooster {
-    id
-    sponsorAmount
-    coinReward
-    treesEarned
-    mealsEarned
-    coinsEarned
-    sponsorEmail
-    sponsorId
-    sponsorAccepted
   }
 `
 export const MyDashboardFragmentDoc = gql`

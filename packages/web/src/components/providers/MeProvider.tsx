@@ -5,6 +5,7 @@ import {
   useMeQuery,
   MeFragment,
   UserGroupItemFragmentDoc,
+  UserBoosterItemFragmentDoc,
 } from "../../lib/graphql"
 import { useToast } from "../../lib/hooks/useToast"
 
@@ -24,8 +25,12 @@ export const ME_FRAGMENT = gql`
     userLevel {
       levelId
     }
+    userBooster {
+      ...UserBoosterItem
+    }
   }
   ${UserGroupItemFragmentDoc}
+  ${UserBoosterItemFragmentDoc}
 `
 
 export const ME = gql`

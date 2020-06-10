@@ -60,7 +60,7 @@ export const Navbar: React.FC = () => {
           {!me ? (
             <>
               <NavLink to="/courses">
-                <Text>Courses</Text>
+                <Text>Challenges</Text>
               </NavLink>
               <NavLink to="/login">
                 <Button variant="link" color="gray.400">
@@ -84,7 +84,7 @@ export const Navbar: React.FC = () => {
                 </Text>
               ) : (
                 <NavLink to="/courses">
-                  <Text>Courses</Text>
+                  <Text>Challenges</Text>
                 </NavLink>
               )}
               {me.role === "admin" && (
@@ -138,7 +138,7 @@ export const Navbar: React.FC = () => {
             <NavLink to="/progress">My progress</NavLink>
           </Text> */}
           <Text onClick={toggleUserMenu}>
-            <NavLink to="/courses">Courses</NavLink>
+            <NavLink to="/courses">Challenges</NavLink>
           </Text>
           <Text onClick={toggleUserMenu}>
             <NavLink to="/settings">Settings</NavLink>
@@ -190,7 +190,7 @@ export const Navbar: React.FC = () => {
               <NavLink to={`/mylevelreward`}>Current lesson</NavLink>
             </Text>
             <Text onClick={toggleMenu}>
-              <NavLink to="/courses">Courses</NavLink>
+              <NavLink to="/courses">Challenges</NavLink>
             </Text>
             {/* TODO: <Text onClick={toggleMenu}>
               <NavLink to="/progress">My progress</NavLink>
@@ -210,7 +210,7 @@ export const Navbar: React.FC = () => {
         ) : (
           <Stack spacing={12} fontWeight="bold" fontSize="xl" align="center">
             <Text onClick={toggleMenu}>
-              <NavLink to="/courses">Courses</NavLink>
+              <NavLink to="/courses">Challenges</NavLink>
             </Text>
             <Text onClick={toggleMenu}>
               <NavLink to="/login">Log in </NavLink>

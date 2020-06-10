@@ -37,7 +37,7 @@ export const AdminCourse: React.FC<Props> = props => {
   const course = data?.courseBySlug
   const me = useMe()
 
-  if (me && me?.role !== "admin")
+  if (me?.role !== "admin" && course?.mentor && me?.id !== course?.mentor?.id)
     return <Redirect noThrow={true} to={`/courses`} />
   return (
     <Page disableRedirect={true} loading={loading}>
