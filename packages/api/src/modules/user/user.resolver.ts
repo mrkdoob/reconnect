@@ -101,7 +101,7 @@ export class UserResolver {
   @Query(() => Boolean)
   async giveAllBoosters() {
     const delay = 1
-    this.userWorker.addJob({ name: "resetGroupUserTasks", data: {} }, { delay })
+    this.userWorker.addJob({ name: "giveAllBoosters", data: {} }, { delay })
 
     return true
   }

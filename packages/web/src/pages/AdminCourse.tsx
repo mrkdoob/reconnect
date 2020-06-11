@@ -144,7 +144,7 @@ export const AdminCourse: React.FC<Props> = props => {
                         )}
                         <Box>
                           <Text fontWeight="semibold">
-                            Get mentored by {course.mentor.fullName}
+                            Created by by {course.mentor.fullName}
                           </Text>
                           <Markup content={course.mentor.bio} />
                         </Box>

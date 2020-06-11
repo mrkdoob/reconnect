@@ -19,7 +19,6 @@ import { User } from "styled-icons/boxicons-regular/User"
 import { InfoCircle } from "styled-icons/boxicons-regular/InfoCircle"
 import { Tree } from "../lib/imageLinks"
 import { Food } from "../lib/imageLinks"
-import { Mask } from "../lib/imageLinks"
 import { Coin } from "../lib/imageLinks"
 import gql from "graphql-tag.macro"
 import { Center } from "./Center"
@@ -98,10 +97,8 @@ export function UserGroupList({ group }: Props) {
                   />
                   {group.rewardType === "tree" ? (
                     <Image src={Tree} h={12} w={16} />
-                  ) : group.rewardType === "meal" ? (
-                    <Image src={Food} h={10} w={10} mx={4} />
                   ) : (
-                    <Image src={Mask} h={10} w={10} mx={4} />
+                    <Image src={Food} h={10} w={10} mx={4} />
                   )}
                   <Tooltip
                     // @ts-ignore
@@ -110,18 +107,14 @@ export function UserGroupList({ group }: Props) {
                       (group.groupCoins % group.coinsForReward) +
                       (group.rewardType === "tree"
                         ? " more coins needed to plant a tree"
-                        : group.rewardType === "meal"
-                        ? " more coins needed to provide a meal"
-                        : " more coins needed to provide a mask")
+                        : " more coins needed to provide a meal")
                     }
                     label={
                       group.coinsForReward -
                       (group.groupCoins % group.coinsForReward) +
                       (group.rewardType === "tree"
                         ? " more coins needed to plant a tree"
-                        : group.rewardType === "meal"
-                        ? " more coins needed to provide a meal"
-                        : " more coins needed to provide a mask")
+                        : " more coins needed to provide a meal")
                     }
                   >
                     <Box

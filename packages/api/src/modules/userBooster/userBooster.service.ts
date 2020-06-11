@@ -87,7 +87,7 @@ export class UserBoosterService {
   async giveAllBoosters() {
     const users = await this.userRepository.findAllActive()
     users?.map(user => {
-      this.create({ userId: user.id })
+      this.create({ userId: user.id, coinReward: 1 })
     })
   }
 }

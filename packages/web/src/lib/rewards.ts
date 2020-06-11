@@ -1,1 +1,1 @@
-export const rewardTypes = ["meal", "mask", "tree"]
+export const rewardTypes = ["meal", "tree"]
