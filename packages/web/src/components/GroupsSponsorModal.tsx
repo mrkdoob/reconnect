@@ -53,7 +53,7 @@ export const GroupsSponsorModal = ({ handleSelect, duration }: Props) => {
 
   const [mail, setMail] = React.useState("")
   const handleChange = (event: any) => setMail(event.target.value)
-  const coinReward = duration * 2 // TODO: Currently based on 1 euro sponsor
+  const coinReward = duration === 5 ? 10 : 20 // TODO: Currently based on 1 euro sponsor
   const sponsorAmount = 1 // TODO: Make dynamic option
 
   const [update] = useUpdateMyBoosterMutation()
@@ -81,7 +81,6 @@ export const GroupsSponsorModal = ({ handleSelect, duration }: Props) => {
   }
 
   const handleConfirmInvite = async () => {
-    setConfirmInvite(true)
     const res = await update({
       variables: {
         data: {
@@ -98,6 +97,7 @@ export const GroupsSponsorModal = ({ handleSelect, duration }: Props) => {
           status: "success",
           description: "Email sent!",
         })
+        handleSelect()
         onClose()
       },
     })
@@ -158,7 +158,7 @@ export const GroupsSponsorModal = ({ handleSelect, duration }: Props) => {
                 Please keep your sponsor up to date with your progress, so that
                 she or he can support and sponsor you.
               </Text>
-              <Button my={4} variantColor="blue" onClick={handleSelect}>
+              <Button my={4} variantColor="blue" onClick={handleConfirmInvite}>
                 Let's begin
               </Button>
             </>
@@ -184,7 +184,11 @@ export const GroupsSponsorModal = ({ handleSelect, duration }: Props) => {
                 <FormLabel>Email</FormLabel>
                 <Input onChange={handleChange} variant="filled" />
               </Flex>
-              <Button mb={4} variantColor="blue" onClick={handleConfirmInvite}>
+              <Button
+                mb={4}
+                variantColor="blue"
+                onClick={() => setConfirmInvite(true)}
+              >
                 Sent mail
               </Button>
             </>
