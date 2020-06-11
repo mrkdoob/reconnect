@@ -22,6 +22,7 @@ import { Food } from "../lib/imageLinks"
 import { Coin } from "../lib/imageLinks"
 import gql from "graphql-tag.macro"
 import { Center } from "./Center"
+import { useMe } from "./providers/MeProvider"
 
 export const GET_USERS = gql`
   query GetUsers {
@@ -63,6 +64,16 @@ export function UserGroupList({ group }: Props) {
       // "https://cdn4.iconfinder.com/data/icons/communication-146/60/man-avatar-circle-question-mark-512.png",
       groupOrder: 0,
     })
+
+  // TODO: This is temporary fix, remove after
+  const me = useMe()
+  if (
+    me &&
+    me.groupOrder > 0 &&
+    !currentMembersInProgress.find(u => u.id === me.id)
+  )
+    currentMembersInProgress[0] =
+      users?.find(u => u.id === me.id) || currentMembersInProgress[0]
 
   return (
     <>

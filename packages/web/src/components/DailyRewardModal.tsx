@@ -17,7 +17,7 @@ import {
 
 import { Markup } from "interweave"
 import { Border } from "./Border"
-import { Coin } from "../lib/imageLinks"
+import { Coin, Food, Tree } from "../lib/imageLinks"
 import { MyDashboardFragment } from "../lib/graphql"
 
 export const USER_DAY_REWARD_ITEM = gql`
@@ -76,9 +76,20 @@ export const DailyRewardModal = ({ onClose, me, dayCompleted }: Props) => {
                       You have earned {me.userBooster?.coinReward} coins{" "}
                     </Text>
                     <Image src={Coin} size={6} mx={2} />
-                    <Text>and have {daysLeft} days left to level up.</Text>
+                    {me.userBooster?.coinReward ===
+                      me.group?.coinsForReward && (
+                      <>
+                        <Text>and 1 donation </Text>{" "}
+                        <Image
+                          src={me.group?.rewardType === "tree" ? Tree : Food}
+                          size={6}
+                          mx={2}
+                        />
+                      </>
+                    )}
                   </Flex>
-                  <Text mb={4}>You have unlocked a wisdom scroll.</Text>
+                  <Text mb={4}>{daysLeft} more days left to level up</Text>
+                  <Text mb={4}>You have unlocked a wisdom scroll</Text>
                   <Border mb={4} />
                   <Button
                     my={6}
