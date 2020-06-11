@@ -20,7 +20,7 @@ export class Pet extends BaseEntity<Pet> {
   @StringField()
   avatarUrl: string
 
-  @UuidField()
+  @UuidField({ nullable: true })
   createdBy: string
 
   // RELATIONS
