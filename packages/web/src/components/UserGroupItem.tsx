@@ -33,6 +33,12 @@ export const GROUP_USER_TASK = gql`
     firstName
     avatar
     groupOrder
+    userBooster {
+      id
+      coinReward
+      treesEarned
+      mealsEarned
+    }
   }
 `
 

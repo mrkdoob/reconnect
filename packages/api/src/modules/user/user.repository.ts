@@ -28,7 +28,7 @@ export class UserRepository {
     return User.find({ where: { groupId } }).then(res => res.length)
   }
 
-  findAllActive(): Promise<User[] | undefined> {
+  findAllActive(): Promise<User[]> {
     return User.find()
     // TODO: Make more efficient
     // return User.find({ where: { groupId } })

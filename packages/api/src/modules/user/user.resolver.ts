@@ -106,7 +106,13 @@ export class UserResolver {
     return true
   }
 
-  // TODO:  @Authorized()
+  @Authorized()
+  @Query(() => [User])
+  getAllUsers(): Promise<User[]> {
+    return this.userRepository.findAllActive()
+  }
+
+  @Authorized()
   @Query(() => User, { nullable: true })
   async getUser(@Arg("userId") userId: string): Promise<User> {
     return this.userRepository.findById(userId)

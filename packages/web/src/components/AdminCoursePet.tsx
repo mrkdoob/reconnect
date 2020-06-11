@@ -9,8 +9,6 @@ import {
   Text,
   Image,
   useToast,
-  IconButton,
-  Stack,
 } from "@chakra-ui/core"
 
 import gql from "graphql-tag.macro"
@@ -28,7 +26,6 @@ import { Circle } from "styled-icons/boxicons-solid/Circle"
 import { mutationHandler } from "../lib/mutationHandler"
 import { AdminCoursePetCreateForm } from "./AdminCoursePetCreateForm"
 import { useMe } from "./providers/MeProvider"
-import { Confirmation } from "./Confirmation"
 import { AdminCoursePetEditModal } from "./AdminCoursePetEditModal"
 
 export const GET_PETS = gql`

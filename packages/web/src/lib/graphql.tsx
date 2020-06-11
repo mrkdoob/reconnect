@@ -660,6 +660,7 @@ export type Query = {
   groups: Array<Group>
   dailyReset: Scalars["Boolean"]
   giveAllBoosters: Scalars["Boolean"]
+  getAllUsers: Array<User>
   getUser?: Maybe<User>
   me?: Maybe<User>
   getGroupMessage: GroupMessage
@@ -1524,7 +1525,20 @@ export type UserGroupItemFragment = { __typename?: "Group" } & Pick<
 export type GroupUserTaskItemFragment = { __typename?: "User" } & Pick<
   User,
   "id" | "firstName" | "avatar" | "groupOrder"
->
+> & {
+    userBooster?: Maybe<
+      { __typename?: "UserBooster" } & Pick<
+        UserBooster,
+        "id" | "coinReward" | "treesEarned" | "mealsEarned"
+      >
+    >
+  }
+
+export type GetUsersQueryVariables = {}
+
+export type GetUsersQuery = { __typename?: "Query" } & {
+  getAllUsers: Array<{ __typename?: "User" } & GroupUserTaskItemFragment>
+}
 
 export type UserInfoFragment = { __typename?: "User" } & Pick<
   User,
@@ -1981,6 +1995,12 @@ export const GroupUserTaskItemFragmentDoc = gql`
     firstName
     avatar
     groupOrder
+    userBooster {
+      id
+      coinReward
+      treesEarned
+      mealsEarned
+    }
   }
 `
 export const UserGroupItemFragmentDoc = gql`
@@ -3885,6 +3905,60 @@ export type DestroyUserTaskMutationResult = ApolloReactCommon.MutationResult<
 export type DestroyUserTaskMutationOptions = ApolloReactCommon.BaseMutationOptions<
   DestroyUserTaskMutation,
   DestroyUserTaskMutationVariables
+>
+export const GetUsersDocument = gql`
+  query GetUsers {
+    getAllUsers {
+      ...GroupUserTaskItem
+    }
+  }
+  ${GroupUserTaskItemFragmentDoc}
+`
+
+/**
+ * __useGetUsersQuery__
+ *
+ * To run a query within a React component, call `useGetUsersQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetUsersQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetUsersQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetUsersQuery(
+  baseOptions?: ApolloReactHooks.QueryHookOptions<
+    GetUsersQuery,
+    GetUsersQueryVariables
+  >,
+) {
+  return ApolloReactHooks.useQuery<GetUsersQuery, GetUsersQueryVariables>(
+    GetUsersDocument,
+    baseOptions,
+  )
+}
+export function useGetUsersLazyQuery(
+  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+    GetUsersQuery,
+    GetUsersQueryVariables
+  >,
+) {
+  return ApolloReactHooks.useLazyQuery<GetUsersQuery, GetUsersQueryVariables>(
+    GetUsersDocument,
+    baseOptions,
+  )
+}
+export type GetUsersQueryHookResult = ReturnType<typeof useGetUsersQuery>
+export type GetUsersLazyQueryHookResult = ReturnType<
+  typeof useGetUsersLazyQuery
+>
+export type GetUsersQueryResult = ApolloReactCommon.QueryResult<
+  GetUsersQuery,
+  GetUsersQueryVariables
 >
 export const UpdateUserGroupMessageDocument = gql`
   mutation UpdateUserGroupMessage(
