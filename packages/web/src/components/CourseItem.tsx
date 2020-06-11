@@ -25,6 +25,7 @@ export const COURSE_ITEM = gql`
     duration
     benefits
     rewardType
+    petId
     mentor {
       ...MentorItem
     }

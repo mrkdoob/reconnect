@@ -11,8 +11,8 @@ export const PET_ITEM = gql`
     description
     name
     levelNumber
-    pictureUrl
     avatarUrl
+    createdBy
   }
 `
 

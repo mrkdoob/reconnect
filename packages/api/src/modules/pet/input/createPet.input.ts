@@ -16,11 +16,6 @@ export class CreatePetInput implements Partial<Pet> {
   @Field()
   levelNumber: number
 
-  @IsNotEmpty()
-  @Field()
-  pictureUrl: string
-
-  @IsNotEmpty()
-  @Field()
+  @Field({ nullable: true })
   avatarUrl: string
 }

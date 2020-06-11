@@ -122,7 +122,7 @@ export const ImageCreate: React.FC<Props> = props => {
 interface PreviewImageProps {
   src: string
   onRemove: () => void
-  loading: boolean
+  loading?: boolean
   width?: string
 }
 export function PreviewImage(props: PreviewImageProps) {

@@ -5,15 +5,16 @@ import gql from "graphql-tag.macro"
 import {
   useUpdateSettingsMutation,
   MySettingsDocument,
-  useGetSignedUrlMutation,
   MeDocument,
+  useGetSignedUrlMutation,
 } from "../lib/graphql"
 import { formatFileName } from "../lib/helpers"
 import { useToast } from "../lib/hooks/useToast"
 import { useOpen } from "../lib/hooks/useOpen"
-import { PreviewImage } from "./CourseImageCreateForm"
+import { amzUrl } from "../lib/uploadPaths"
+import { PreviewImage } from "./ImageCreate"
 
-export const GET_SIGNED_URL = gql`
+export const GET_SIGNED_S3_URL = gql`
   mutation GetSignedUrl($data: S3SignedUrlInput!) {
     getSignedS3Url(data: $data)
   }
@@ -22,6 +23,8 @@ export const GET_SIGNED_URL = gql`
 interface Props {
   onClose?: () => void
 }
+
+// TODO: Use ImageCreate
 export const NewAvatar: React.FC<Props> = props => {
   const [images, setImages] = React.useState<File[]>([])
   const [loading, setLoading, setStopLoading] = useOpen()
@@ -76,8 +79,6 @@ export const NewAvatar: React.FC<Props> = props => {
       } catch (error) {
         console.log(error)
       }
-
-      const amzUrl = "https://reconnectapp-dev.s3.eu-central-1.amazonaws.com/"
 
       await updateSettings({
         variables: {

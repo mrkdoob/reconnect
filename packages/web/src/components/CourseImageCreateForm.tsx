@@ -1,5 +1,5 @@
 import React from "react"
-import { Button, Box, Image, IconButton, Flex } from "@chakra-ui/core"
+import { Button, Box, Flex } from "@chakra-ui/core"
 import { useDropzone } from "react-dropzone"
 import gql from "graphql-tag.macro"
 import {
@@ -12,6 +12,7 @@ import {
 import { formatFileName } from "../lib/helpers"
 import { useToast } from "../lib/hooks/useToast"
 import { useOpen } from "../lib/hooks/useOpen"
+import { PreviewImage } from "./ImageCreate"
 
 export const UPDATE_COURSE = gql`
   mutation UpdateCourse($id: String!, $data: UpdateCourseInput!) {
@@ -167,38 +168,6 @@ export const CourseImageCreateForm: React.FC<Props> = props => {
           Submit
         </Button>
       </Flex>
-    </Box>
-  )
-}
-
-interface PreviewImageProps {
-  src: string
-  onRemove: () => void
-  loading: boolean
-  width?: string
-}
-export function PreviewImage(props: PreviewImageProps) {
-  return (
-    <Box
-      pos="relative"
-      size="150px"
-      w={props.width || "150px"}
-      h="150px"
-      m="0 auto"
-    >
-      <IconButton
-        pos="absolute"
-        top={0}
-        size="sm"
-        isLoading={props.loading}
-        isDisabled={props.loading}
-        right={0}
-        icon="delete"
-        variantColor="red"
-        aria-label="Remove image"
-        onClick={props.onRemove}
-      />
-      <Image src={props.src} rounded="lg" objectFit="cover" w="100%" h="100%" />
     </Box>
   )
 }

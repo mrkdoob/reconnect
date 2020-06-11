@@ -17,6 +17,7 @@ import { UserPet } from "../userPet/userPet.entity"
 import { UserLevel } from "../userLevel/userLevel.entity"
 import { Course } from "../course/course.entity"
 import { UserBooster } from "../userBooster/userBooster.entity"
+import { Pet } from "../pet/pet.entity"
 
 @ObjectType()
 @Entity()
@@ -113,6 +114,12 @@ export class User extends BaseEntity<User> {
     userDayReward => userDayReward.userId,
   )
   userDayReward: UserDayReward
+
+  @OneToMany(
+    () => Pet,
+    petsCreated => petsCreated.createdBy,
+  )
+  petsCreated: Pet[]
 
   @BeforeInsert()
   async hashPassword() {

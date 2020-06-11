@@ -13,8 +13,5 @@ export class UpdatePetInput implements Partial<Pet> {
   levelNumber: number
 
   @Field({ nullable: true })
-  pictureUrl: string
-
-  @Field({ nullable: true })
   avatarUrl: string
 }

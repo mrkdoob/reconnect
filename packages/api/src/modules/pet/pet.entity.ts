@@ -1,8 +1,9 @@
-import { Entity, OneToMany } from "typeorm"
+import { Entity, OneToMany, ManyToOne } from "typeorm"
 import { ObjectType } from "type-graphql"
 import { BaseEntity } from "../shared/base.entity"
-import { StringField, IntField } from "../shared/fields"
+import { StringField, IntField, UuidField } from "../shared/fields"
 import { UserPet } from "../userPet/userPet.entity"
+import { User } from "../user/user.entity"
 
 @ObjectType()
 @Entity()
@@ -17,10 +18,10 @@ export class Pet extends BaseEntity<Pet> {
   levelNumber: number
 
   @StringField()
-  pictureUrl: string
-
-  @StringField()
   avatarUrl: string
+
+  @UuidField()
+  createdBy: string
 
   // RELATIONS
 
@@ -29,4 +30,10 @@ export class Pet extends BaseEntity<Pet> {
     userPet => userPet.pet,
   )
   userPets: UserPet[]
+
+  @ManyToOne(
+    () => User,
+    user => user.petsCreated,
+  )
+  user: User
 }

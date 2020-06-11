@@ -156,8 +156,7 @@ export type CreatePetInput = {
   name: Scalars["String"]
   description: Scalars["String"]
   levelNumber: Scalars["Float"]
-  pictureUrl: Scalars["String"]
-  avatarUrl: Scalars["String"]
+  avatarUrl?: Maybe<Scalars["String"]>
 }
 
 export type CreateUserBoosterInput = {
@@ -646,8 +645,8 @@ export type Pet = {
   name: Scalars["String"]
   description?: Maybe<Scalars["String"]>
   levelNumber: Scalars["Int"]
-  pictureUrl: Scalars["String"]
   avatarUrl: Scalars["String"]
+  createdBy: Scalars["String"]
 }
 
 export type Query = {
@@ -678,6 +677,7 @@ export type Query = {
   getOption: Option
   getAllOptions: Array<Option>
   getPet: Pet
+  getAllPets: Array<Pet>
   getUserBooster: UserBooster
   getUserCourse: UserCourse
   myDayReward?: Maybe<UserDayReward>
@@ -901,7 +901,6 @@ export type UpdatePetInput = {
   name?: Maybe<Scalars["String"]>
   description?: Maybe<Scalars["String"]>
   levelNumber?: Maybe<Scalars["Float"]>
-  pictureUrl?: Maybe<Scalars["String"]>
   avatarUrl?: Maybe<Scalars["String"]>
 }
 
@@ -1124,6 +1123,38 @@ export type GetAdminCourseMessagesQuery = { __typename?: "Query" } & {
   getCourseMessages: Array<{ __typename?: "Message" } & MessageFragment>
 }
 
+export type GetPetsQueryVariables = {}
+
+export type GetPetsQuery = { __typename?: "Query" } & {
+  getAllPets: Array<{ __typename?: "Pet" } & PetItemFragment>
+}
+
+export type CreatePetMutationVariables = {
+  data: CreatePetInput
+}
+
+export type CreatePetMutation = { __typename?: "Mutation" } & {
+  createPet: { __typename?: "Pet" } & PetItemFragment
+}
+
+export type DestroyPetMutationVariables = {
+  petId: Scalars["String"]
+}
+
+export type DestroyPetMutation = { __typename?: "Mutation" } & Pick<
+  Mutation,
+  "destroyPet"
+>
+
+export type UpdatePetMutationVariables = {
+  petId: Scalars["String"]
+  data: UpdatePetInput
+}
+
+export type UpdatePetMutation = { __typename?: "Mutation" } & {
+  updatePet?: Maybe<{ __typename?: "Pet" } & PetItemFragment>
+}
+
 export type CreateCourseMutationVariables = {
   data: CreateCourseInput
 }
@@ -1214,6 +1245,7 @@ export type CourseItemFragment = { __typename?: "Course" } & Pick<
   | "duration"
   | "benefits"
   | "rewardType"
+  | "petId"
 > & { mentor?: Maybe<{ __typename?: "User" } & MentorItemFragment> }
 
 export type CreateLevelMutationVariables = {
@@ -1538,7 +1570,7 @@ export type UpdateUserGroupMessageMutation = { __typename?: "Mutation" } & {
 
 export type PetItemFragment = { __typename?: "Pet" } & Pick<
   Pet,
-  "id" | "description" | "name" | "levelNumber" | "pictureUrl" | "avatarUrl"
+  "id" | "description" | "name" | "levelNumber" | "avatarUrl" | "createdBy"
 >
 
 export type UserPetItemFragment = { __typename?: "UserPet" } & Pick<
@@ -2038,6 +2070,7 @@ export const CourseItemFragmentDoc = gql`
     duration
     benefits
     rewardType
+    petId
     mentor {
       ...MentorItem
     }
@@ -2141,8 +2174,8 @@ export const PetItemFragmentDoc = gql`
     description
     name
     levelNumber
-    pictureUrl
     avatarUrl
+    createdBy
   }
 `
 export const UserPetItemFragmentDoc = gql`
@@ -2469,6 +2502,197 @@ export type GetAdminCourseMessagesLazyQueryHookResult = ReturnType<
 export type GetAdminCourseMessagesQueryResult = ApolloReactCommon.QueryResult<
   GetAdminCourseMessagesQuery,
   GetAdminCourseMessagesQueryVariables
+>
+export const GetPetsDocument = gql`
+  query GetPets {
+    getAllPets {
+      ...PetItem
+    }
+  }
+  ${PetItemFragmentDoc}
+`
+
+/**
+ * __useGetPetsQuery__
+ *
+ * To run a query within a React component, call `useGetPetsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetPetsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetPetsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetPetsQuery(
+  baseOptions?: ApolloReactHooks.QueryHookOptions<
+    GetPetsQuery,
+    GetPetsQueryVariables
+  >,
+) {
+  return ApolloReactHooks.useQuery<GetPetsQuery, GetPetsQueryVariables>(
+    GetPetsDocument,
+    baseOptions,
+  )
+}
+export function useGetPetsLazyQuery(
+  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+    GetPetsQuery,
+    GetPetsQueryVariables
+  >,
+) {
+  return ApolloReactHooks.useLazyQuery<GetPetsQuery, GetPetsQueryVariables>(
+    GetPetsDocument,
+    baseOptions,
+  )
+}
+export type GetPetsQueryHookResult = ReturnType<typeof useGetPetsQuery>
+export type GetPetsLazyQueryHookResult = ReturnType<typeof useGetPetsLazyQuery>
+export type GetPetsQueryResult = ApolloReactCommon.QueryResult<
+  GetPetsQuery,
+  GetPetsQueryVariables
+>
+export const CreatePetDocument = gql`
+  mutation CreatePet($data: CreatePetInput!) {
+    createPet(data: $data) {
+      ...PetItem
+    }
+  }
+  ${PetItemFragmentDoc}
+`
+
+/**
+ * __useCreatePetMutation__
+ *
+ * To run a mutation, you first call `useCreatePetMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreatePetMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createPetMutation, { data, loading, error }] = useCreatePetMutation({
+ *   variables: {
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useCreatePetMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    CreatePetMutation,
+    CreatePetMutationVariables
+  >,
+) {
+  return ApolloReactHooks.useMutation<
+    CreatePetMutation,
+    CreatePetMutationVariables
+  >(CreatePetDocument, baseOptions)
+}
+export type CreatePetMutationHookResult = ReturnType<
+  typeof useCreatePetMutation
+>
+export type CreatePetMutationResult = ApolloReactCommon.MutationResult<
+  CreatePetMutation
+>
+export type CreatePetMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  CreatePetMutation,
+  CreatePetMutationVariables
+>
+export const DestroyPetDocument = gql`
+  mutation DestroyPet($petId: String!) {
+    destroyPet(petId: $petId)
+  }
+`
+
+/**
+ * __useDestroyPetMutation__
+ *
+ * To run a mutation, you first call `useDestroyPetMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDestroyPetMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [destroyPetMutation, { data, loading, error }] = useDestroyPetMutation({
+ *   variables: {
+ *      petId: // value for 'petId'
+ *   },
+ * });
+ */
+export function useDestroyPetMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    DestroyPetMutation,
+    DestroyPetMutationVariables
+  >,
+) {
+  return ApolloReactHooks.useMutation<
+    DestroyPetMutation,
+    DestroyPetMutationVariables
+  >(DestroyPetDocument, baseOptions)
+}
+export type DestroyPetMutationHookResult = ReturnType<
+  typeof useDestroyPetMutation
+>
+export type DestroyPetMutationResult = ApolloReactCommon.MutationResult<
+  DestroyPetMutation
+>
+export type DestroyPetMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  DestroyPetMutation,
+  DestroyPetMutationVariables
+>
+export const UpdatePetDocument = gql`
+  mutation UpdatePet($petId: String!, $data: UpdatePetInput!) {
+    updatePet(petId: $petId, data: $data) {
+      ...PetItem
+    }
+  }
+  ${PetItemFragmentDoc}
+`
+
+/**
+ * __useUpdatePetMutation__
+ *
+ * To run a mutation, you first call `useUpdatePetMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdatePetMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updatePetMutation, { data, loading, error }] = useUpdatePetMutation({
+ *   variables: {
+ *      petId: // value for 'petId'
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useUpdatePetMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    UpdatePetMutation,
+    UpdatePetMutationVariables
+  >,
+) {
+  return ApolloReactHooks.useMutation<
+    UpdatePetMutation,
+    UpdatePetMutationVariables
+  >(UpdatePetDocument, baseOptions)
+}
+export type UpdatePetMutationHookResult = ReturnType<
+  typeof useUpdatePetMutation
+>
+export type UpdatePetMutationResult = ApolloReactCommon.MutationResult<
+  UpdatePetMutation
+>
+export type UpdatePetMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  UpdatePetMutation,
+  UpdatePetMutationVariables
 >
 export const CreateCourseDocument = gql`
   mutation CreateCourse($data: CreateCourseInput!) {

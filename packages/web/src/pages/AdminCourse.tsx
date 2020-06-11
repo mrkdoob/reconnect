@@ -28,6 +28,7 @@ import { CourseDailyRewardList } from "../components/CourseDailyRewardList"
 import { AdminCourseMessageList } from "../components/AdminCourseMessageList"
 import { AdminCourseLevelList } from "../components/AdminCourseLevelList"
 import { AdminCourseMentorModalForm } from "../components/AdminCourseMentorModalForm"
+import { AdminCoursePet } from "../components/AdminCoursePet"
 
 interface Props extends RouteComponentProps<{ slug: string }> {}
 
@@ -48,6 +49,7 @@ export const AdminCourse: React.FC<Props> = props => {
             <Tab>Levels</Tab>
             <Tab>Rewards</Tab>
             <Tab>Messages</Tab>
+            <Tab>Pet</Tab>
           </StyledTabList>
 
           <TabPanels m="60px">
@@ -160,6 +162,9 @@ export const AdminCourse: React.FC<Props> = props => {
             </TabPanel>
             <TabPanel>
               <AdminCourseMessageList courseId={course.id} />
+            </TabPanel>
+            <TabPanel>
+              <AdminCoursePet courseId={course.id} coursePetId={course.petId} />
             </TabPanel>
           </TabPanels>
         </Tabs>
