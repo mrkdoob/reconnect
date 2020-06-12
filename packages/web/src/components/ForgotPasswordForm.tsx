@@ -1,6 +1,6 @@
 import React from "react"
 import gql from "graphql-tag"
-import { Button, Stack, useToast, Text } from "@chakra-ui/core"
+import { Button, Stack, useToast, Text, Flex } from "@chakra-ui/core"
 
 import Yup from "../lib/yup"
 import { useForm } from "../lib/hooks/useForm"
@@ -51,7 +51,18 @@ export const ForgotPasswordForm: React.FC<Props> = props => {
   return (
     <>
       {success ? (
-        <Text textAlign="center">Check your email for instructions.</Text>
+        <Flex direction="column" align="center">
+          <Text textAlign="center">Check your email for instructions.</Text>
+          <Button
+            variantColor="blue"
+            variant="link"
+            loadingText="loading"
+            mt={8}
+            onClick={() => props.handleClick()}
+          >
+            Return to login
+          </Button>
+        </Flex>
       ) : (
         <Form onSubmit={handleSubmit} {...form}>
           <Stack spacing={4} shouldWrapChildren>

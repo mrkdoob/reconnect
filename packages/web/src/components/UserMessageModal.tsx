@@ -11,7 +11,7 @@ import { useToggle } from "../lib/hooks/useToggle"
 import { Markup } from "interweave"
 import { Modal } from "./Modal"
 import { UserPetItem } from "./UserPetItem"
-import { HealthPotion } from "../lib/imageLinks"
+import { HealthPotion, Coin, Tree, Food } from "../lib/imageLinks"
 
 export const USER_GROUP_MESSAGE = gql`
   fragment UserGroupMessage on UserGroupMessage {
@@ -150,19 +150,33 @@ export const UserMessageModal: React.FC<Props> = props => {
         </Flex>
       ) : (
         <Flex direction="column">
+          {/* FIRST MESSAGE @ START OF COURSE */}
           {props.userGroupMessage?.message?.order === 1 ? (
-            <>
+            <Flex
+              justify="center"
+              align="center"
+              textAlign="center"
+              direction="column"
+            >
+              <Flex align="center" mb={2}>
+                <Image src={Coin} size={12} mr={8} />
+                <Image
+                  src={props.rewardType === "tree" ? Tree : Food}
+                  size={16}
+                />
+              </Flex>
               <Text mb={4}>
                 Upon completing your daily practice you will recieve coins that
                 will contribute towards the chosen charity.
               </Text>
-              {/* TODO: Make dynamic */}
-              <Text mb={4}>
+
+              <UserPetItem userPet={props.userPet} />
+              <Text mb={4} mt={2}>
                 When you fail to complete your daily tasks your animal spirit
                 will lose one health. When it loses all health, you will lose
                 your progress.
               </Text>
-            </>
+            </Flex>
           ) : (
             <>
               {props.userGroupMessage?.groupMessage?.rewardCount !== 0 && (
@@ -187,7 +201,7 @@ export const UserMessageModal: React.FC<Props> = props => {
               h={props.userGroupMessage.message.fullHeightPic ? "" : "300px"}
               objectFit="cover"
               borderRadius="lg"
-              mb={4}
+              my={4}
             />
           )}
           {props.userGroupMessage?.message?.videoUrl && (
