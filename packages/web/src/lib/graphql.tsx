@@ -544,6 +544,7 @@ export type MutationUpdateUserBoosterArgs = {
 }
 
 export type MutationUpdateCurrentUserBoosterArgs = {
+  sendSponsorInviteEmail: Scalars["Boolean"]
   data: UpdateUserBoosterInput
 }
 
@@ -646,7 +647,7 @@ export type Pet = {
   description?: Maybe<Scalars["String"]>
   levelNumber: Scalars["Int"]
   avatarUrl: Scalars["String"]
-  createdBy: Scalars["String"]
+  createdBy?: Maybe<Scalars["String"]>
 }
 
 export type Query = {
@@ -659,7 +660,6 @@ export type Query = {
   group: Group
   groups: Array<Group>
   dailyReset: Scalars["Boolean"]
-  giveAllBoosters: Scalars["Boolean"]
   getAllUsers: Array<User>
   getUser?: Maybe<User>
   me?: Maybe<User>
@@ -1428,6 +1428,7 @@ export type UserBoosterItemFragment = { __typename?: "UserBooster" } & Pick<
 
 export type UpdateMyBoosterMutationVariables = {
   data: UpdateUserBoosterInput
+  sendSponsorInviteEmail: Scalars["Boolean"]
 }
 
 export type UpdateMyBoosterMutation = { __typename?: "Mutation" } & {
@@ -3677,8 +3678,14 @@ export type ForgotPasswordMutationOptions = ApolloReactCommon.BaseMutationOption
   ForgotPasswordMutationVariables
 >
 export const UpdateMyBoosterDocument = gql`
-  mutation UpdateMyBooster($data: UpdateUserBoosterInput!) {
-    updateCurrentUserBooster(data: $data) {
+  mutation UpdateMyBooster(
+    $data: UpdateUserBoosterInput!
+    $sendSponsorInviteEmail: Boolean!
+  ) {
+    updateCurrentUserBooster(
+      data: $data
+      sendSponsorInviteEmail: $sendSponsorInviteEmail
+    ) {
       ...UserBoosterItem
     }
   }
@@ -3699,6 +3706,7 @@ export const UpdateMyBoosterDocument = gql`
  * const [updateMyBoosterMutation, { data, loading, error }] = useUpdateMyBoosterMutation({
  *   variables: {
  *      data: // value for 'data'
+ *      sendSponsorInviteEmail: // value for 'sendSponsorInviteEmail'
  *   },
  * });
  */

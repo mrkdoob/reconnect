@@ -32,8 +32,14 @@ export const USER_BOOSTER_ITEM = gql`
 `
 
 export const UPDATE_MY_BOOSTER = gql`
-  mutation UpdateMyBooster($data: UpdateUserBoosterInput!) {
-    updateCurrentUserBooster(data: $data) {
+  mutation UpdateMyBooster(
+    $data: UpdateUserBoosterInput!
+    $sendSponsorInviteEmail: Boolean!
+  ) {
+    updateCurrentUserBooster(
+      data: $data
+      sendSponsorInviteEmail: $sendSponsorInviteEmail
+    ) {
       ...UserBoosterItem
     }
   }
@@ -66,6 +72,7 @@ export const GroupsSponsorModal = ({ handleSelect, duration }: Props) => {
           sponsorAmount,
           boostDays: duration,
         },
+        sendSponsorInviteEmail: false,
       },
     })
     mutationHandler(res, {
@@ -89,6 +96,7 @@ export const GroupsSponsorModal = ({ handleSelect, duration }: Props) => {
           sponsorAmount,
           boostDays: duration,
         },
+        sendSponsorInviteEmail: true,
       },
     })
     mutationHandler(res, {

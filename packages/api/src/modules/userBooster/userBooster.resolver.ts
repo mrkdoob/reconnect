@@ -49,8 +49,7 @@ export class UserBoosterResolver {
       ...data,
       userId: currentUser.id,
     })
-    if (data.sponsorEmail)
-      this.userMailer.sendSponsorInviteEmail(currentUser, booster)
+
     return booster
   }
 
@@ -68,8 +67,13 @@ export class UserBoosterResolver {
   updateCurrentUserBooster(
     @CurrentUser() currentUser: User,
     @Arg("data") data: UpdateUserBoosterInput,
+    @Arg("sendSponsorInviteEmail") sendSponsorInviteEmail: boolean,
   ): Promise<UserBooster> {
-    return this.userBoosterService.updateByUserId(currentUser.id, data)
+    return this.userBoosterService.updateByUserId(
+      currentUser.id,
+      data,
+      sendSponsorInviteEmail,
+    )
   }
 
   @Authorized(["admin"])

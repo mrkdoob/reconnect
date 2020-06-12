@@ -2,7 +2,6 @@ import { Service, Inject } from "typedi"
 import { FULL_WEB_URL } from "../../lib/config"
 import { User } from "./user.entity"
 import { Mailer } from "../../lib/mailer"
-import { UserBooster } from "../userBooster/userBooster.entity"
 import { UserBoosterRepository } from "../userBooster/userBooster.repository"
 
 @Service()
@@ -75,14 +74,18 @@ export class UserMailer {
   }
 
   // TODO: Make dynamic
-  sendSponsorInviteEmail(user: User, booster: UserBooster) {
+  async sendSponsorInviteEmail(boosterId: string) {
+    const booster = await this.userBoosterRepository.findById(boosterId, {
+      relations: ["user"],
+    })
+
     if (!booster.sponsorEmail) return
     this.mailer.send({
       to: booster.sponsorEmail,
       data: {
-        subject: `Sponsor ${user.firstName}`,
-        html: `<p>Hi!</p></br> <p>${user.firstName} would like you to sponsor him/her during his challenge on the Become platform.</p>
-        <p>It would be great if you can donate ${booster.sponsorAmount} euro to the Isha foundation when ${user.firstName} has completed his challenge.</p>
+        subject: `Sponsor ${booster.user.firstName}`,
+        html: `<p>Hi!</p></br> <p>${booster.user.firstName} would like you to sponsor him/her during his challenge on the Become platform.</p>
+        <p>It would be great if you can donate ${booster.sponsorAmount} euro to the Isha foundation when ${booster.user.firstName} has completed his challenge.</p>
         <p>Please <a href="https://www.becomebetter.life/sponsor/${booster.id}">click here</a> if you would like to sponsor.</p>
         </br><p>With joy,</p>
         <p>The Become team</p>`,
@@ -94,6 +97,7 @@ export class UserMailer {
     const booster = await this.userBoosterRepository.findById(boosterId, {
       relations: ["user"],
     })
+
     if (!booster.sponsorEmail) return
     this.mailer.send({
       to: booster.sponsorEmail,

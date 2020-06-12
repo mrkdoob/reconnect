@@ -35,8 +35,13 @@ export class UserBoosterService {
   async updateByUserId(
     userId: string,
     data: Partial<UserBooster>,
+    sendSponsorInviteEmail: boolean,
   ): Promise<UserBooster> {
     const userBooster = await this.userBoosterRepository.findByUserId(userId)
+
+    if (data.sponsorEmail && sendSponsorInviteEmail)
+      this.userMailer.sendSponsorInviteEmail(userBooster.id)
+
     return userBooster.update(data)
   }
 

@@ -15,7 +15,7 @@ interface MailArgs {
 }
 
 export class Mailer {
-  private readonly from: string = "Mark <mark-vdl@live.nl>"
+  private readonly from: string = "Mark from Become <mark-vdl@live.nl>"
   private devMail: Transporter
 
   constructor() {
