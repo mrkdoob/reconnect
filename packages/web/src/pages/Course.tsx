@@ -46,7 +46,7 @@ export const Course: React.FC<Props> = props => {
   const course = data?.courseBySlug
   const me = useMe()
 
-  if (me?.id === course?.mentor?.id) {
+  if (me && me.id === course?.mentor?.id) {
     return <Redirect noThrow to={"/admin-courses/" + slug} />
   } else {
     return (
