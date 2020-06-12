@@ -7,7 +7,6 @@ import { UserGroupMessageService } from "../userGroupMessage/userGroupMessage.se
 import { GroupMessageService } from "../groupMessage/groupMessage.service"
 import { UserResolver } from "./user.resolver"
 import { ONE_DAY } from "../../lib/times"
-import { UserBoosterService } from "../userBooster/userBooster.service"
 
 export type resetGroupUserTasks = {
   name: "resetGroupUserTasks"
@@ -39,11 +38,6 @@ export type repeatDaily = {
   data: {}
 }
 
-export type giveAllBoosters = {
-  name: "giveAllBoosters"
-  data: {}
-}
-
 export type JobType =
   | resetGroupUserTasks
   | resetAllGroupOrdersAndSetPetLifes
@@ -51,7 +45,6 @@ export type JobType =
   | resetAllUserGroupMessages
   | updateDailyMessage
   | repeatDaily
-  | giveAllBoosters
 
 const QUEUE = "USER"
 // new QueueScheduler(QUEUE, { connection: redis })
@@ -72,8 +65,6 @@ export class UserWorker extends Worker<JobType> {
   groupMessageService: GroupMessageService
   @Inject(() => UserResolver)
   userResolver: UserResolver
-  @Inject(() => UserBoosterService)
-  userBoosterService: UserBoosterService
 
   async work() {
     this.runJob(async (job: JobType) => {
@@ -95,9 +86,6 @@ export class UserWorker extends Worker<JobType> {
           return
         case "repeatDaily":
           this.userResolver.dailyReset(ONE_DAY, true)
-          return
-        case "giveAllBoosters":
-          this.userBoosterService.giveAllBoosters()
           return
         default:
           return

@@ -98,14 +98,6 @@ export class UserResolver {
     return true
   }
 
-  @Query(() => Boolean)
-  async giveAllBoosters() {
-    const delay = 1
-    this.userWorker.addJob({ name: "giveAllBoosters", data: {} }, { delay })
-
-    return true
-  }
-
   @Authorized()
   @Query(() => [User])
   getAllUsers(): Promise<User[]> {

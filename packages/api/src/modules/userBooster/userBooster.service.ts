@@ -82,12 +82,4 @@ export class UserBoosterService {
     const userBooster = await this.userBoosterRepository.findById(userBoosterId)
     return userBooster.destroy()
   }
-
-  // TODO: Remove after bootstrap
-  async giveAllBoosters() {
-    const users = await this.userRepository.findAllActive()
-    users?.map(user => {
-      this.create({ userId: user.id, coinReward: 1 })
-    })
-  }
 }
