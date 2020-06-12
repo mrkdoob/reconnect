@@ -66,6 +66,16 @@ export const Register: React.FC<RouteComponentProps> = () => {
         })
         navigate("/") // TODO: Go back to previous page when its course page?
       },
+      onServerError: res => {
+        res.includes("user already exists") &&
+          toast({
+            title: "Account created.",
+            description: "Account with that email already exists.",
+            status: "error",
+            duration: 4000,
+            isClosable: true,
+          })
+      },
     })
   }
   return (
