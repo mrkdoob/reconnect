@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useState } from "react"
 import gql from "graphql-tag.macro"
 import { Text, Flex, Image, Button, AspectRatioBox, Box } from "@chakra-ui/core"
 
@@ -64,6 +64,7 @@ export const UserMessageModal: React.FC<Props> = props => {
     default:
       !props.userGroupMessage?.isRead && props.userGroupMessage?.showOption,
   }) // TODO: Change useToggle
+  const [continueFirst, setContinueFirst] = useState(false)
 
   const [updateUserGroupMessage] = useUpdateUserGroupMessageMutation()
 
@@ -152,31 +153,42 @@ export const UserMessageModal: React.FC<Props> = props => {
         <Flex direction="column">
           {/* FIRST MESSAGE @ START OF COURSE */}
           {props.userGroupMessage?.message?.order === 1 ? (
-            <Flex
-              justify="center"
-              align="center"
-              textAlign="center"
-              direction="column"
-            >
-              <Flex align="center" mb={2}>
-                <Image src={Coin} size={12} mr={8} />
-                <Image
-                  src={props.rewardType === "tree" ? Tree : Food}
-                  size={16}
-                />
-              </Flex>
-              <Text mb={4}>
-                Upon completing your daily practice you will recieve coins that
-                will contribute towards the chosen charity.
-              </Text>
+            <>
+              {!continueFirst && (
+                <Flex
+                  justify="center"
+                  align="center"
+                  textAlign="center"
+                  direction="column"
+                >
+                  <Flex align="center" mb={2}>
+                    <Image src={Coin} size={12} mr={8} />
+                    <Image
+                      src={props.rewardType === "tree" ? Tree : Food}
+                      size={16}
+                    />
+                  </Flex>
+                  <Text mb={4}>
+                    Upon completing your daily practice you will recieve coins
+                    that will contribute towards the chosen charity.
+                  </Text>
 
-              <UserPetItem userPet={props.userPet} />
-              <Text mb={4} mt={2}>
-                When you fail to complete your daily tasks your animal spirit
-                will lose one health. When it loses all health, you will lose
-                your progress.
-              </Text>
-            </Flex>
+                  <UserPetItem userPet={props.userPet} />
+                  <Text mb={4} mt={2}>
+                    When you fail to complete your daily tasks your animal
+                    spirit will lose one health. When it loses all health, you
+                    will lose your progress.
+                  </Text>
+                  <Button
+                    my={6}
+                    onClick={() => setContinueFirst(true)}
+                    variantColor="blue"
+                  >
+                    Continue
+                  </Button>
+                </Flex>
+              )}
+            </>
           ) : (
             <>
               {props.userGroupMessage?.groupMessage?.rewardCount !== 0 && (
@@ -192,39 +204,47 @@ export const UserMessageModal: React.FC<Props> = props => {
               )}
             </>
           )}
+          {props.userGroupMessage?.message?.order !== 1 ||
+            (continueFirst && (
+              <>
+                {props.userGroupMessage?.message?.pictureUrl && (
+                  <Image
+                    src={props.userGroupMessage.message.pictureUrl}
+                    alt="Message picture"
+                    w="625px"
+                    h={
+                      props.userGroupMessage.message.fullHeightPic
+                        ? ""
+                        : "300px"
+                    }
+                    objectFit="cover"
+                    borderRadius="lg"
+                    my={4}
+                  />
+                )}
+                {props.userGroupMessage?.message?.videoUrl && (
+                  <>
+                    <AspectRatioBox ratio={4 / 3}>
+                      <Box
+                        mt={6}
+                        as="iframe"
+                        title="task video"
+                        // @ts-ignore
+                        src={props.userGroupMessage?.message?.videoUrl || ""}
+                        allowFullScreen
+                        borderRadius="lg"
+                      />
+                    </AspectRatioBox>
+                    <Box mb={6} />
+                  </>
+                )}
+                <Markup content={props.userGroupMessage?.message?.message} />
 
-          {props.userGroupMessage?.message?.pictureUrl && (
-            <Image
-              src={props.userGroupMessage.message.pictureUrl}
-              alt="Message picture"
-              w="625px"
-              h={props.userGroupMessage.message.fullHeightPic ? "" : "300px"}
-              objectFit="cover"
-              borderRadius="lg"
-              my={4}
-            />
-          )}
-          {props.userGroupMessage?.message?.videoUrl && (
-            <>
-              <AspectRatioBox ratio={4 / 3}>
-                <Box
-                  mt={6}
-                  as="iframe"
-                  title="task video"
-                  // @ts-ignore
-                  src={props.userGroupMessage?.message?.videoUrl || ""}
-                  allowFullScreen
-                  borderRadius="lg"
-                />
-              </AspectRatioBox>
-              <Box mb={6} />
-            </>
-          )}
-          <Markup content={props.userGroupMessage?.message?.message} />
-
-          <Button my={6} onClick={handleClose} variantColor="blue">
-            Continue
-          </Button>
+                <Button my={6} onClick={handleClose} variantColor="blue">
+                  Continue
+                </Button>
+              </>
+            ))}
           {/* TODO: Add or remove? <Button fontSize="sm" onClick={handleDontShowMe} variant="ghost">
           Don't show me again
         </Button> */}
