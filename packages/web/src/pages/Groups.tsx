@@ -27,6 +27,7 @@ import { Badge } from "styled-icons/boxicons-regular/Badge"
 import { useMe } from "../components/providers/MeProvider"
 import { Confirmation } from "../components/Confirmation"
 import { GroupsSponsorModal } from "../components/GroupsSponsorModal"
+import { mutationHandler } from "../lib/mutationHandler"
 
 export const GET_COURSE_GROUPS = gql`
   query GetCourseGroups($slug: String!) {
@@ -71,21 +72,16 @@ export const Groups: React.FC<Props> = props => {
 
   const toast = useToast()
 
-  const handleGroupSelect = (groupId: string) => {
+  const handleGroupSelect = async (groupId: string) => {
     if (!courseId || !groupId) return
-    startCourse({
+    const res = await startCourse({
       variables: { courseId, groupId },
     })
-      .then(() => {
+    mutationHandler(res, {
+      onSuccess: () => {
         navigate("/mylevelreward")
-      })
-      .catch(() => {
-        toast({
-          status: "error",
-          description:
-            "Oops.. something went wrong while setting up your course",
-        })
-      })
+      },
+    })
   }
 
   const [endCourse] = useEndMyCourseMutation({

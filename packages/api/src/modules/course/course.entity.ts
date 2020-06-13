@@ -22,8 +22,7 @@ export class Course extends BaseEntity<Course> {
   @StringField()
   name: string
 
-  //TODO: Remove nullable?
-  @StringField({ nullable: true })
+  @StringField()
   slug: string
 
   @StringField()

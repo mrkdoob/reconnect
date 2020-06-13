@@ -63,7 +63,7 @@ export const Course: React.FC<Props> = props => {
                 rounded="lg"
                 bg="black"
                 // @ts-ignore
-                opacity="0.1"
+                opacity="0.2"
                 w="100%"
                 h="100%"
                 position="absolute"

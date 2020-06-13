@@ -41,7 +41,7 @@ export type Course = {
   createdAt: Scalars["DateTime"]
   updatedAt: Scalars["DateTime"]
   name: Scalars["String"]
-  slug?: Maybe<Scalars["String"]>
+  slug: Scalars["String"]
   category: Scalars["String"]
   description: Scalars["String"]
   fullDescription?: Maybe<Scalars["String"]>
@@ -101,7 +101,7 @@ export type CreateGroupInput = {
   rewardCount: Scalars["Float"]
   startDate?: Maybe<Scalars["DateTime"]>
   coinsForReward: Scalars["Float"]
-  endDate: Scalars["DateTime"]
+  endDate?: Maybe<Scalars["DateTime"]>
   courseId: Scalars["String"]
   rewardType: Scalars["String"]
 }
@@ -1791,7 +1791,7 @@ export type MyProgressFragment = { __typename?: "User" } & Pick<User, "id"> & {
 
 export type MyCourseProgressFragment = { __typename?: "Course" } & Pick<
   Course,
-  "id"
+  "id" | "slug"
 > & { levels?: Maybe<Array<{ __typename?: "Level" } & CourseLevelFragment>> }
 
 export type MyLevelProgressFragment = { __typename?: "UserLevel" } & Pick<
@@ -2270,6 +2270,7 @@ export const MyLevelProgressFragmentDoc = gql`
 export const MyCourseProgressFragmentDoc = gql`
   fragment MyCourseProgress on Course {
     id
+    slug
     levels {
       ...CourseLevel
     }

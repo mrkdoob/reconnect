@@ -120,7 +120,10 @@ export const CourseLevelTaskCreateModal = ({ levelId }: Props) => {
               <CourseLevelTaskOptions
                 order={1}
                 levelTaskId={levelTaskId}
-                onClose={() => setShowExistingOptions(false)}
+                onClose={() => {
+                  onClose()
+                  setShowExistingOptions(false)
+                }}
                 levelId={levelId}
               />
             </>

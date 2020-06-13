@@ -33,6 +33,7 @@ export const MY_PROGRESS_FRAGMENT = gql`
 export const MY_COURSE_PROGRESS_FRAGMENT = gql`
   fragment MyCourseProgress on Course {
     id
+    slug
     levels {
       ...CourseLevel
     }

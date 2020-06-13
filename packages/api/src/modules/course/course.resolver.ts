@@ -18,11 +18,15 @@ import { Loaders } from "../shared/context/loaders"
 import { Group } from "../group/group.entity"
 import { CourseDayReward } from "../courseDayReward/courseDayReward.entity"
 import { User } from "../user/user.entity"
+import { GroupService } from "../group/group.service"
+import { DEFAULT_COINS_FOR_REWARD } from "../../lib/globalVars"
 
 @Resolver(() => Course)
 export class CourseResolver {
   @Inject(() => CourseService)
   courseService: CourseService
+  @Inject(() => GroupService)
+  groupService: GroupService
   @Inject(() => CourseRepository)
   courseRepository: CourseRepository
 
@@ -45,8 +49,19 @@ export class CourseResolver {
 
   // TODO: @Authorized()
   @Mutation(() => Course)
-  createCourse(@Arg("data") data: CreateCourseInput): Promise<Course> {
-    return this.courseService.create(data)
+  async createCourse(@Arg("data") data: CreateCourseInput): Promise<Course> {
+    const course = await this.courseService.create(data)
+
+    const groupData = {
+      name: course.name,
+      rewardCount: 0,
+      coinsForReward: DEFAULT_COINS_FOR_REWARD,
+      courseId: course.id,
+      rewardType: course.rewardType,
+    }
+    await this.groupService.create(groupData)
+
+    return course
   }
 
   // TODO: @Authorized(["admin"])
