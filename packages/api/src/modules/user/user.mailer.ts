@@ -3,12 +3,15 @@ import { FULL_WEB_URL } from "../../lib/config"
 import { User } from "./user.entity"
 import { Mailer } from "../../lib/mailer"
 import { UserBoosterRepository } from "../userBooster/userBooster.repository"
+import { UserRepository } from "./user.repository"
 
 @Service()
 export class UserMailer {
   constructor(private readonly mailer: Mailer) {}
   @Inject(() => UserBoosterRepository)
   userBoosterRepository: UserBoosterRepository
+  @Inject(() => UserRepository)
+  userRepository: UserRepository
 
   sendWelcomeEmail(user: User) {
     if (!user.email) return
@@ -75,17 +78,20 @@ export class UserMailer {
 
   // TODO: Make dynamic
   async sendSponsorInviteEmail(boosterId: string) {
-    const booster = await this.userBoosterRepository.findById(boosterId, {
+    const booster = await this.userBoosterRepository.findById(
+      boosterId /* TODO: Debug {
       relations: ["user"],
-    })
+    }*/,
+    )
+    const user = await this.userRepository.findById(booster.userId)
 
     if (!booster.sponsorEmail) return
     this.mailer.send({
       to: booster.sponsorEmail,
       data: {
-        subject: `Sponsor ${booster.user.firstName}`,
-        html: `<p>Hi!</p></br> <p>${booster.user.firstName} would like you to sponsor him/her during his challenge on the Become platform.</p>
-        <p>It would be great if you can donate ${booster.sponsorAmount} euro to the Isha foundation when ${booster.user.firstName} has completed his challenge.</p>
+        subject: `Sponsor ${user.firstName}`,
+        html: `<p>Hi!</p></br> <p>${user.firstName} would like you to sponsor him/her during his challenge on the Become platform.</p>
+        <p>It would be great if you can donate ${booster.sponsorAmount} euro to the Isha foundation when ${user.firstName} has completed his challenge.</p>
         <p>Please <a href="https://www.becomebetter.life/sponsor/${booster.id}">click here</a> if you would like to sponsor.</p>
         </br><p>With joy,</p>
         <p>The Become team</p>`,
@@ -94,16 +100,15 @@ export class UserMailer {
   }
 
   async sendSponsorCompleteEmail(boosterId: string) {
-    const booster = await this.userBoosterRepository.findById(boosterId, {
-      relations: ["user"],
-    })
+    const booster = await this.userBoosterRepository.findById(boosterId)
+    const user = await this.userRepository.findById(booster.userId)
 
     if (!booster.sponsorEmail) return
     this.mailer.send({
       to: booster.sponsorEmail,
       data: {
-        subject: `${booster.user.firstName} has completed his challenge!`,
-        html: `<p>Hi!</p></br> <p>${booster.user.firstName}has completed his/her challenge on the Become platform.</p>
+        subject: `${user.firstName} has completed his challenge!`,
+        html: `<p>Hi!</p></br> <p>${user.firstName}has completed his/her challenge on the Become platform.</p>
         <p>It would be great if you can donate ${booster.sponsorAmount} euro to the <a href="https://www.ishaoutreach.org/en/action-rural-rejuvenation/project/corona-relief">Isha Outreach</a></p>.
         <p><a href="https://www.ishaoutreach.org/en/action-rural-rejuvenation/project/corona-relief">https://www.ishaoutreach.org/en/action-rural-rejuvenation/project/corona-relief</a></p>
         </br><p>With joy,</p>

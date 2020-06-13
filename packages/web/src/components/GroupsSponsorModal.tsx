@@ -161,7 +161,7 @@ export const GroupsSponsorModal = ({ handleSelect, duration }: Props) => {
             </>
           ) : confirmInvite ? (
             <>
-              <Text>We have sent an email with instruction.</Text>
+              <Text>We will sent an email with instruction.</Text>
               <Text my={4}>
                 Please keep your sponsor up to date with your progress, so that
                 she or he can support and sponsor you.
