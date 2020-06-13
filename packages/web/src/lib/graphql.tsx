@@ -106,11 +106,6 @@ export type CreateGroupInput = {
   rewardType: Scalars["String"]
 }
 
-export type CreateGroupMessageInput = {
-  groupId: Scalars["String"]
-  messageId?: Maybe<Scalars["String"]>
-}
-
 export type CreateLevelInput = {
   levelNumber: Scalars["Float"]
   maxProgressDays: Scalars["Float"]
@@ -177,7 +172,6 @@ export type CreateUserCourseInput = {
 }
 
 export type CreateUserGroupMessageInput = {
-  groupMessageId: Scalars["String"]
   userId: Scalars["String"]
   messageId: Scalars["String"]
 }
@@ -222,17 +216,6 @@ export type Group = {
   groupSize?: Maybe<Scalars["Int"]>
   courseId: Scalars["String"]
   users?: Maybe<Array<User>>
-}
-
-export type GroupMessage = {
-  __typename?: "GroupMessage"
-  id: Scalars["ID"]
-  createdAt: Scalars["DateTime"]
-  updatedAt: Scalars["DateTime"]
-  rewardCount: Scalars["Int"]
-  leftCoinsCount: Scalars["Int"]
-  groupId: Scalars["String"]
-  messageId?: Maybe<Scalars["String"]>
 }
 
 export type Level = {
@@ -305,6 +288,15 @@ export type Mutation = {
   createGroup: Group
   updateGroup?: Maybe<Group>
   destroyGroup?: Maybe<Scalars["Boolean"]>
+  createLevel: Level
+  updateLevel?: Maybe<Level>
+  destroyLevel: Scalars["Boolean"]
+  createLevelTask: LevelTask
+  updateLevelTask?: Maybe<LevelTask>
+  destroyLevelTask: Scalars["Boolean"]
+  createLevelTaskOption: LevelTaskOption
+  updateLevelTaskOption?: Maybe<LevelTaskOption>
+  destroyLevelTaskOption: Scalars["Boolean"]
   updateMe?: Maybe<User>
   login: AuthResponse
   register: AuthResponse
@@ -316,18 +308,6 @@ export type Mutation = {
   endMyCourse?: Maybe<User>
   endCourseByUserId?: Maybe<User>
   startMyCourse?: Maybe<User>
-  createGroupMessage: GroupMessage
-  updateGroupMessage?: Maybe<GroupMessage>
-  destroyGroupMessage?: Maybe<Scalars["Boolean"]>
-  createLevel: Level
-  updateLevel?: Maybe<Level>
-  destroyLevel: Scalars["Boolean"]
-  createLevelTask: LevelTask
-  updateLevelTask?: Maybe<LevelTask>
-  destroyLevelTask: Scalars["Boolean"]
-  createLevelTaskOption: LevelTaskOption
-  updateLevelTaskOption?: Maybe<LevelTaskOption>
-  destroyLevelTaskOption: Scalars["Boolean"]
   createMessage: Message
   updateMessage?: Maybe<Message>
   destroyMessage?: Maybe<Scalars["Boolean"]>
@@ -402,52 +382,6 @@ export type MutationDestroyGroupArgs = {
   groupId: Scalars["String"]
 }
 
-export type MutationUpdateMeArgs = {
-  data: UpdateInput
-}
-
-export type MutationLoginArgs = {
-  data: LoginInput
-}
-
-export type MutationRegisterArgs = {
-  data: RegisterInput
-}
-
-export type MutationForgotPasswordArgs = {
-  email: Scalars["String"]
-}
-
-export type MutationResetPasswordArgs = {
-  data: ResetPasswordInput
-}
-
-export type MutationEndMyCourseArgs = {
-  hasFailed: Scalars["Boolean"]
-}
-
-export type MutationEndCourseByUserIdArgs = {
-  userId: Scalars["String"]
-}
-
-export type MutationStartMyCourseArgs = {
-  courseId: Scalars["String"]
-  groupId: Scalars["String"]
-}
-
-export type MutationCreateGroupMessageArgs = {
-  data: CreateGroupMessageInput
-}
-
-export type MutationUpdateGroupMessageArgs = {
-  data: UpdateGroupMessageInput
-  groupMessageId: Scalars["String"]
-}
-
-export type MutationDestroyGroupMessageArgs = {
-  groupMessageId: Scalars["String"]
-}
-
 export type MutationCreateLevelArgs = {
   data: CreateLevelInput
 }
@@ -485,6 +419,39 @@ export type MutationUpdateLevelTaskOptionArgs = {
 
 export type MutationDestroyLevelTaskOptionArgs = {
   levelTaskOptionId: Scalars["String"]
+}
+
+export type MutationUpdateMeArgs = {
+  data: UpdateInput
+}
+
+export type MutationLoginArgs = {
+  data: LoginInput
+}
+
+export type MutationRegisterArgs = {
+  data: RegisterInput
+}
+
+export type MutationForgotPasswordArgs = {
+  email: Scalars["String"]
+}
+
+export type MutationResetPasswordArgs = {
+  data: ResetPasswordInput
+}
+
+export type MutationEndMyCourseArgs = {
+  hasFailed: Scalars["Boolean"]
+}
+
+export type MutationEndCourseByUserIdArgs = {
+  userId: Scalars["String"]
+}
+
+export type MutationStartMyCourseArgs = {
+  courseId: Scalars["String"]
+  groupId: Scalars["String"]
 }
 
 export type MutationCreateMessageArgs = {
@@ -659,12 +626,6 @@ export type Query = {
   getAllCourseDayRewards: Array<CourseDayReward>
   group: Group
   groups: Array<Group>
-  dailyReset: Scalars["Boolean"]
-  getAllUsers: Array<User>
-  getUser?: Maybe<User>
-  me?: Maybe<User>
-  getGroupMessage: GroupMessage
-  allGroupMessages: Array<GroupMessage>
   getLevel: Level
   getAllLevels: Array<Level>
   getLevelTask: LevelTask
@@ -673,6 +634,10 @@ export type Query = {
   getLevelTaskOption: LevelTaskOption
   getAllLevelTaskOptions: Array<LevelTaskOption>
   getAllLevelTaskOptionsByLevelId: Array<LevelTaskOption>
+  dailyReset: Scalars["Boolean"]
+  getAllUsers: Array<User>
+  getUser?: Maybe<User>
+  me?: Maybe<User>
   getMessage: Message
   getCourseMessages: Array<Message>
   getOption: Option
@@ -707,19 +672,6 @@ export type QueryGroupArgs = {
   groupId: Scalars["String"]
 }
 
-export type QueryDailyResetArgs = {
-  repeatDaily: Scalars["Boolean"]
-  delay: Scalars["Float"]
-}
-
-export type QueryGetUserArgs = {
-  userId: Scalars["String"]
-}
-
-export type QueryGetGroupMessageArgs = {
-  groupMessageId: Scalars["String"]
-}
-
 export type QueryGetLevelArgs = {
   levelId: Scalars["String"]
 }
@@ -738,6 +690,15 @@ export type QueryGetLevelTaskOptionArgs = {
 
 export type QueryGetAllLevelTaskOptionsByLevelIdArgs = {
   levelId: Scalars["String"]
+}
+
+export type QueryDailyResetArgs = {
+  repeatDaily: Scalars["Boolean"]
+  delay: Scalars["Float"]
+}
+
+export type QueryGetUserArgs = {
+  userId: Scalars["String"]
 }
 
 export type QueryGetMessageArgs = {
@@ -839,12 +800,6 @@ export type UpdateGroupInput = {
   rewardType?: Maybe<Scalars["String"]>
 }
 
-export type UpdateGroupMessageInput = {
-  messageId?: Maybe<Scalars["String"]>
-  leftCoinsCount?: Maybe<Scalars["Float"]>
-  rewardCount?: Maybe<Scalars["Float"]>
-}
-
 export type UpdateInput = {
   firstName?: Maybe<Scalars["String"]>
   lastName?: Maybe<Scalars["String"]>
@@ -925,7 +880,6 @@ export type UpdateUserCourseInput = {
 }
 
 export type UpdateUserGroupMessageInput = {
-  groupMessageId?: Maybe<Scalars["String"]>
   isRead?: Maybe<Scalars["Boolean"]>
   showOption?: Maybe<Scalars["Boolean"]>
   messageId?: Maybe<Scalars["String"]>
@@ -1030,10 +984,8 @@ export type UserGroupMessage = {
   updatedAt: Scalars["DateTime"]
   isRead: Scalars["Boolean"]
   showOption: Scalars["Boolean"]
-  groupMessageId?: Maybe<Scalars["String"]>
   messageId?: Maybe<Scalars["String"]>
   userId: Scalars["String"]
-  groupMessage?: Maybe<GroupMessage>
   message?: Maybe<Message>
 }
 
@@ -1554,12 +1506,6 @@ export type UserItemFragment = { __typename?: "User" } & Pick<
 export type UserGroupMessageFragment = {
   __typename?: "UserGroupMessage"
 } & Pick<UserGroupMessage, "id" | "isRead" | "showOption"> & {
-    groupMessage?: Maybe<
-      { __typename?: "GroupMessage" } & Pick<
-        GroupMessage,
-        "id" | "rewardCount" | "leftCoinsCount"
-      >
-    >
     message?: Maybe<
       { __typename?: "Message" } & Pick<
         Message,
@@ -2174,11 +2120,6 @@ export const UserGroupMessageFragmentDoc = gql`
     id
     isRead
     showOption
-    groupMessage {
-      id
-      rewardCount
-      leftCoinsCount
-    }
     message {
       id
       message

@@ -4,7 +4,6 @@ import { Worker } from "../../lib/worker"
 import { UserTaskService } from "../userTask/userTask.service"
 import { GroupService } from "../group/group.service"
 import { UserGroupMessageService } from "../userGroupMessage/userGroupMessage.service"
-import { GroupMessageService } from "../groupMessage/groupMessage.service"
 import { UserResolver } from "./user.resolver"
 import { ONE_DAY } from "../../lib/times"
 
@@ -28,11 +27,6 @@ export type resetAllUserGroupMessages = {
   data: {}
 }
 
-export type updateDailyMessage = {
-  name: "updateDailyMessage"
-  data: {}
-}
-
 export type repeatDaily = {
   name: "repeatDaily"
   data: {}
@@ -43,7 +37,6 @@ export type JobType =
   | resetAllGroupOrdersAndSetPetLifes
   | resetMembersFinished
   | resetAllUserGroupMessages
-  | updateDailyMessage
   | repeatDaily
 
 const QUEUE = "USER"
@@ -61,8 +54,6 @@ export class UserWorker extends Worker<JobType> {
   groupService: GroupService
   @Inject(() => UserGroupMessageService)
   userGroupMessageService: UserGroupMessageService
-  @Inject(() => GroupMessageService)
-  groupMessageService: GroupMessageService
   @Inject(() => UserResolver)
   userResolver: UserResolver
 
@@ -80,9 +71,6 @@ export class UserWorker extends Worker<JobType> {
           return
         case "resetAllGroupOrdersAndSetPetLifes":
           this.userService.resetAllGroupOrdersAndSetPetLifes()
-          return
-        case "updateDailyMessage":
-          this.groupMessageService.updateDailyMessage()
           return
         case "repeatDaily":
           this.userResolver.dailyReset(ONE_DAY, true)

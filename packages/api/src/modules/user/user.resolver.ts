@@ -90,7 +90,6 @@ export class UserResolver {
       { name: "resetAllUserGroupMessages", data: {} },
       { delay },
     )
-    this.userWorker.addJob({ name: "updateDailyMessage", data: {} }, { delay })
 
     repeatDaily &&
       this.userWorker.addJob({ name: "repeatDaily", data: {} }, { delay })

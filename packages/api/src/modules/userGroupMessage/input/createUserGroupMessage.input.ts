@@ -6,10 +6,6 @@ import { UserGroupMessage } from "../userGroupMessage.entity"
 export class CreateUserGroupMessageInput implements Partial<UserGroupMessage> {
   @IsNotEmpty()
   @Field()
-  groupMessageId: string
-
-  @IsNotEmpty()
-  @Field()
   userId: string
 
   @IsNotEmpty()

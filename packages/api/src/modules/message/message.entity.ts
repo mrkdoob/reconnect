@@ -1,4 +1,4 @@
-import { Entity, OneToOne, OneToMany } from "typeorm"
+import { Entity, OneToMany } from "typeorm"
 import { ObjectType } from "type-graphql"
 import { BaseEntity } from "../shared/base.entity"
 import {
@@ -7,7 +7,6 @@ import {
   BooleanField,
   UuidField,
 } from "../shared/fields"
-import { GroupMessage } from "../groupMessage/groupMessage.entity"
 import { UserGroupMessage } from "../userGroupMessage/userGroupMessage.entity"
 
 @ObjectType()
@@ -31,12 +30,7 @@ export class Message extends BaseEntity<Message> {
   @UuidField({ nullable: true })
   courseId: string
 
-  // RELATIONS TODO:
-  @OneToOne(
-    () => GroupMessage,
-    // group => group.groupMessage,
-  )
-  groupMessage: GroupMessage
+  // RELATIONS
 
   @OneToMany(
     () => UserGroupMessage,

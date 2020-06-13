@@ -17,7 +17,6 @@ import { UserGroupMessageService } from "./userGroupMessage.service"
 import { Loaders } from "../shared/context/loaders"
 import { UserGroupMessage } from "./userGroupMessage.entity"
 import { UserGroupMessageRepository } from "./userGroupMessage.repository"
-import { GroupMessage } from "../groupMessage/groupMessage.entity"
 import { Message } from "../message/message.entity"
 import { MessageRepository } from "../message/message.repository"
 
@@ -77,19 +76,11 @@ export class UserGroupMessageResolver {
   }
 
   // FIELD RESOLVERS
-  @FieldResolver(() => GroupMessage, { nullable: true })
-  groupMessage(
-    @Root() userGroupMessage: UserGroupMessage,
-    @Loaders() { groupMessageLoader }: Loaders,
-  ) {
-    return groupMessageLoader.load(userGroupMessage.groupMessageId)
-  }
-
   @FieldResolver(() => Message, { nullable: true })
   message(
-    @Root() groupMessage: GroupMessage,
+    @Root() userGroupMessage: UserGroupMessage,
     @Loaders() { messageLoader }: Loaders,
   ) {
-    return messageLoader.load(groupMessage.messageId)
+    return messageLoader.load(userGroupMessage.messageId)
   }
 }

@@ -1,15 +1,12 @@
 import { Service, Inject } from "typedi"
 import { UserGroupMessageRepository } from "./userGroupMessage.repository"
 import { UserGroupMessage } from "./userGroupMessage.entity"
-import { GroupMessageRepository } from "../groupMessage/groupMessage.repository"
 import { MessageRepository } from "../message/message.repository"
 
 @Service()
 export class UserGroupMessageService {
   @Inject(() => UserGroupMessageRepository)
   userGroupMessageRepository: UserGroupMessageRepository
-  @Inject(() => GroupMessageRepository)
-  groupMessageRepository: GroupMessageRepository
   @Inject(() => MessageRepository)
   messageRepository: MessageRepository
 
@@ -23,16 +20,12 @@ export class UserGroupMessageService {
     groupId: string,
     courseId: string,
   ): Promise<UserGroupMessage> {
-    const groupMessage = await this.groupMessageRepository.findByGroupId(
-      groupId,
-    )
     const firstMessage = await this.messageRepository.findByOrderCourse(
       1,
       courseId,
     )
     return await UserGroupMessage.create({
       userId,
-      groupMessageId: groupMessage.id,
       messageId: firstMessage.id,
     }).save()
   }

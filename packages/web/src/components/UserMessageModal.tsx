@@ -18,11 +18,6 @@ export const USER_GROUP_MESSAGE = gql`
     id
     isRead
     showOption
-    groupMessage {
-      id
-      rewardCount
-      leftCoinsCount
-    }
     message {
       id
       message
@@ -64,7 +59,9 @@ export const UserMessageModal: React.FC<Props> = props => {
     default:
       !props.userGroupMessage?.isRead && props.userGroupMessage?.showOption,
   }) // TODO: Change useToggle
-  const [continueFirst, setContinueFirst] = useState(false)
+  const [showMessage, setShowMessage] = useState(
+    props.userGroupMessage?.message?.order !== 1,
+  )
 
   const [updateUserGroupMessage] = useUpdateUserGroupMessageMutation()
 
@@ -152,9 +149,9 @@ export const UserMessageModal: React.FC<Props> = props => {
       ) : (
         <Flex direction="column">
           {/* FIRST MESSAGE @ START OF COURSE */}
-          {props.userGroupMessage?.message?.order === 1 ? (
+          {props.userGroupMessage?.message?.order === 1 && (
             <>
-              {!continueFirst && (
+              {!showMessage && (
                 <Flex
                   justify="center"
                   align="center"
@@ -181,7 +178,7 @@ export const UserMessageModal: React.FC<Props> = props => {
                   </Text>
                   <Button
                     my={6}
-                    onClick={() => setContinueFirst(true)}
+                    onClick={() => setShowMessage(true)}
                     variantColor="blue"
                   >
                     Continue
@@ -189,62 +186,45 @@ export const UserMessageModal: React.FC<Props> = props => {
                 </Flex>
               )}
             </>
-          ) : (
+          )}
+          {showMessage && (
             <>
-              {props.userGroupMessage?.groupMessage?.rewardCount !== 0 && (
-                <Text mb={4}>
-                  Together with your team you have{" "}
-                  {props.rewardType === "tree" ? "planted" : "donated"}{" "}
-                  {props.userGroupMessage?.groupMessage?.rewardCount}{" "}
-                  {props.rewardType}
-                  {props.userGroupMessage?.groupMessage?.rewardCount !== 1 &&
-                    "s"}{" "}
-                  yesterday. Thank you!
-                </Text>
+              {props.userGroupMessage?.message?.pictureUrl && (
+                <Image
+                  src={props.userGroupMessage.message.pictureUrl}
+                  alt="Message picture"
+                  w="625px"
+                  h={
+                    props.userGroupMessage.message.fullHeightPic ? "" : "300px"
+                  }
+                  objectFit="cover"
+                  borderRadius="lg"
+                  my={4}
+                />
               )}
+              {props.userGroupMessage?.message?.videoUrl && (
+                <>
+                  <AspectRatioBox ratio={4 / 3}>
+                    <Box
+                      mt={6}
+                      as="iframe"
+                      title="task video"
+                      // @ts-ignore
+                      src={props.userGroupMessage?.message?.videoUrl || ""}
+                      allowFullScreen
+                      borderRadius="lg"
+                    />
+                  </AspectRatioBox>
+                  <Box mb={6} />
+                </>
+              )}
+              <Markup content={props.userGroupMessage?.message?.message} />
+
+              <Button my={6} onClick={handleClose} variantColor="blue">
+                Continue
+              </Button>
             </>
           )}
-          {props.userGroupMessage?.message?.order !== 1 ||
-            (continueFirst && (
-              <>
-                {props.userGroupMessage?.message?.pictureUrl && (
-                  <Image
-                    src={props.userGroupMessage.message.pictureUrl}
-                    alt="Message picture"
-                    w="625px"
-                    h={
-                      props.userGroupMessage.message.fullHeightPic
-                        ? ""
-                        : "300px"
-                    }
-                    objectFit="cover"
-                    borderRadius="lg"
-                    my={4}
-                  />
-                )}
-                {props.userGroupMessage?.message?.videoUrl && (
-                  <>
-                    <AspectRatioBox ratio={4 / 3}>
-                      <Box
-                        mt={6}
-                        as="iframe"
-                        title="task video"
-                        // @ts-ignore
-                        src={props.userGroupMessage?.message?.videoUrl || ""}
-                        allowFullScreen
-                        borderRadius="lg"
-                      />
-                    </AspectRatioBox>
-                    <Box mb={6} />
-                  </>
-                )}
-                <Markup content={props.userGroupMessage?.message?.message} />
-
-                <Button my={6} onClick={handleClose} variantColor="blue">
-                  Continue
-                </Button>
-              </>
-            ))}
           {/* TODO: Add or remove? <Button fontSize="sm" onClick={handleDontShowMe} variant="ghost">
           Don't show me again
         </Button> */}

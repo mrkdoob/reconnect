@@ -15,9 +15,6 @@ export class UserGroupMessage extends BaseEntity<UserGroupMessage> {
   showOption: boolean
 
   @UuidField({ nullable: true })
-  groupMessageId: string
-
-  @UuidField({ nullable: true })
   messageId: string
 
   @UuidField()

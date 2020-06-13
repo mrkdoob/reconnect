@@ -1,9 +1,8 @@
-import { Entity, OneToMany, OneToOne } from "typeorm"
+import { Entity, OneToMany } from "typeorm"
 import { ObjectType } from "type-graphql"
 import { BaseEntity } from "../shared/base.entity"
 import { StringField, IntField, DateField, UuidField } from "../shared/fields"
 import { User } from "../user/user.entity"
-import { GroupMessage } from "../groupMessage/groupMessage.entity"
 
 @ObjectType()
 @Entity()
@@ -24,7 +23,7 @@ export class Group extends BaseEntity<Group> {
   coinsForReward: number
 
   @IntField({ default: 0 })
-  groupCoins: number // Resets daily
+  groupCoins: number
 
   @StringField({ default: "tree" })
   rewardType: string
@@ -47,10 +46,4 @@ export class Group extends BaseEntity<Group> {
     user => user.group,
   )
   users: User[]
-
-  @OneToOne(
-    () => GroupMessage,
-    groupMessage => groupMessage.groupId,
-  )
-  groupMessage: GroupMessage
 }
