@@ -40,6 +40,9 @@ export class UpdateInput implements Partial<User> {
 export class CompleteMeInput implements Partial<User> {
   @Field({ nullable: true })
   groupOrder: number
+
+  @Field(() => String, { nullable: true })
+  groupId?: string | null
 }
 
 @InputType()

@@ -188,6 +188,8 @@ export class UserResolver {
         currentUser.groupId,
         currentUser.id,
       ) // Don't update group score if last level
+    } else {
+      this.endMyCourse(currentUser, false)
     }
     const data: CompleteMeInput = {
       groupOrder: group?.groupMembersFinished || 0,
