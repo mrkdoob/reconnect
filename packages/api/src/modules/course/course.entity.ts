@@ -8,7 +8,12 @@ import {
 } from "typeorm"
 import { ObjectType } from "type-graphql"
 import { BaseEntity } from "../shared/base.entity"
-import { StringField, UuidField, IntField } from "../shared/fields"
+import {
+  StringField,
+  UuidField,
+  IntField,
+  BooleanField,
+} from "../shared/fields"
 import { Level } from "../level/level.entity"
 import slug from "limax"
 import { Group } from "../group/group.entity"
@@ -46,6 +51,9 @@ export class Course extends BaseEntity<Course> {
 
   @StringField({ nullable: true })
   rewardType: string
+
+  @BooleanField({ default: false })
+  isPublished: boolean
 
   @UuidField({ nullable: true })
   petId: string

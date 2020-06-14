@@ -25,6 +25,7 @@ export const COURSE_ITEM = gql`
     duration
     benefits
     rewardType
+    isPublished
     petId
     mentor {
       ...MentorItem
@@ -55,9 +56,9 @@ export function CourseItem(props: Props) {
             position="relative"
             left={2}
             bottom={3}
-            variantColor="cyan"
+            variantColor={props.course.isPublished ? "cyan" : "red"}
           >
-            {props.course.category}
+            {props.course.isPublished ? props.course.category : "Not published"}
           </Tag>
         </Box>
 

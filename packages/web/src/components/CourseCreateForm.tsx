@@ -57,7 +57,7 @@ export const CourseCreateForm: React.FC<Props> = props => {
     rewardType: string
     benefits: string
   }) => {
-    const duration = 10
+    const duration = 5
     const res = await createCourse({
       variables: { data: { ...data, duration, mentorId: props.mentorId } },
     })

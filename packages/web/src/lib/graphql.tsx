@@ -33,6 +33,7 @@ export type BulkSignedResponse = {
 
 export type CompleteMeInput = {
   groupOrder?: Maybe<Scalars["Float"]>
+  groupId?: Maybe<Scalars["String"]>
 }
 
 export type Course = {
@@ -49,6 +50,7 @@ export type Course = {
   benefits?: Maybe<Scalars["String"]>
   cover?: Maybe<Scalars["String"]>
   rewardType?: Maybe<Scalars["String"]>
+  isPublished: Scalars["Boolean"]
   petId?: Maybe<Scalars["String"]>
   mentorId?: Maybe<Scalars["String"]>
   levels?: Maybe<Array<Level>>
@@ -785,6 +787,7 @@ export type UpdateCourseInput = {
   cover?: Maybe<Scalars["String"]>
   endText?: Maybe<Scalars["String"]>
   rewardType?: Maybe<Scalars["String"]>
+  isPublished?: Maybe<Scalars["Boolean"]>
   petId?: Maybe<Scalars["String"]>
   mentorId?: Maybe<Scalars["String"]>
 }
@@ -1198,6 +1201,7 @@ export type CourseItemFragment = { __typename?: "Course" } & Pick<
   | "duration"
   | "benefits"
   | "rewardType"
+  | "isPublished"
   | "petId"
 > & { mentor?: Maybe<{ __typename?: "User" } & MentorItemFragment> }
 
@@ -2053,6 +2057,7 @@ export const CourseItemFragmentDoc = gql`
     duration
     benefits
     rewardType
+    isPublished
     petId
     mentor {
       ...MentorItem

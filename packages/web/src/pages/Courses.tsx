@@ -33,8 +33,11 @@ export const Courses: React.FC<RouteComponentProps> = () => {
   })
   const { isOpen, onOpen, onClose } = useDisclosure()
 
-  const courses = data?.getAllCourses || []
   const me = useMe()
+  const courses =
+    data?.getAllCourses.filter(
+      course => course.isPublished === true || course.mentor?.id === me?.id,
+    ) || []
 
   const allowedToCreateCourse =
     me?.userBooster?.coinsEarned && me?.userBooster?.coinsEarned >= 100
