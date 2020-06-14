@@ -272,4 +272,5 @@ const StyledImage = styled(Image)`
   border-left: 3px solid ${p => p.theme.colors.blue[200]};
   border-right: 3px solid ${p => p.theme.colors.green[100]};
   border-bottom: 3px solid ${p => p.theme.colors.green[400]};
+  image-orientation: from-image;
 `

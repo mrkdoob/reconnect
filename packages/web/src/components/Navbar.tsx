@@ -8,7 +8,6 @@ import {
   Flex,
   Box,
   Collapse,
-  Image,
 } from "@chakra-ui/core"
 import { Link as RLink, Match } from "@reach/router"
 
@@ -21,6 +20,7 @@ import { Close } from "styled-icons/material/Close"
 import { useMe } from "./providers/MeProvider"
 import { User } from "styled-icons/boxicons-regular/User"
 import { colors } from "../lib/colors"
+import { ProfilePhoto } from "./ProfilePhoto"
 
 export const Navbar: React.FC = () => {
   const me = useMe()
@@ -95,7 +95,7 @@ export const Navbar: React.FC = () => {
             </>
           )}
           {me?.avatar && me.avatar ? (
-            <Image
+            <ProfilePhoto
               src={me.avatar}
               size="40px"
               rounded="full"

@@ -1,5 +1,5 @@
 import React from "react"
-import { Flex, Image, Text, Box } from "@chakra-ui/core"
+import { Flex, Text, Box } from "@chakra-ui/core"
 import gql from "graphql-tag.macro"
 import {
   GroupUserTaskItemFragment,
@@ -7,6 +7,7 @@ import {
 } from "../lib/graphql"
 import { Question } from "styled-icons/remix-fill/Question"
 import { User } from "styled-icons/boxicons-regular/User"
+import { ProfilePhoto } from "./ProfilePhoto"
 
 // TODO: Refactor rewardCount?
 export const USER_GROUP = gql`
@@ -50,7 +51,7 @@ export function UserGroupItem({ user }: Props) {
   return (
     <Flex justify="center" align="center" direction="column">
       {user?.avatar ? (
-        <Image
+        <ProfilePhoto
           h={{ base: 8, md: 10 }}
           w={{ base: 8, md: 10 }}
           objectFit="cover"
