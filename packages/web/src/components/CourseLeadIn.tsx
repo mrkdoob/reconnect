@@ -65,11 +65,7 @@ export function CourseLeadIn(props: Props) {
             {/* <BoxSubHeader>{props.course.rewardType}s</BoxSubHeader> */}
             <BoxSubHeader>Help those in need</BoxSubHeader>
             <Text fontSize="sm">
-              {/* You will have a chance to{" "}
-              {props.course.rewardType === "tree" ? "plant" : "provide"}{" "}
-              {props.course.rewardType}s everyday together with your team* */}
-              Each time you practice, we will donate to a charity to help those
-              in need.
+              Each time you practice, you will unlock a donation to a charity.
             </Text>
           </Box>
         </Flex>

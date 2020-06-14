@@ -46,6 +46,8 @@ export class UserDayRewardService {
     const newReward = await this.courseDayRewardRepository.findNext(
       reward.courseDayRewardId,
     )
+    console.log("newReward" + newReward)
+
     const data = { courseDayRewardId: newReward.id }
     return reward.update(data)
   }

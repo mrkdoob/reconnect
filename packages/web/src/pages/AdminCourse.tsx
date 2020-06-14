@@ -87,7 +87,7 @@ export const AdminCourse: React.FC<Props> = props => {
                     letterSpacing="0.25rem"
                     fontSize="xs"
                     fontWeight="semibold"
-                    mb={4}
+                    mb={2}
                   >
                     {course?.category}
                   </Text>

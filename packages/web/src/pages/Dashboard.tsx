@@ -20,7 +20,6 @@ import {
   LevelItemFragmentDoc,
   UserGroupMessageFragmentDoc,
   UserPetItemFragmentDoc,
-  UserDayRewardItemFragmentDoc,
   UserBoosterItemFragmentDoc,
 } from "../lib/graphql"
 import { UserTaskList } from "../components/UserTaskList"
@@ -63,9 +62,6 @@ export const MY_DASHBOARD_FRAGMENT = gql`
     userPet {
       ...UserPetItem
     }
-    userDayReward {
-      ...UserDayRewardItem
-    }
     userBooster {
       ...UserBoosterItem
     }
@@ -75,7 +71,6 @@ export const MY_DASHBOARD_FRAGMENT = gql`
   ${UserGroupItemFragmentDoc}
   ${UserGroupMessageFragmentDoc}
   ${UserPetItemFragmentDoc}
-  ${UserDayRewardItemFragmentDoc}
   ${UserBoosterItemFragmentDoc}
 `
 
@@ -246,7 +241,7 @@ export const Dashboard: React.FC<RouteComponentProps> = () => {
           userPet={me.userPet}
         />
       )}
-      {me && (
+      {me && dayCompleted && (
         <DailyRewardModal
           me={me}
           dayCompleted={dayCompleted}

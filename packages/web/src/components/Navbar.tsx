@@ -186,9 +186,11 @@ export const Navbar: React.FC = () => {
             <Text onClick={toggleMenu}>
               <NavLink to="/">Dashboard </NavLink>
             </Text>
-            <Text onClick={toggleMenu}>
-              <NavLink to={`/mylevelreward`}>Current lesson</NavLink>
-            </Text>
+            {me.groupId && (
+              <Text onClick={toggleMenu}>
+                <NavLink to={`/mylevelreward`}>Current lesson</NavLink>
+              </Text>
+            )}
             <Text onClick={toggleMenu}>
               <NavLink to="/courses">Challenges</NavLink>
             </Text>

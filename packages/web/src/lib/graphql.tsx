@@ -1347,6 +1347,14 @@ export type UserDayRewardItemFragment = { __typename?: "UserDayReward" } & Pick<
     >
   }
 
+export type MyDayrewardQueryVariables = {}
+
+export type MyDayrewardQuery = { __typename?: "Query" } & {
+  myDayReward?: Maybe<
+    { __typename?: "UserDayReward" } & UserDayRewardItemFragment
+  >
+}
+
 export type ForgotPasswordMutationVariables = {
   email: Scalars["String"]
 }
@@ -1664,9 +1672,6 @@ export type MyDashboardFragment = { __typename?: "User" } & Pick<
       { __typename?: "UserGroupMessage" } & UserGroupMessageFragment
     >
     userPet?: Maybe<{ __typename?: "UserPet" } & UserPetItemFragment>
-    userDayReward?: Maybe<
-      { __typename?: "UserDayReward" } & UserDayRewardItemFragment
-    >
     userBooster?: Maybe<
       { __typename?: "UserBooster" } & UserBoosterItemFragment
     >
@@ -1860,6 +1865,17 @@ export const CourseDayRewardFragmentDoc = gql`
     pictureUrl
     videoUrl
     courseId
+  }
+`
+export const UserDayRewardItemFragmentDoc = gql`
+  fragment UserDayRewardItem on UserDayReward {
+    id
+    courseDayReward {
+      id
+      description
+      pictureUrl
+      videoUrl
+    }
   }
 `
 export const GroupItemFragmentDoc = gql`
@@ -2151,17 +2167,6 @@ export const UserPetItemFragmentDoc = gql`
   }
   ${PetItemFragmentDoc}
 `
-export const UserDayRewardItemFragmentDoc = gql`
-  fragment UserDayRewardItem on UserDayReward {
-    id
-    courseDayReward {
-      id
-      description
-      pictureUrl
-      videoUrl
-    }
-  }
-`
 export const MyDashboardFragmentDoc = gql`
   fragment MyDashboard on User {
     id
@@ -2182,9 +2187,6 @@ export const MyDashboardFragmentDoc = gql`
     userPet {
       ...UserPetItem
     }
-    userDayReward {
-      ...UserDayRewardItem
-    }
     userBooster {
       ...UserBoosterItem
     }
@@ -2194,7 +2196,6 @@ export const MyDashboardFragmentDoc = gql`
   ${UserLevelItemFragmentDoc}
   ${UserGroupMessageFragmentDoc}
   ${UserPetItemFragmentDoc}
-  ${UserDayRewardItemFragmentDoc}
   ${UserBoosterItemFragmentDoc}
 `
 export const MyLevelProgressFragmentDoc = gql`
@@ -3574,6 +3575,60 @@ export type GetOptionsLazyQueryHookResult = ReturnType<
 export type GetOptionsQueryResult = ApolloReactCommon.QueryResult<
   GetOptionsQuery,
   GetOptionsQueryVariables
+>
+export const MyDayrewardDocument = gql`
+  query MyDayreward {
+    myDayReward {
+      ...UserDayRewardItem
+    }
+  }
+  ${UserDayRewardItemFragmentDoc}
+`
+
+/**
+ * __useMyDayrewardQuery__
+ *
+ * To run a query within a React component, call `useMyDayrewardQuery` and pass it any options that fit your needs.
+ * When your component renders, `useMyDayrewardQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useMyDayrewardQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useMyDayrewardQuery(
+  baseOptions?: ApolloReactHooks.QueryHookOptions<
+    MyDayrewardQuery,
+    MyDayrewardQueryVariables
+  >,
+) {
+  return ApolloReactHooks.useQuery<MyDayrewardQuery, MyDayrewardQueryVariables>(
+    MyDayrewardDocument,
+    baseOptions,
+  )
+}
+export function useMyDayrewardLazyQuery(
+  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+    MyDayrewardQuery,
+    MyDayrewardQueryVariables
+  >,
+) {
+  return ApolloReactHooks.useLazyQuery<
+    MyDayrewardQuery,
+    MyDayrewardQueryVariables
+  >(MyDayrewardDocument, baseOptions)
+}
+export type MyDayrewardQueryHookResult = ReturnType<typeof useMyDayrewardQuery>
+export type MyDayrewardLazyQueryHookResult = ReturnType<
+  typeof useMyDayrewardLazyQuery
+>
+export type MyDayrewardQueryResult = ApolloReactCommon.QueryResult<
+  MyDayrewardQuery,
+  MyDayrewardQueryVariables
 >
 export const ForgotPasswordDocument = gql`
   mutation ForgotPassword($email: String!) {

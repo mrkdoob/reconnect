@@ -99,7 +99,7 @@ export function LevelRewardItem({ levelReward, tasks, loading }: Props) {
                 variantColor="green"
                 onClick={onOpen}
               >
-                Add your own practice
+                Add your own habit
               </Button>
             </Flex>
             <Border my={16} />
@@ -115,7 +115,7 @@ export function LevelRewardItem({ levelReward, tasks, loading }: Props) {
       </Page>
       <Modal
         size="xl"
-        title="Create your own practice"
+        title="Create your own habit"
         onClose={onClose}
         isOpen={isOpen}
       >

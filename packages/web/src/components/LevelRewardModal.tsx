@@ -83,7 +83,7 @@ export const LevelRewardModal = ({
         )}
         <Text mb={4}>
           {level?.isLast
-            ? "This is the end of the course. Continue learning by trying out some of our other courses."
+            ? "This is the end of the challenge. We hope you'll stick to these newly learned habits. Try out some of our other challenges for more healthy habits!"
             : "There is a new teaching waiting for you."}
         </Text>
         {level?.rewardUrl && (
@@ -114,7 +114,7 @@ export const LevelRewardModal = ({
               variantColor="blue"
               w="100%"
             >
-              More courses
+              More challenges
             </Button>
           </Link>
         )}
