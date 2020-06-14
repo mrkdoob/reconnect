@@ -87,7 +87,7 @@ export const Sponsor: React.FC<Props> = props => {
   }
 
   return (
-    <Page loading={loading}>
+    <Page disableRedirect={true} loading={loading}>
       <Flex
         justify="center"
         w={{ base: "100%", md: "30rem" }}
