@@ -19,6 +19,7 @@ import { Portfolio } from "../pages/Portfolio"
 import { AdminCourse } from "../pages/AdminCourse"
 import { AdminCourses } from "../pages/AdminCourses"
 import { Sponsor } from "../pages/Sponsor"
+import { CreateChallenge } from "../pages/CreateChallenge"
 
 export function Application() {
   return (
@@ -43,6 +44,7 @@ export function Application() {
             <Login path="/login" />
             <ResetPassword path="/reset-password/:token" />
             <Portfolio path="/portfolio" />
+            <CreateChallenge path="/create-challenge" />
           </Router>
         </Flex>
         {/* </CheckAuth> */}

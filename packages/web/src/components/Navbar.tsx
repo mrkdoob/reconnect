@@ -141,6 +141,9 @@ export const Navbar: React.FC = () => {
             <NavLink to="/courses">Challenges</NavLink>
           </Text>
           <Text onClick={toggleUserMenu}>
+            <NavLink to="/create-challenge">Create your own challenge</NavLink>
+          </Text>
+          <Text onClick={toggleUserMenu}>
             <NavLink to="/settings">Settings</NavLink>
           </Text>
 
@@ -197,6 +200,12 @@ export const Navbar: React.FC = () => {
             {/* TODO: <Text onClick={toggleMenu}>
               <NavLink to="/progress">My progress</NavLink>
             </Text> */}
+
+            <Text onClick={toggleMenu}>
+              <NavLink to="/create-challenge">
+                Create your own challenge
+              </NavLink>
+            </Text>
             <Text onClick={toggleMenu}>
               <NavLink to="/settings">Settings</NavLink>
             </Text>

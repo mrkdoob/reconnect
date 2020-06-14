@@ -68,7 +68,11 @@ export function LevelRewardItem({ levelReward, tasks, loading }: Props) {
             {/* Renders HTML in string */}
             <Heading mb={4}>{levelReward?.title}</Heading>
             <Markup content={levelReward?.rewardText} />
-
+            <Text fontWeight="semibold">Daily practice</Text>
+            <Text>
+              Here are some daily practices you can do the following days to
+              complete the challenge.
+            </Text>
             {tasks &&
               tasks?.length > 0 &&
               tasks.map(task => (
@@ -89,7 +93,12 @@ export function LevelRewardItem({ levelReward, tasks, loading }: Props) {
                 <LevelTaskItem key={task.id} levelTask={task} />
               ))} */}
 
-            <Flex justify="space-between" align="center" mt={8}>
+            <Flex
+              wrap="wrap"
+              justify={{ base: "center", md: "space-between" }}
+              align="center"
+              mt={8}
+            >
               <Text fontWeight="semibold">
                 Want to challenge yourself a bit more?
               </Text>
@@ -98,6 +107,7 @@ export function LevelRewardItem({ levelReward, tasks, loading }: Props) {
                 w="fit-content"
                 variantColor="green"
                 onClick={onOpen}
+                mt={{ base: 4, md: 0 }}
               >
                 Add your own habit
               </Button>
