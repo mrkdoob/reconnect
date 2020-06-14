@@ -66,9 +66,11 @@ export function LevelRewardItem({ levelReward, tasks, loading }: Props) {
             <Border mt={12} mb={{ base: 8, md: 16 }} />
             <Text mb={6}>{levelReward?.rewardDescription}</Text>
             {/* Renders HTML in string */}
-            <Heading mb={4}>{levelReward?.title}</Heading>
+            <Heading mb={2}>{levelReward?.title}</Heading>
             <Markup content={levelReward?.rewardText} />
-            <Text fontWeight="semibold">Daily practice</Text>
+            <Text mt={6} fontWeight="semibold">
+              Daily practice
+            </Text>
             <Text>
               Here are some daily practices you can do the following days to
               complete the challenge.
