@@ -116,14 +116,13 @@ export const UserMessageModal: React.FC<Props> = props => {
                 <>
                   <Text mb={4}>
                     {/* TODO?: Make dynamic if max_retries > 1 */}
-                    Your {props.userPet.pet.name} died :({" "}
+                    {props.userPet.pet.name} died :({" "}
                   </Text>
                   <Text mb={4}>Your level progress is set back to 0</Text>
                   <Image src={HealthPotion} h={20} w={20} />
                   <Text my={4}>
-                    {/* TODO: Dynamic mentor name? */}
-                    Your mentor has given you a health potion to revive your
-                    spirit animal.
+                    You have been given a health potion to revive{" "}
+                    {props.userPet.pet.name}.
                   </Text>
                   <Text mb={4}>You have one more chance to succeed!</Text>
                 </>
@@ -136,9 +135,7 @@ export const UserMessageModal: React.FC<Props> = props => {
           ) : (
             <>
               {props.userPet.pet ? (
-                <Text mb={4}>
-                  Your {props.userPet.pet.name} has lost health :(
-                </Text>
+                <Text mb={4}>{props.userPet.pet.name} has lost health :(</Text>
               ) : (
                 <Text mb={4}>You have lost health :(</Text>
               )}
