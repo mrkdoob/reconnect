@@ -30,4 +30,18 @@ export class UserPetRepository {
       throw new UserInputError("No UserPet found")
     }
   }
+
+  findActiveByUserId(
+    userId: string,
+    options?: FindOneOptions<UserPet>,
+  ): Promise<UserPet> {
+    try {
+      return UserPet.findOneOrFail({
+        where: { userId, isActive: true },
+        ...options,
+      })
+    } catch {
+      throw new UserInputError("No UserPet found")
+    }
+  }
 }

@@ -93,6 +93,7 @@ export class UserPetService {
       // Lose progress
       if (userPet.challengeActive) {
         await this.userLevelService.decrementDayProgress(userId)
+        this.userMailer.sendDeadPetRetryLevelEmail(userId)
       } else {
         const user = await this.userRepository.findById(userId)
         this.userMailer.sendCoachingEmail(user)
@@ -101,6 +102,7 @@ export class UserPetService {
       return null
     } else {
       const data = { lifes: userPet.lifes - 1 }
+      this.userMailer.sendPetLostLifeEmail(userId)
       return userPet.update(data)
     }
   }

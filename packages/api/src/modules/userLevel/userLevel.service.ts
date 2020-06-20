@@ -90,7 +90,6 @@ export class UserLevelService {
       return null
     } else {
       await this.userPetService.resetHealthByUserId(userId)
-      this.userMailer.sendRetryLevelEmail(user, userLevel.retriesRemaining)
       userLevel.update({
         completed: false,
         progressDay: 0,

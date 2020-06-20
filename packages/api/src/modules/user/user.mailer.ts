@@ -4,6 +4,7 @@ import { User } from "./user.entity"
 import { Mailer } from "../../lib/mailer"
 import { UserBoosterRepository } from "../userBooster/userBooster.repository"
 import { UserRepository } from "./user.repository"
+import { UserPetRepository } from "../userPet/userPet.repository"
 
 @Service()
 export class UserMailer {
@@ -12,6 +13,8 @@ export class UserMailer {
   userBoosterRepository: UserBoosterRepository
   @Inject(() => UserRepository)
   userRepository: UserRepository
+  @Inject(() => UserPetRepository)
+  userPetRepository: UserPetRepository
 
   sendWelcomeEmail(user: User) {
     if (!user.email) return
@@ -50,15 +53,41 @@ export class UserMailer {
     })
   }
 
-  // TODO: Make better mail
-  sendRetryLevelEmail(user: User, retries: number) {
+  async sendDeadPetRetryLevelEmail(userId: string) {
+    const user = await this.userRepository.findById(userId, {
+      relations: ["userLevel"],
+    })
+    const pet = await this.userPetRepository.findActiveByUserId(userId, {
+      relations: ["pet"],
+    })
+
     if (!user.email) return
     this.mailer.send({
       to: user.email,
       data: {
-        subject: `Oh no! You have lost your level progress`,
-        html: `<p>Hi ${user.firstName}, </p></br> <p>Unfortunately, you have run out of lifes.</p>
-        <p>You have ${retries} retry left.</p>`,
+        subject: `Oh no! ${pet.pet.name} lost all his health.`,
+        html: `<p>Hi ${user.firstName}, </p></br> <p>Unfortunately, ${pet.pet.name} lost all his health.</p>
+        <p>You have lost your level progress.</p>
+        <p>You have ${user.userLevel.retriesRemaining} retry left.</p>`,
+      },
+    })
+  }
+
+  async sendPetLostLifeEmail(userId: string) {
+    const user = await this.userRepository.findById(userId)
+    const pet = await this.userPetRepository.findActiveByUserId(userId, {
+      relations: ["pet"],
+    })
+
+    if (!user.email) return
+    this.mailer.send({
+      to: user.email,
+      data: {
+        subject: `${pet.pet.name} lost health :(?`,
+        html: `<p>Hi ${user.firstName}, </p></br> <p>${pet.pet.name} lost one health.</p>
+        <p>Make sure he stays alive to not lose your progress.</p>
+        <p>If you need any help or tips, please let me know. You can reply to this email if you would like.</p>
+        `,
       },
     })
   }
