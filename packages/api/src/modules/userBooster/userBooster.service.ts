@@ -62,12 +62,17 @@ export class UserBoosterService {
     let boostDays = userBooster.boostDays
     let coinReward = userBooster.coinReward
     let sponsorAmount = userBooster.sponsorAmount
+    let sponsorEmail = userBooster.sponsorEmail
+    let sponsorAccepted = userBooster.sponsorAccepted
 
     if (userBooster.boostDays === 0) {
       coinReward = 1
       sponsorAmount = 0
-      userBooster.sponsorEmail &&
+      if (userBooster.sponsorEmail) {
         this.userMailer.sendSponsorCompleteEmail(userBooster.id)
+        sponsorEmail = ""
+        sponsorAccepted = false
+      }
     } else {
       boostDays = userBooster.boostDays - 1
     }
@@ -79,6 +84,8 @@ export class UserBoosterService {
       treesEarned,
       mealsEarned,
       sponsorAmount,
+      sponsorEmail,
+      sponsorAccepted,
     }
     return userBooster.update(data)
   }
