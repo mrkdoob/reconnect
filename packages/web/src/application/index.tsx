@@ -20,6 +20,7 @@ import { AdminCourse } from "../pages/AdminCourse"
 import { AdminCourses } from "../pages/AdminCourses"
 import { Sponsor } from "../pages/Sponsor"
 import { CreateChallenge } from "../pages/CreateChallenge"
+import { Landing } from "../pages/Landing"
 
 export function Application() {
   return (
@@ -29,7 +30,8 @@ export function Application() {
         <Flex>
           <Navbar />
           <Router>
-            <Dashboard path="/" />
+            <Landing path="/" />
+            <Dashboard path="/dashboard" />
             <Courses path="/courses" />
             <AdminCourses path="/admin-courses" />
             <Course path="/courses/:slug" />

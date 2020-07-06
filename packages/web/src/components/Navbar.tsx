@@ -76,7 +76,7 @@ export const Navbar: React.FC = () => {
           ) : (
             <>
               <Text>
-                <NavLink to="/">Home</NavLink>
+                <NavLink to="/dashboard">Home</NavLink>
               </Text>
               {me.groupId ? (
                 <Text>
@@ -187,7 +187,7 @@ export const Navbar: React.FC = () => {
         {me ? (
           <Stack spacing={12} fontWeight="bold" fontSize="xl" align="center">
             <Text onClick={toggleMenu}>
-              <NavLink to="/">Dashboard </NavLink>
+              <NavLink to="/dashboard">Dashboard </NavLink>
             </Text>
             {me.groupId && (
               <Text onClick={toggleMenu}>
