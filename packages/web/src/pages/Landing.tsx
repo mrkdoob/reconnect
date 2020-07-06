@@ -1,5 +1,5 @@
 import React from "react"
-import { RouteComponentProps, Redirect, navigate } from "@reach/router"
+import { RouteComponentProps, navigate } from "@reach/router"
 
 import { Page } from "../components/Page"
 import {
