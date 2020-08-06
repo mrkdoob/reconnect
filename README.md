@@ -1,7 +1,8 @@
-
 # Reconnect
 
-## Typescript + React + Graphql 
+## Typescript + React + Graphql
+
+## Boilerplate by No Quarter
 
 Comes with user authentication included
 
@@ -28,10 +29,12 @@ Comes with user authentication included
 
 **Must have node, yarn/npm, postgres and redis installed and setup locally**
 
-1. `git clone https://github.com/NoQuarterCo/fullstack-boilerplate.git`
+1. `git clone https://github.com/mrkdoob/reconnect.git`
 2. `yarn install`
 3. `createdb fullstack-boilerplate` (must have postgres setup locally)
 4. `cd packages/api && yarn watch`
 5. `cd packages/web && yarn start`
+
 # reconnect
+
 # reconnect
