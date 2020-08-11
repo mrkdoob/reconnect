@@ -49,7 +49,7 @@ export function CourseItem(props: Props) {
       }
     >
       <StyledCourseItem borderRadius="lg">
-        <Box w="100%" h={{ base: 120, lg: 150 }} bg="gray.100" rounded="lg">
+        <Box w="100%" h={{ base: 130, lg: 150 }} bg="gray.100" rounded="lg">
           <StyledCover rounded="lg" src={props.course.cover || ""} />
           <Tag
             size="sm"

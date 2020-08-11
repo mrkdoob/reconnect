@@ -35,7 +35,11 @@ export const Landing: React.FC<Props> = props => {
 
   return (
     <Page disableRedirect={true} loading={loading}>
-      <Flex w="100%" h="calc(100vh - 60px)">
+      <Flex
+        w="100%"
+        h="calc(100vh - 60px)"
+        direction={{ base: "column", md: "row" }}
+      >
         <Flex
           direction="column"
           justify="center"
@@ -43,7 +47,8 @@ export const Landing: React.FC<Props> = props => {
           w={{ base: "100%", md: "40%" }}
           fontWeight="semibold"
           fontSize="5xl"
-          pb={64}
+          pb={{ base: 8, md: 64 }}
+          mt={{ base: "60px", md: 0 }}
         >
           <Text color={colors[0]}>Become</Text>
           <Flex pb={4} mt={-4}>
@@ -90,53 +95,56 @@ export const Landing: React.FC<Props> = props => {
         left="0"
         justify="center"
         align="center"
-        h="300px"
+        h={{ base: "content-fit", md: "300px" }}
+        py={{ base: 8, md: 0 }}
         fontWeight="semibold"
         direction="column"
         id="section1"
       >
-        <Flex fontSize="4xl" mb={8}>
-          <Text color={colors[0]} mr={2}>
-            A new
-          </Text>
-          <Text color={colors[1]} mr={2}>
-            way
-          </Text>
-          <Text color={colors[2]} mr={2}>
-            of
-          </Text>
-          <Text color={colors[3]} mr={2}>
-            learning
-          </Text>
-        </Flex>
-        <Stack spacing={16} isInline>
-          <StyledFlexCard>
+        <Stack fontSize="4xl" mb={8} spacing={2} isInline>
+          <Text color={colors[0]}>A new</Text>
+          <Text color={colors[1]}>way</Text>
+          <Text color={colors[2]}>of</Text>
+          <Text color={colors[3]}>learning</Text>
+        </Stack>
+        <Flex
+          // spacing={{ base: 8, md: 16 }}
+          flexDirection={{ base: "column", md: "row" }}
+        >
+          <StyledFlexCard mr={{ base: 0, md: 16 }} mb={{ base: 8, md: 0 }}>
             <Box mr={4} color={colors[0]} as={Users} size={8} />
             <Text>Social support</Text>
           </StyledFlexCard>
-          <StyledFlexCard>
+          <StyledFlexCard mr={{ base: 0, md: 16 }} mb={{ base: 8, md: 0 }}>
             <Box mr={4} color={colors[1]} as={Microscope} size={8} />
             <Text>Proven methods</Text>
           </StyledFlexCard>
-          <StyledFlexCard>
+          <StyledFlexCard mr={{ base: 0, md: 16 }} mb={{ base: 8, md: 0 }}>
             <Box mr={4} color={colors[2]} as={BarChart2} size={8} />
             <Text>Gradual progress</Text>
           </StyledFlexCard>
-          <StyledFlexCard>
+          <StyledFlexCard mr={{ base: 0, md: 16 }} mb={{ base: 8, md: 0 }}>
             <Box mr={4} color={colors[3]} as={HandHoldingHeart} size={8} />
             <Text>Meaningful</Text>
           </StyledFlexCard>
-        </Stack>
+        </Flex>
       </Flex>
-      <Flex mt="400px">
-        <StyledImageColumn>
+
+      <Flex
+        mt={{ base: "calc(500px + 1rem)", md: "400px" }}
+        direction={{ base: "column", md: "row" }}
+      >
+        <StyledImageColumn w={{ base: "100%", md: "50%" }}>
           <Image
             h="300px"
             w="400px"
             src="https://reconnectapp-dev.s3.eu-central-1.amazonaws.com/screenshot-2020-06-29-at-12-37-35-png"
           />
         </StyledImageColumn>
-        <StyledTextColumn>
+        <StyledTextColumn
+          w={{ base: "100%", md: "50%" }}
+          mt={{ base: 16, md: 0 }}
+        >
           <Flex fontWeight="semibold" fontSize="2xl" mb={4}>
             <Text color={colors[0]}>Me</Text>
             <Text color={colors[1]}>ani</Text>
@@ -151,8 +159,14 @@ export const Landing: React.FC<Props> = props => {
           </Text>
         </StyledTextColumn>
       </Flex>
-      <Flex mt={32}>
-        <StyledTextColumn>
+      <Flex
+        mt={{ base: 16, md: 32 }}
+        direction={{ base: "column-reverse", md: "row" }}
+      >
+        <StyledTextColumn
+          w={{ base: "100%", md: "50%" }}
+          mt={{ base: 16, md: 0 }}
+        >
           <Flex fontWeight="semibold" fontSize="2xl" mb={4}>
             <Text color={colors[0]}>To</Text>
             <Text color={colors[1]}>ge</Text>
@@ -165,7 +179,7 @@ export const Landing: React.FC<Props> = props => {
             will support you on your journey.
           </Text>
         </StyledTextColumn>
-        <StyledImageColumn>
+        <StyledImageColumn w={{ base: "100%", md: "50%" }}>
           <Image
             w="400px"
             h="300px"
@@ -175,7 +189,7 @@ export const Landing: React.FC<Props> = props => {
           />
         </StyledImageColumn>
       </Flex>
-      <Flex mt={32}>
+      <Flex mt={{ base: 16, md: 32 }} direction={{ base: "column", md: "row" }}>
         <StyledImageColumn w={{ base: "100vw", md: "60%" }}>
           <Image
             h="300px"
@@ -184,7 +198,10 @@ export const Landing: React.FC<Props> = props => {
             objectFit="cover"
           />
         </StyledImageColumn>
-        <StyledTextColumn>
+        <StyledTextColumn
+          w={{ base: "100%", md: "50%" }}
+          mt={{ base: 16, md: 0 }}
+        >
           <Flex fontWeight="semibold" fontSize="2xl" mb={4}>
             <Text color={colors[0]}>Pl</Text>
             <Text color={colors[1]}>ay</Text>
@@ -217,8 +234,15 @@ export const Landing: React.FC<Props> = props => {
           px={4}
           align="center"
           justify="space-between"
+          direction={{ base: "column", md: "row" }}
         >
-          <Flex fontSize="5xl" fontWeight="semibold">
+          <Flex
+            fontSize={{ base: "3xl", md: "5xl" }}
+            fontWeight="semibold"
+            flexWrap="wrap"
+            justify="center"
+            mb={{ base: 8, md: 0 }}
+          >
             <Text color={colors[0]} mr={2}>
               Create
             </Text>
@@ -248,7 +272,7 @@ export const Landing: React.FC<Props> = props => {
         direction="column"
         justify="center"
         align="center"
-        py={24}
+        py={{ base: 8, md: 24 }}
       >
         <Text
           color="gray.400"
@@ -272,13 +296,11 @@ export const Landing: React.FC<Props> = props => {
 }
 
 const StyledTextColumn = styled(Flex)`
-  width: 50%;
   flex-direction: column;
   justify-content: center;
 `
 
 const StyledImageColumn = styled(Flex)`
-  width: 50%;
   justify-content: center;
   align-items: center;
 `
